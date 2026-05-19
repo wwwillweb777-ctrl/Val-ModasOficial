@@ -6,6 +6,11 @@
     <title>Atendente</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
@@ -336,18 +341,34 @@
     // ✅ SENHA DEFINIDA PELO USUÁRIO: Jesus321
     const SENHA_ACESSO = "Jesus321";
 
-    function salvarDados(chave, dados) { 
-        localStorage.setItem(chave, JSON.stringify(dados)); 
+    // ✅ CONFIGURAÇÃO DO FIREBASE
+    const firebaseConfig = {
+        apiKey: "AIzaSyDUgHEX610xqLmEmM6F_d0sOzbYxLLxT8w",
+        authDomain: "willobras.firebaseapp.com",
+        databaseURL: "https://willobras-default-rtdb.firebaseio.com",
+        projectId: "willobras",
+        storageBucket: "willobras.firebasestorage.app",
+        messagingSenderId: "66370500400",
+        appId: "1:66370500400:web:42d6569ca2c8172ddf3af5"
+    };
+
+    // Inicializa Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // ✅ Funções de integração com o Firebase
+    function salvarDados(caminho, dados) { 
+        return db.ref(caminho).set(dados); 
     }
-    function carregarDados(chave) { 
-        const dadosBrutos = localStorage.getItem(chave); 
-        return dadosBrutos ? JSON.parse(dadosBrutos) : []; 
+    function carregarDados(caminho) { 
+        return db.ref(caminho).once('value').then(snap => snap.val() || []); 
     }
+
     function formatarMoeda(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
 
     // ✅ Registrar horário de entrada/saída na administração
-    function registrarHorario(acao, nome) {
-        const registros = carregarDados('registros_atendentes') || [];
+    async function registrarHorario(acao, nome) {
+        const registros = await carregarDados('registros_atendentes') || [];
         registros.push({
             nome: nome,
             acao: acao,
@@ -356,7 +377,7 @@
         salvarDados('registros_atendentes', registros);
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         const logado = localStorage.getItem('atendente_logado');
         if(logado) {
             const dados = JSON.parse(logado);
@@ -369,7 +390,7 @@
     });
 
     // ✅ Verificar senha para entrar
-    function verificarSenha(e) {
+    async function verificarSenha(e) {
         e.preventDefault();
         const senhaDigitada = document.getElementById('senha-acesso').value.trim();
         if(senhaDigitada === SENHA_ACESSO) {
@@ -409,7 +430,7 @@
     function fecharModalEdicao() {
         document.getElementById('modalEditar').style.display = 'none';
     }
-    function salvarNovoNome() {
+    async function salvarNovoNome() {
         const novoNome = document.getElementById('novo-nome-atendente').value.trim().substring(0, 50);
         if(novoNome) {
             const nomeAntigo = document.getElementById('nome-logado').innerText;
@@ -430,14 +451,14 @@
         document.getElementById('desc-prod').value = '';
     }
 
-    function salvarProduto(e) {
+    async function salvarProduto(e) {
         e.preventDefault();
         const nome = document.getElementById('nome-prod').value.trim();
         const preco = parseFloat(document.getElementById('preco-prod').value);
         const descricao = document.getElementById('desc-prod').value.trim();
         if(!nome || isNaN(preco)) return;
 
-        const produtos = carregarDados('produtos') || [];
+        const produtos = await carregarDados('produtos') || [];
         produtos.push({ 
             id: Date.now().toString(), 
             nome, 
@@ -451,9 +472,9 @@
         carregarProdutos();
     }
 
-    function carregarProdutos() {
+    async function carregarProdutos() {
         const container = document.getElementById('lista-produtos-atendente');
-        const produtos = carregarDados('produtos') || [];
+        const produtos = await carregarDados('produtos') || [];
 
         if(produtos.length === 0) {
             container.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhum produto cadastrado.</p>';
@@ -485,25 +506,25 @@
         container.innerHTML = html;
     }
 
-    function alterarDisponibilidade(idProduto) {
-        const produtos = carregarDados('produtos') || [];
+    async function alterarDisponibilidade(idProduto) {
+        const produtos = await carregarDados('produtos') || [];
         const novos = produtos.map(p => p.id === idProduto ? {...p, disponivel: !p.disponivel} : p);
         salvarDados('produtos', novos);
         carregarProdutos();
     }
 
     // ✅ Função de exclusão definitiva
-    function removerProdutoDefinitivo(idProduto) {
+    async function removerProdutoDefinitivo(idProduto) {
         if(!confirm('Tem certeza? Este produto será REMOVIDO PARA SEMPRE e não poderá ser recuperado!')) return;
-        const produtos = carregarDados('produtos') || [];
+        const produtos = await carregarDados('produtos') || [];
         const filtrados = produtos.filter(p => p.id !== idProduto);
         salvarDados('produtos', filtrados);
         carregarProdutos();
     }
 
-    function carregarPedidos() {
+    async function carregarPedidos() {
         const container = document.getElementById('lista-pedidos-atendente');
-        const pedidos = carregarDados('pedidos') || [];
+        const pedidos = await carregarDados('pedidos') || [];
         const pedidosAtivos = pedidos.filter(p => p.status !== 'entregue' && p.status !== 'cancelado');
 
         if(pedidosAtivos.length === 0) {
@@ -547,8 +568,8 @@
         }
     }
 
-    function atualizarStatus(idPedido, novoStatus, divergencia = false) {
-        const pedidos = carregarDados('pedidos') || [];
+    async function atualizarStatus(idPedido, novoStatus, divergencia = false) {
+        const pedidos = await carregarDados('pedidos') || [];
         const atualizados = pedidos.map(p => {
             if(p.id === idPedido) {
                 return {
@@ -567,3 +588,4 @@
 </script>
 </body>
 </html>
+
