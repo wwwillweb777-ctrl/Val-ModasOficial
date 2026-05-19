@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atendente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+        body { 
+            line-height: 1.6; 
+            background-color: #f9fafb; 
+            color: #1f2937; 
+            padding-top: 160px; 
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 8px; }
+        .shadow { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); }
+        .shadow-lg { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); }
+        .rounded-xl { border-radius: 0.75rem; } .rounded-2xl { border-radius: 1rem; }
+        .transition { transition: all 0.15s ease; }
+        .bg-blue-50 { background-color: #eff6ff; } .bg-green-50 { background-color: #f0fdf4; } .bg-purple-50 { background-color: #faf5ff; }
+        .bg-yellow-100 { background-color: #fef3c7; } .bg-green-100 { background-color: #d1fae5; } .bg-blue-100 { background-color: #dbeafe; } .bg-red-100 { background-color: #fecdd3; }
+        .text-yellow-800 { color: #854d0e; } .text-green-800 { color: #166534; } .text-blue-800 { color: #1e40af; } .text-red-800 { color: #991b1b; }
+        a { text-decoration: none; } nav a { transition: all 0.2s ease; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f1f1f1; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        .btn-menu {
+            border: none !important;
+            border-radius: 10px !important;
+            padding: 7px 12px !important;
+            cursor: pointer !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            text-align: center !important;
+            min-width: 78px !important;
+            height: 36px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin: 0 2px !important;
+            pointer-events: auto !important;
+            opacity: 1 !important;
+            transition: all 0.2s ease !important;
+        }
+        .btn-menu:active {
+            transform: scale(0.96) !important;
+            filter: brightness(0.85) !important;
+        }
+        .btn-azul {
+            background-color: #2563eb !important;
+            color: #ffffff !important;
+        }
+        .btn-azul-claro {
+            background-color: rgba(37, 99, 235, 0.25) !important;
+            color: #ffffff !important;
+        }
+        .btn-vendido {
+            background-color: #dc2626 !important;
+            color: #ffffff !important;
+        }
+        .btn-cancelar {
+            background-color: #16a34a !important;
+            color: #000000 !important;
+            border: 1px solid #000000 !important;
+        }
+        .btn-enviar {
+            background-color: #16a34a !important;
+            color: #ffffff !important;
+        }
+        .btn-cancelar-form {
+            background-color: #f59e0b !important;
+            color: #ffffff !important;
+        }
+        .btn-excluir {
+            background-color: #dc2626 !important;
+            color: #ffffff !important;
+            border: none !important;
+        }
+        .btn-excluir:hover {
+            background-color: #b91c1c !important;
+        }
+
+        .titulo-admin {
+            color: #ffd700 !important;
+            -webkit-text-stroke: 0.5px #000000;
+            text-stroke: 0.5px #000000;
+            text-shadow: 
+                1px 1px 1px rgba(0, 0, 0, 0.4),
+                -0.5px -0.5px 0.5px rgba(0, 0, 0, 0.4),
+                0 0 3px #ffd700;
+            display: inline-block;
+            padding: 2px 8px;
+        }
+
+        .btn-remover {
+            background: transparent !important;
+            border: none !important;
+            font-size: 16px !important;
+            cursor: pointer !important;
+            color: inherit !important;
+            padding: 2px !important;
+        }
+        .btn-remover:hover {
+            color: #666666 !important;
+            background: transparent !important;
+        }
+
+        .item-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            transition: opacity 0.3s ease;
+            font-size: 16px !important;
+        }
+        .item-container p {
+            font-size: 16px !important;
+        }
+        .item-container .font-bold {
+            font-size: 17px !important;
+        }
+
+        .cabecalho {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 160px;
+            background-color: #7e22ce;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 999999;
+            contain: strict;
+            padding-top: 8px;
+            padding-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            overscroll-behavior: contain;
+            gap: 16px;
+        }
+
+        .titulo-principal {
+            width: 100%;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .titulo-principal .texto {
+            color: #000000 !important;
+            -webkit-text-stroke: 0.4px #ffffff;
+            text-stroke: 0.4px #ffffff;
+            text-shadow: none;
+        }
+        .titulo-principal .emoji {
+            color: #ffd700;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 0 8px #ffd700;
+            -webkit-text-stroke: 0;
+        }
+
+        .botoes-principais {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 90%;
+            gap: 20px;
+        }
+
+        .botao-principal {
+            flex: 1;
+            height: 50px !important;
+            border: none;
+            border-radius: 14px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-size: 15px !important;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(4px);
+        }
+
+        .botao-principal:hover {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .botao-principal.ativo {
+            background-color: #2563eb !important;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .conteudo-principal {
+            height: calc(100vh - 160px);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            position: relative;
+        }
+
+        .info-atendente {
+            position: fixed;
+            top: 165px;
+            left: 15px;
+            font-size: 16px;
+            color: #000000 !important;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            background-color: transparent;
+        }
+        .info-atendente .cadeado {
+            cursor: pointer;
+            font-size: 17px;
+            color: #000000;
+            transition: transform 0.2s;
+        }
+        .info-atendente .cadeado:hover {
+            transform: scale(1.1);
+            color: #7e22ce;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999999;
+            padding: 20px;
+        }
+        .modal-conteudo {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="info-atendente">
+        <span>Atendente: <strong id="nome-logado"></strong></span>
+        <span class="cadeado" onclick="abrirModalEdicao()" title="Alterar nome do atendente">🔒</span>
+    </div>
+
+    <header class="cabecalho">
+        <h1 class="titulo-principal">
+            <span class="emoji">🤝</span>
+            <span class="texto">Atendente</span>
+        </h1>
+
+        <div class="botoes-principais">
+            <a href="index.html" class="botao-principal">🏠 Início</a>
+            <a href="javascript:;" id="btn-vendas" class="botao-principal ativo" onclick="abrirAba('vendas')">📦 Vendas</a>
+            <a href="javascript:;" id="btn-produtos" class="botao-principal" onclick="abrirAba('produtos')">🛒 Produtos</a>
+        </div>
+    </header>
+
+    <div class="conteudo-principal">
+        <section class="container mx-auto p-4">
+
+            <div id="tela-cadastro" class="bg-white rounded-2xl shadow p-6 mb-8">
+                <h2 class="text-xl font-bold text-green-700 mb-4 text-center">🔐 Acesso Restrito</h2>
+                <form onsubmit="verificarSenha(event)" class="space-y-3 p-4 bg-gray-50 rounded-lg max-w-md mx-auto">
+                    <input type="password" id="senha-acesso" placeholder="Digite a senha" class="w-full p-3 border rounded-lg text-center text-lg font-bold" required>
+                    <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition">Entrar</button>
+                </form>
+            </div>
+
+            <div id="conteudo-principal" class="hidden">
+                <div id="aba-vendas" class="aba-conteudo">
+                    <div class="bg-white rounded-2xl shadow p-6 mb-8">
+                        <h2 class="text-xl font-bold text-green-700 mb-6 text-center flex items-center justify-center gap-2">
+                            📦 Pedidos para Atender
+                        </h2>
+                        
+                        <div id="lista-pedidos-atendente" class="space-y-5">
+                            <p class="text-gray-500 text-center py-4">Nenhum pedido pendente.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="aba-produtos" class="aba-conteudo hidden">
+                    <div class="bg-white rounded-2xl shadow p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Gerenciar Cardápio</h2>
+                        <form id="form-produto" onsubmit="salvarProduto(event)" class="space-y-4 mb-8 p-4 bg-gray-50 rounded-xl">
+                            <input type="text" id="nome-prod" placeholder="Nome do produto" class="w-full p-4 border rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                            <input type="number" id="preco-prod" step="0.01" placeholder="Preço (ex: 15.90)" class="w-full p-4 border rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                            <textarea id="desc-prod" placeholder="Descrição do produto" class="w-full p-4 border rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                            
+                            <div class="flex gap-3">
+                                <button type="submit" class="w-1/2 btn-menu btn-enviar py-4 rounded-xl font-bold text-lg hover:bg-green-700 transition shadow-md hover:shadow-lg">Enviar</button>
+                                <button type="reset" onclick="limparFormulario()" class="w-1/2 btn-menu btn-cancelar-form py-4 rounded-xl font-bold text-lg hover:bg-amber-600 transition shadow-md hover:shadow-lg">Cancelar</button>
+                            </div>
+                        </form>
+
+                        <h3 class="font-bold text-xl mb-4 text-center text-gray-800">Produtos Cadastrados</h3>
+                        <div id="lista-produtos-atendente" class="space-y-4 text-base"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="modalEditar" class="modal" style="display: none;">
+        <div class="modal-conteudo">
+    <h3 class="font-bold text-lg mb-3 text-center text-purple-800">Alterar Atendente</h3>
+    <input type="text" id="novo-nome-atendente" maxlength="50" placeholder="Digite o nome (máx 50 caracteres)" class="w-full p-3 border rounded-lg mb-4" required>
+    <div class="flex gap-2">
+        <button onclick="salvarNovoNome()" class="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">Salvar</button>
+        <button onclick="fecharModalEdicao()" class="flex-1 bg-gray-400 text-white py-2 rounded-lg hover:bg-gray-500 transition">Cancelar</button>
+    </div>
+</div>
+</div>
+
+<script>
+    // ✅ SENHA DEFINIDA PELO USUÁRIO: Jesus321
+    const SENHA_ACESSO = "Jesus321";
+
+    function salvarDados(chave, dados) { 
+        localStorage.setItem(chave, JSON.stringify(dados)); 
+    }
+    function carregarDados(chave) { 
+        const dadosBrutos = localStorage.getItem(chave); 
+        return dadosBrutos ? JSON.parse(dadosBrutos) : []; 
+    }
+    function formatarMoeda(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+
+    // ✅ Registrar horário de entrada/saída na administração
+    function registrarHorario(acao, nome) {
+        const registros = carregarDados('registros_atendentes') || [];
+        registros.push({
+            nome: nome,
+            acao: acao,
+            data_hora: new Date().toLocaleString('pt-BR')
+        });
+        salvarDados('registros_atendentes', registros);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const logado = localStorage.getItem('atendente_logado');
+        if(logado) {
+            const dados = JSON.parse(logado);
+            document.getElementById('nome-logado').innerText = dados.nome;
+            document.getElementById('tela-cadastro').classList.add('hidden');
+            document.getElementById('conteudo-principal').classList.remove('hidden');
+            carregarPedidos();
+            carregarProdutos();
+        }
+    });
+
+    // ✅ Verificar senha para entrar
+    function verificarSenha(e) {
+        e.preventDefault();
+        const senhaDigitada = document.getElementById('senha-acesso').value.trim();
+        if(senhaDigitada === SENHA_ACESSO) {
+            const nome = prompt("Acesso liberado!\nDigite seu nome para registrar entrada (máx 50 caracteres):");
+            if(nome && nome.trim() !== "") {
+                const nomeFinal = nome.trim().substring(0, 50);
+                const dados = { nome: nomeFinal };
+                localStorage.setItem('atendente_logado', JSON.stringify(dados));
+                registrarHorario('ENTRADA', nomeFinal);
+                
+                document.getElementById('tela-cadastro').classList.add('hidden');
+                document.getElementById('conteudo-principal').classList.remove('hidden');
+                document.getElementById('nome-logado').innerText = nomeFinal;
+
+                carregarPedidos();
+                carregarProdutos();
+            }
+        } else {
+            alert("❌ Senha incorreta!");
+        }
+    }
+
+    function abrirAba(nomeAba) {
+        document.querySelectorAll('.aba-conteudo').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`aba-${nomeAba}`).classList.remove('hidden');
+
+        document.querySelectorAll('.botao-principal').forEach(btn => btn.classList.remove('ativo'));
+        document.getElementById(`btn-${nomeAba}`).classList.add('ativo');
+    }
+
+    // ✅ Funções do Modal de Edição
+    function abrirModalEdicao() {
+        document.getElementById('modalEditar').style.display = 'flex';
+        document.getElementById('novo-nome-atendente').value = document.getElementById('nome-logado').innerText;
+        document.getElementById('novo-nome-atendente').focus();
+    }
+    function fecharModalEdicao() {
+        document.getElementById('modalEditar').style.display = 'none';
+    }
+    function salvarNovoNome() {
+        const novoNome = document.getElementById('novo-nome-atendente').value.trim().substring(0, 50);
+        if(novoNome) {
+            const nomeAntigo = document.getElementById('nome-logado').innerText;
+            registrarHorario('SAÍDA', nomeAntigo);
+            registrarHorario('ENTRADA', novoNome);
+
+            const dados = { nome: novoNome };
+            localStorage.setItem('atendente_logado', JSON.stringify(dados));
+            document.getElementById('nome-logado').innerText = novoNome;
+            fecharModalEdicao();
+        }
+    }
+
+    // ✅ Limpar formulário ao cancelar
+    function limparFormulario() {
+        document.getElementById('nome-prod').value = '';
+        document.getElementById('preco-prod').value = '';
+        document.getElementById('desc-prod').value = '';
+    }
+
+    function salvarProduto(e) {
+        e.preventDefault();
+        const nome = document.getElementById('nome-prod').value.trim();
+        const preco = parseFloat(document.getElementById('preco-prod').value);
+        const descricao = document.getElementById('desc-prod').value.trim();
+        if(!nome || isNaN(preco)) return;
+
+        const produtos = carregarDados('produtos') || [];
+        produtos.push({ 
+            id: Date.now().toString(), 
+            nome, 
+            preco, 
+            descricao, 
+            disponivel: true 
+        });
+        salvarDados('produtos', produtos);
+
+        limparFormulario();
+        carregarProdutos();
+    }
+
+    function carregarProdutos() {
+        const container = document.getElementById('lista-produtos-atendente');
+        const produtos = carregarDados('produtos') || [];
+
+        if(produtos.length === 0) {
+            container.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhum produto cadastrado.</p>';
+            return;
+        }
+
+        let html = '';
+        produtos.forEach(p => {
+            html += `
+            <div class="p-4 border rounded-xl bg-white shadow-sm item-container">
+                <div>
+                    <p class="font-bold text-lg">${p.nome}</p>
+                    <p class="text-green-700 font-semibold">${formatarMoeda(p.preco)}</p>
+                    <p class="text-sm text-gray-600 mt-1">${p.descricao || 'Sem descrição'}</p>
+                    <span class="text-xs ${p.disponivel ? 'text-green-600' : 'text-red-600'} font-bold mt-2 inline-block">
+                        ${p.disponivel ? '✅ Disponível' : '❌ Indisponível'}
+                    </span>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <button onclick="alterarDisponibilidade('${p.id}')" class="btn-menu btn-azul text-xs px-2 py-1">
+                        ${p.disponivel ? 'Desativar' : 'Ativar'}
+                    </button>
+                    <button onclick="removerProdutoDefinitivo('${p.id}')" class="btn-menu btn-excluir text-xs px-2 py-1">
+                        Excluir
+                    </button>
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    function alterarDisponibilidade(idProduto) {
+        const produtos = carregarDados('produtos') || [];
+        const novos = produtos.map(p => p.id === idProduto ? {...p, disponivel: !p.disponivel} : p);
+        salvarDados('produtos', novos);
+        carregarProdutos();
+    }
+
+    // ✅ Função de exclusão definitiva
+    function removerProdutoDefinitivo(idProduto) {
+        if(!confirm('Tem certeza? Este produto será REMOVIDO PARA SEMPRE e não poderá ser recuperado!')) return;
+        const produtos = carregarDados('produtos') || [];
+        const filtrados = produtos.filter(p => p.id !== idProduto);
+        salvarDados('produtos', filtrados);
+        carregarProdutos();
+    }
+
+    function carregarPedidos() {
+        const container = document.getElementById('lista-pedidos-atendente');
+        const pedidos = carregarDados('pedidos') || [];
+        const pedidosAtivos = pedidos.filter(p => p.status !== 'entregue' && p.status !== 'cancelado');
+
+        if(pedidosAtivos.length === 0) {
+            container.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhum pedido pendente.</p>';
+            return;
+        }
+
+        let html = '';
+        pedidosAtivos.forEach(p => {
+            const total = p.itens.reduce((soma, item) => soma + (item.preco * item.quantidade), 0);
+            html += `
+            <div class="p-5 border rounded-2xl bg-white shadow-lg mb-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-bold text-lg text-purple-800">Pedido #${p.id.slice(-4)}</h3>
+                    <span class="text-sm font-bold ${p.status === 'preparando' ? 'text-yellow-600' : 'text-blue-600'}">
+                        ${p.status.toUpperCase()}
+                    </span>
+                </div>
+                <p class="text-sm text-gray-700 mb-2">Cliente: ${p.cliente?.nome || 'Não identificado'}</p>
+                <div class="pl-2 mb-3 border-l-2 border-purple-200">
+                    ${p.itens.map(i => `<p class="text-sm">${i.quantidade}x ${i.nome} - ${formatarMoeda(i.preco * i.quantidade)}</p>`).join('')}
+                </div>
+                <p class="font-bold text-right text-lg text-green-700 mb-3">Total: ${formatarMoeda(total)}</p>
+                <div class="flex flex-wrap gap-2 justify-end">
+                    <button onclick="confirmarVendido('${p.id}')" class="btn-menu btn-vendido">⚠️ Vendido</button>
+                    <button onclick="confirmarCancelado('${p.id}')" class="btn-menu btn-cancelar">Cancelar</button>
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    function confirmarVendido(idPedido) {
+        const temDivergencia = confirm('✅ Pedido Vendido!\n\nHá divergência de valor ou itens?\n(Clique OK = Sim | Cancelar = Não)');
+        atualizarStatus(idPedido, 'entregue', temDivergencia);
+    }
+
+    function confirmarCancelado(idPedido) {
+        if(confirm('❌ Tem certeza que deseja CANCELAR este pedido?\nEsta ação não poderá ser desfeita!')) {
+            atualizarStatus(idPedido, 'cancelado', false);
+        }
+    }
+
+    function atualizarStatus(idPedido, novoStatus, divergencia = false) {
+        const pedidos = carregarDados('pedidos') || [];
+        const atualizados = pedidos.map(p => {
+            if(p.id === idPedido) {
+                return {
+                    ...p, 
+                    status: novoStatus,
+                    possui_divergencia: divergencia,
+                    data_baixa: new Date().toLocaleString('pt-BR'),
+                    atendente_baixa: JSON.parse(localStorage.getItem('atendente_logado'))?.nome || 'Desconhecido'
+                };
+            }
+            return p;
+        });
+        salvarDados('pedidos', atualizados);
+        carregarPedidos();
+    }
+</script>
+</body>
+</html>
