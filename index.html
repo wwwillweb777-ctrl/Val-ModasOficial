@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Loja da Val</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
@@ -389,13 +394,33 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
 
 <script>
 
+    // ✅ CONFIGURAÇÃO DO FIREBASE
+    const firebaseConfig = {
+      apiKey: "AIzaSyDUgHEX610xqLmEmM6F_d0sOzbYxLLxT8w",
+      authDomain: "willobras.firebaseapp.com",
+      databaseURL: "https://willobras-default-rtdb.firebaseio.com",
+      projectId: "willobras",
+      storageBucket: "willobras.firebasestorage.app",
+      messagingSenderId: "66370500400",
+      appId: "1:66370500400:web:42d6569ca2c8172ddf3af5"
+    };
+
+    // Inicializa Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
     // ✅ SENHAS DE ACESSO E CONFIGURAÇÕES
     const SENHA_ATENDENTE = "Deus321";
     const SENHA_ADMIN = "WJ@321";
     const NUMERO_MENSAGENS = "5531990721928"; // 📩 Para este número vai só a mensagem: Boa noite!
 
-    function salvarDados(chave, dados) { localStorage.setItem(chave, JSON.stringify(dados)); }
-    function carregarDados(chave) { const d = localStorage.getItem(chave); return d ? JSON.parse(d) : []; }
+    // ✅ FUNÇÕES DE INTEGRAÇÃO COM FIREBASE
+    function salvarDados(caminho, dados) { 
+        return db.ref(caminho).set(dados); 
+    }
+    function carregarDados(caminho) { 
+        return db.ref(caminho).once('value').then(snap => snap.val() || []); 
+    }
     function formatarMoeda(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
 
     function abrirMenu() { document.getElementById('menuLateral').classList.remove('-translate-x-full'); document.getElementById('fundoEscuro').classList.remove('hidden'); document.body.style.overflow='hidden'; }
@@ -426,8 +451,8 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
     const modal = document.getElementById("formularioModal");
     const spanFechar = document.getElementsByClassName("fechar")[0];
 
-    function abrirFormulario() {
-        const carrinho = carregarDados('carrinho');
+    async function abrirFormulario() {
+        const carrinho = await carregarDados('carrinho');
         if(carrinho.length === 0) { 
             alert('Adicione itens ao carrinho primeiro!'); 
             return; 
@@ -445,7 +470,7 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
         }
     }
 
-    document.getElementById("btnEnviarPedido").addEventListener("click", function() {
+    document.getElementById("btnEnviarPedido").addEventListener("click", async function() {
         const nome = document.getElementById('nome').value.trim();
         const cidade = document.getElementById('cidade').value.trim();
         const rua = document.getElementById('rua').value.trim();
@@ -461,7 +486,7 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
         }
 
         // Dados do Pedido
-        const carrinho = carregarDados('carrinho');
+        const carrinho = await carregarDados('carrinho');
         const total = carrinho.reduce((s,i)=>s + (i.preco * i.quantidade),0);
         
         let listaItens = "";
@@ -479,7 +504,7 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
         // ✅ NÃO ENVIA MAIS DADOS POR WHATSAPP. DADOS FICAM SOMENTE NA ÁREA ADMINISTRATIVA (VARIÁVEIS)
 
         // ✅ SALVA TODOS OS DADOS NO SISTEMA (ÁREA ADMINISTRATIVA) - INCLUSIVE O NÚMERO DO CLIENTE
-        const clientes = carregarDados('clientes');
+        const clientes = await carregarDados('clientes');
         const clienteExistente = clientes.find(c => c.whatsapp === whatsapp);
         if (!clienteExistente) {
             clientes.push({
@@ -491,7 +516,7 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
                 referencia: referencia,
                 data_cadastro: new Date().toLocaleString('pt-BR')
             });
-            salvarDados('clientes', clientes);
+            await salvarDados('clientes', clientes);
         }
 
         // Salva o pedido completo no sistema
@@ -510,10 +535,10 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
             baixa_feita: false
         };
 
-        const pedidos = carregarDados('pedidos');
+        const pedidos = await carregarDados('pedidos');
         pedidos.push(novoPedido);
-        salvarDados('pedidos', pedidos);
-        salvarDados('carrinho', []);
+        await salvarDados('pedidos', pedidos);
+        await salvarDados('carrinho', []);
         atualizarCarrinho();
         carregarMeusPedidos();
 
@@ -532,17 +557,17 @@ document.addEventListener('DOMContentLoaded', () => {
     carregarMeusPedidos();
 });
 
-function iniciarDadosPadrao() {
-    if(carregarDados('pedidos').length === 0) salvarDados('pedidos', []);
-    if(carregarDados('carrinho').length === 0) salvarDados('carrinho', []);
-    if(carregarDados('produtos').length === 0) salvarDados('produtos', []);
-    if(carregarDados('clientes').length === 0) salvarDados('clientes', []);
+async function iniciarDadosPadrao() {
+    if((await carregarDados('pedidos')).length === 0) await salvarDados('pedidos', []);
+    if((await carregarDados('carrinho')).length === 0) await salvarDados('carrinho', []);
+    if((await carregarDados('produtos')).length === 0) await salvarDados('produtos', []);
+    if((await carregarDados('clientes')).length === 0) await salvarDados('clientes', []);
 }
 
 // ✅ FUNÇÃO NOVA: Carrega produtos cadastrados pelo atendente
-function carregarProdutosLoja() {
+async function carregarProdutosLoja() {
     const container = document.getElementById('lista-produtos');
-    const produtos = carregarDados('produtos') || [];
+    const produtos = await carregarDados('produtos') || [];
     const produtosDisponiveis = produtos.filter(p => p.disponivel === true);
 
     if(produtosDisponiveis.length === 0) {
@@ -573,8 +598,8 @@ function carregarProdutosLoja() {
     container.innerHTML = html;
 }
 
-function adicionarItem(id, nome, preco) {
-    const carrinho = carregarDados('carrinho');
+async function adicionarItem(id, nome, preco) {
+    const carrinho = await carregarDados('carrinho');
     const itemExistente = carrinho.find(i => i.id === id);
     
     if (itemExistente) {
@@ -583,12 +608,12 @@ function adicionarItem(id, nome, preco) {
         carrinho.push({id, nome, preco, quantidade: 1});
     }
     
-    salvarDados('carrinho', carrinho);
+    await salvarDados('carrinho', carrinho);
     atualizarCarrinho();
 }
 
-function atualizarCarrinho() {
-    const carrinho = carregarDados('carrinho');
+async function atualizarCarrinho() {
+    const carrinho = await carregarDados('carrinho');
     const container = document.getElementById('carrinho-itens');
     const totalEl = document.getElementById('carrinho-total');
     const nomeInfo = document.getElementById('nome-cliente-info');
@@ -625,8 +650,8 @@ function atualizarCarrinho() {
     totalEl.innerText = total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
 }
 
-function alterarQuantidade(id, delta) {
-    const carrinho = carregarDados('carrinho');
+async function alterarQuantidade(id, delta) {
+    const carrinho = await carregarDados('carrinho');
     const item = carrinho.find(i => i.id === id);
     if (!item) return;
 
@@ -635,19 +660,19 @@ function alterarQuantidade(id, delta) {
         const index = carrinho.indexOf(item);
         carrinho.splice(index, 1);
     }
-    salvarDados('carrinho', carrinho);
+    await salvarDados('carrinho', carrinho);
     atualizarCarrinho();
 }
 
-function removerItemTodo(id) {
-    const carrinho = carregarDados('carrinho');
+async function removerItemTodo(id) {
+    const carrinho = await carregarDados('carrinho');
     const novaLista = carrinho.filter(i => i.id !== id);
-    salvarDados('carrinho', novaLista);
+    await salvarDados('carrinho', novaLista);
     atualizarCarrinho();
 }
 
-function carregarMeusPedidos() {
-    const pedidos = carregarDados('pedidos');
+async function carregarMeusPedidos() {
+    const pedidos = await carregarDados('pedidos');
     const container = document.getElementById('lista-meus-pedidos');
     const pedidosAtivos = pedidos.filter(p => p.status !== 'Entregue');
 
