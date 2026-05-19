@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Loja da Val</title>
     <!-- ✅ ADICIONADO: Chamada para o arquivo de configuração com a chave -->
     <script src="config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- ✅ FIREBASE - MESMA VERSÃO DO ATENDENTE -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
@@ -208,7 +210,7 @@
             background-color: #1d4ed8 !important;
         }
 
-        /* ✅ Cabeçalho configurado: cor azul, imagem centralizada e fixa - INTACTO CONFORME PEDIDO */
+        /* ✅ Cabeçalho configurado: cor azul, imagem centralizada e fixa */
         .cabecalho-nosso {
             background: url('https://i.postimg.cc/VvLMVFgG/IMG-20260518-085339-(2).webp') no-repeat center center;
             background-color: #005bcc;
@@ -226,7 +228,7 @@
             border-bottom: none;
         }
 
-        /* ✅ CONFIGURAÇÕES DE IMAGEM - TAMANHO, PROPORÇÃO E AJUSTES (TUDO IGUAL AO ANTERIOR) */
+        /* ✅ CONFIGURAÇÕES DE IMAGEM - TAMANHO, PROPORÇÃO E AJUSTES */
         .img-produto {
             width: 100% !important;
             height: 100% !important;
@@ -293,7 +295,7 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
             </button>
         </div>
         <nav class="flex flex-col gap-3">
-            <a href="inicial.html" class="py-3 px-4 rounded-lg bg-white/20 font-medium text-center text-white hover:bg-yellow-500/30" onclick="fecharMenu()">🏠 Loja da Val 🛍️🛒</a>
+            <a href="index.html" class="py-3 px-4 rounded-lg bg-white/20 font-medium text-center text-white hover:bg-yellow-500/30" onclick="fecharMenu()">🏠 Loja da Val 🛍️🛒</a>
             <a href="#meusPedidos" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="fecharMenu()">📋 Meus Pedidos</a>
             <a href="#" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="fecharMenu()">👤 Área do Cliente</a>
             <hr class="border-white/30 my-2">
@@ -316,7 +318,7 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
             <h2 class="text-2xl font-bold text-yellow-500 mb-6 text-center">Nossos Produtos 🛍️✨</h2>
             <div id="lista-produtos" class="space-y-4">
                 <!-- ✅ AQUI VÃO SER CARREGADOS OS PRODUTOS DO ATENDENTE DINAMICAMENTE -->
-                <p class="text-gray-500 text-center py-4">Carregando produtos...</p>
+                 <p class="text-gray-500 text-center py-4">Carregando produtos...</p>
              </div>
         </div>
 
@@ -397,25 +399,40 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
     const NUMERO_MENSAGENS = "5531990721928"; // 📩 Para este número vai só a mensagem: Boa noite!
 
     // ✅ CONFIGURAÇÃO FIREBASE - MESMA CHAVE E DADOS DOS DEMAIS ARQUIVOS
-    // ✅ Os dados abaixo são carregados do arquivo config.js, igual nos outros códigos
     let firebaseConfig;
     if (typeof CONFIG_FIREBASE !== 'undefined') {
         firebaseConfig = CONFIG_FIREBASE;
     } else {
-        // Fallback caso o arquivo não carregue (mesmos dados que você já usa)
+        // Fallback caso o arquivo não carregue
         firebaseConfig = {
-            apiKey: "AIzaSyC8l4tX7H8uG7wE5s9R2a3dF4gH6jK8lP0mN1bVxZ7cQ9wE2rT3yU5iO7pS9dF3gH5jK7",
-            authDomain: "loja-da-val-2026.firebaseapp.com",
-            databaseURL: "https://loja-da-val-2026-default-rtdb.firebaseio.com",
-            projectId: "loja-da-val-2026",
-            storageBucket: "loja-da-val-2026.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abc123def456ghi789jkl0"
+            apiKey: "AIzaSyCYd655rBu8_UfwGtYWDgRzdtAw-UAR9Qg",
+            authDomain: "val-modas.firebaseapp.com",
+            databaseURL: "https://val-modas-default-rtdb.firebaseio.com",
+            projectId: "val-modas",
+            storageBucket: "val-modas.firebasestorage.app",
+            messagingSenderId: "1060099036181",
+            appId: "1:1060099036181:web:e677b3b6ae0ce1a499aa1c"
         };
     }
 
-    function salvarDados(chave, dados) { localStorage.setItem(chave, JSON.stringify(dados)); }
-    function carregarDados(chave) { const d = localStorage.getItem(chave); return d ? JSON.parse(d) : []; }
+    // ✅ INICIALIZAÇÃO DO FIREBASE - IGUAL AO ATENDENTE
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+
+    // ✅ FUNÇÕES PADRÃO DO SISTEMA
+    function salvarDados(chave, dados) { 
+        return db.ref(chave).set(dados); 
+    }
+    function carregarDados(chave) { 
+        return db.ref(chave).once('value').then(snap => {
+            const valor = snap.val();
+            if (!valor) return [];
+            if (Array.isArray(valor)) return valor.filter(Boolean);
+            return Object.values(valor);
+        });
+    }
     function formatarMoeda(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
 
     function abrirMenu() { document.getElementById('menuLateral').classList.remove('-translate-x-full'); document.getElementById('fundoEscuro').classList.remove('hidden'); document.body.style.overflow='hidden'; }
@@ -447,7 +464,7 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
     const spanFechar = document.getElementsByClassName("fechar")[0];
 
     function abrirFormulario() {
-        const carrinho = carregarDados('carrinho');
+        const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
         if(carrinho.length === 0) { 
             alert('Adicione itens ao carrinho primeiro!'); 
             return; 
@@ -465,7 +482,7 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
         }
     }
 
-    document.getElementById("btnEnviarPedido").addEventListener("click", function() {
+    document.getElementById("btnEnviarPedido").addEventListener("click", async function() {
         const nome = document.getElementById('nome').value.trim();
         const cidade = document.getElementById('cidade').value.trim();
         const rua = document.getElementById('rua').value.trim();
@@ -474,14 +491,12 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
         const referencia = document.getElementById('ponto_referencia').value.trim();
         const whatsapp = document.getElementById('whatsapp').value.trim();
 
-        // Validação básica
         if (!nome || !cidade || !rua || !numero || !tipoImovel || !whatsapp) {
             alert("⚠️ Preencha todos os campos obrigatórios!");
             return;
         }
 
-        // Dados do Pedido
-        const carrinho = carregarDados('carrinho');
+        const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
         const total = carrinho.reduce((s,i)=>s + (i.preco * i.quantidade),0);
         
         let listaItens = "";
@@ -489,32 +504,10 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
             listaItens += `➡️ ${item.quantidade}x ${item.nome} - ${formatarMoeda(item.preco * item.quantidade)}\n`;
         });
 
-        // ✅ REGRA PRINCIPAL:
-        // 1. Para o número 31990721928 -> SOMENTE mensagem de Boa noite
         const mensagemApenasAgradecimento = `Boa noite! Recebemos seu pedido, em breve entraremos em contato.`;
+        const linkMensagemSimples = `https://wa.me/${NUMERO_MENSAGENS}?text=${encodeURIComponent(mensagemApenasAgradecimento)}`;
 
-        // 🔗 Link APENAS com mensagem de boa noite
-        const linkMensagemSimples = `https://wa.me/${NUMERO_MENSAGENS}?text=${mensagemApenasAgradecimento}`;
-
-        // ✅ NÃO ENVIA MAIS DADOS POR WHATSAPP. DADOS FICAM SOMENTE NA ÁREA ADMINISTRATIVA (VARIÁVEIS)
-
-        // ✅ SALVA TODOS OS DADOS NO SISTEMA (ÁREA ADMINISTRATIVA) - INCLUSIVE O NÚMERO DO CLIENTE
-        const clientes = carregarDados('clientes');
-        const clienteExistente = clientes.find(c => c.whatsapp === whatsapp);
-        if (!clienteExistente) {
-            clientes.push({
-                id: Date.now().toString(),
-                nome: nome,
-                whatsapp: whatsapp, // ✅ SALVA O NÚMERO DIGITADO PELO CLIENTE
-                cidade: cidade,
-                endereco: `${rua}, ${numero} - ${tipoImovel}`,
-                referencia: referencia,
-                data_cadastro: new Date().toLocaleString('pt-BR')
-            });
-            salvarDados('clientes', clientes);
-        }
-
-        // Salva o pedido completo no sistema
+        // ✅ SALVA PEDIDO NO FIREBASE
         const novoPedido = {
             id: Date.now().toString(),
             data: new Date().toLocaleString('pt-BR'),
@@ -524,77 +517,80 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
             cliente_nome: nome,
             cliente_endereco: `${rua}, ${numero} - ${tipoImovel}. ${referencia}`,
             cliente_cidade: cidade,
-            cliente_whatsapp: whatsapp, // ✅ NÚMERO DO CLIENTE SALVO PARA APARECER NA TELA ADMIN
+            cliente_whatsapp: whatsapp,
             atendente_nome: null,
             observacao: '',
             baixa_feita: false
         };
 
-        const pedidos = carregarDados('pedidos');
-        pedidos.push(novoPedido);
-        salvarDados('pedidos', pedidos);
-        salvarDados('carrinho', []);
-        atualizarCarrinho();
-        carregarMeusPedidos();
+        try {
+            const pedidos = await carregarDados('pedidos');
+            pedidos.push(novoPedido);
+            await salvarDados('pedidos', pedidos);
+            
+            localStorage.removeItem('carrinho');
+            atualizarCarrinho();
+            carregarMeusPedidos();
 
-        // ✅ ABRE SOMENTE A MENSAGEM DE BOA NOITE PARA O NÚMERO DEFINIDO
-        window.open(linkMensagemSimples, '_blank');
-
-        // Fecha o formulário e avisa
-        modal.style.display = "none";
-        alert(`✅ Pedido enviado com sucesso, ${nome}! Agora já aparece na administração.`	);
+            window.open(linkMensagemSimples, '_blank');
+            modal.style.display = "none";
+            alert(`✅ Pedido enviado com sucesso, ${nome}! Agora já aparece na administração.`);
+        } catch (erro) {
+            alert("❌ Erro ao enviar pedido: " + erro.message);
+        }
     });
 
 document.addEventListener('DOMContentLoaded', () => {
-    iniciarDadosPadrao();
     carregarProdutosLoja();
     atualizarCarrinho();
     carregarMeusPedidos();
+
+    // ✅ ATUALIZA PRODUTOS EM TEMPO REAL
+    db.ref('produtos').on('value', () => {
+        carregarProdutosLoja();
+    });
 });
 
-function iniciarDadosPadrao() {
-    if(carregarDados('pedidos').length === 0) salvarDados('pedidos', []);
-    if(carregarDados('carrinho').length === 0) salvarDados('carrinho', []);
-    if(carregarDados('produtos').length === 0) salvarDados('produtos', []);
-    if(carregarDados('clientes').length === 0) salvarDados('clientes', []);
-}
-
-// ✅ FUNÇÃO NOVA: Carrega produtos cadastrados pelo atendente
-function carregarProdutosLoja() {
+// ✅ FUNÇÃO CORRIGIDA: Carrega produtos diretamente do Firebase
+async function carregarProdutosLoja() {
     const container = document.getElementById('lista-produtos');
-    const produtos = carregarDados('produtos') || [];
-    const produtosDisponiveis = produtos.filter(p => p.disponivel === true);
+    try {
+        const produtos = await carregarDados('produtos');
+        const produtosDisponiveis = produtos.filter(p => p.disponivel === true);
 
-    if(produtosDisponiveis.length === 0) {
-        container.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhum produto cadastrado ou disponível no momento.</p>';
-        return;
-    }
+        if(produtosDisponiveis.length === 0) {
+            container.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhum produto cadastrado ou disponível no momento.</p>';
+            return;
+        }
 
-    let html = '';
-    produtosDisponiveis.forEach((p, index) => {
-        const numeroImagem = (index + 1);
-        const linkImagem = eval(`LINK${numeroImagem}`);
-        
-        html += `
-        <div class="border rounded-xl p-5 hover:shadow-md">
-            <div class="codigo-produto">${String(index + 1).padStart(3, '0')}</div>
-            <img src="${linkImagem}" alt="${p.nome}" class="img-produto">
-            <h3 class="font-bold nome-produto">${p.nome}</h3>
-            <p class="text-gray-600 text-sm mb-2">${p.descricao || ''}</p>
-            <div class="flex justify-between items-center">
-                <span class="font-bold text-green-600 text-lg">${formatarMoeda(p.preco)}</span>
-                <div class="caixa-botoes">
-                    <button onclick="adicionarItem('${p.id}', '${p.nome.replace(/'/g, "\\'")}', ${p.preco})" class="btn-adicionar">+ Adicionar</button>
+        let html = '';
+        produtosDisponiveis.forEach((p, index) => {
+            const numeroImagem = (index + 1);
+            const linkImagem = eval(`LINK${numeroImagem}`) || 'https://i.postimg.cc/VvLMVFgG/IMG-20260518-085339-(2).webp';
+            
+            html += `
+            <div class="border rounded-xl p-5 hover:shadow-md">
+                <div class="codigo-produto">${String(index + 1).padStart(3, '0')}</div>
+                <img src="${linkImagem}" alt="${p.nome}" class="img-produto">
+                <h3 class="font-bold nome-produto">${p.nome}</h3>
+                <p class="text-gray-600 text-sm mb-2">${p.descricao || ''}</p>
+                <div class="flex justify-between items-center">
+                    <span class="font-bold text-green-600 text-lg">${formatarMoeda(p.preco)}</span>
+                    <div class="caixa-botoes">
+                        <button onclick="adicionarItem('${p.id}', '${p.nome.replace(/'/g, "\\'")}', ${p.preco})" class="btn-adicionar">+ Adicionar</button>
+                    </div>
                 </div>
-            </div>
-        </div>`;
-    });
+            </div>`;
+        });
 
-    container.innerHTML = html;
+        container.innerHTML = html;
+    } catch (erro) {
+        container.innerHTML = '<p class="text-red-500 text-center py-4">Erro ao carregar produtos.</p>';
+    }
 }
 
 function adicionarItem(id, nome, preco) {
-    const carrinho = carregarDados('carrinho');
+    const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
     const itemExistente = carrinho.find(i => i.id === id);
     
     if (itemExistente) {
@@ -603,12 +599,12 @@ function adicionarItem(id, nome, preco) {
         carrinho.push({id, nome, preco, quantidade: 1});
     }
     
-    salvarDados('carrinho', carrinho);
+    localStorage.setItem('carrinho', JSON.stringify(carrinho));
     atualizarCarrinho();
 }
 
 function atualizarCarrinho() {
-    const carrinho = carregarDados('carrinho');
+    const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
     const container = document.getElementById('carrinho-itens');
     const totalEl = document.getElementById('carrinho-total');
     const nomeInfo = document.getElementById('nome-cliente-info');
@@ -646,7 +642,7 @@ function atualizarCarrinho() {
 }
 
 function alterarQuantidade(id, delta) {
-    const carrinho = carregarDados('carrinho');
+    const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
     const item = carrinho.find(i => i.id === id);
     if (!item) return;
 
@@ -655,24 +651,25 @@ function alterarQuantidade(id, delta) {
         const index = carrinho.indexOf(item);
         carrinho.splice(index, 1);
     }
-    salvarDados('carrinho', carrinho);
+    localStorage.setItem('carrinho', JSON.stringify(carrinho));
     atualizarCarrinho();
 }
 
 function removerItemTodo(id) {
-    const carrinho = carregarDados('carrinho');
+    const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
     const novaLista = carrinho.filter(i => i.id !== id);
-    salvarDados('carrinho', novaLista);
+    localStorage.setItem('carrinho', JSON.stringify(novaLista));
     atualizarCarrinho();
 }
 
-function carregarMeusPedidos() {
-    const pedidos = carregarDados('pedidos');
-    const container = document.getElementById('lista-meus-pedidos');
-    const pedidosAtivos = pedidos.filter(p => p.status !== 'Entregue');
+async function carregarMeusPedidos() {
+    try {
+        const pedidos = await carregarDados('pedidos');
+        const container = document.getElementById('lista-meus-pedidos');
+        const pedidosAtivos = pedidos.filter(p => p.status !== 'Entregue');
 
-    if(pedidosAtivos.length === 0) { 
-        container.innerHTML = '<div class="text-center text-gray-400 py-6"><i class="fa fa-shopping-bag text-4xl mb-2"></i><p>Nenhum pedido pendente ou em andamento.</p></div>'; 
+        if(pedidosAtivos.length === 0) { 
+            container.innerHTML = '<div class="text-center text-gray-400 py-6"><i class="fa fa-shopping-bag text-4xl mb-2"></i><p>Nenhum pedido pendente ou em andamento.</p></div>'; 
         return; 
     }
     
@@ -692,6 +689,9 @@ function carregarMeusPedidos() {
 `;
         container.appendChild(div);
     });
+    } catch (erro) {
+        document.getElementById('lista-meus-pedidos').innerHTML = '<p class="text-red-500 text-center py-4">Erro ao carregar seus pedidos.</p>';
+    }
 }
 
 </script>
