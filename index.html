@@ -309,7 +309,6 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
     </div>
 
     <div id="fundoEscuro" onclick="fecharMenu()" class="fixed inset-0 bg-black/70 z-40 hidden"></div>
-
     <section class="container mx-auto p-4 pt-44 pb-20">
         <div class="bg-blue-50 border-l-4 border-yellow-500 p-4 rounded-lg mb-8 text-center">
             <p class="text-blue-800 font-medium">👋 Olá! Faça seu pedido ou clique no <b>menu</b> para navegar.</p>
@@ -635,7 +634,8 @@ async function atualizarCarrinho() {
             <div>
                 <span class="texto-forte">${item.nome || `Produto ${item.id}`}</span>
                 <div class="text-sm text-gray-400">
-                    <button onclick="alterarQuantidade('${item.id}', -1)" class="text-blue-400">-</button>
+                    <button onclick="alterarQuantidade('
+${item.id}', -1)" class="text-blue-400">-</button>
                     ${item.quantidade}
                     <button onclick="alterarQuantidade('${item.id}', 1)" class="text-blue-400">+</button>
                     <span class="ml-2">x ${formatarMoeda(item.preco)}</span>
@@ -702,5 +702,4 @@ async function carregarMeusPedidos() {
 </script>
 
 </body>
-
 </html>
