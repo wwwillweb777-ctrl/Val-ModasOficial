@@ -395,13 +395,13 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
 
     // ✅ CONFIGURAÇÃO DO FIREBASE
     const firebaseConfig = {
-      apiKey: "AIzaSyDUgHEX610xqLmEmM6F_d0sOzbYxLLxT8w",
-      authDomain: "willobras.firebaseapp.com",
-      databaseURL: "https://willobras-default-rtdb.firebaseio.com",
-      projectId: "willobras",
-      storageBucket: "willobras.firebasestorage.app",
-      messagingSenderId: "66370500400",
-      appId: "1:66370500400:web:42d6569ca2c8172ddf3af5"
+      apiKey: "AIzaSyCYd655rBu8_UfwGtYWDgRzdtAw-UAR9Qg",
+      authDomain: "val-modas.firebaseapp.com",
+      databaseURL: "https://val-modas-default-rtdb.firebaseio.com",
+      projectId: "val-modas",
+      storageBucket: "val-modas.firebasestorage.app",
+      messagingSenderId: "1060099036181",
+      appId: "1:1060099036181:web:e677b3b6ae0ce1a499aa1c"
     };
 
     // Inicializa Firebase
@@ -584,7 +584,7 @@ async function carregarProdutosLoja() {
             <div class="codigo-produto">${String(index + 1).padStart(3, '0')}</div>
             <img src="${linkImagem}" alt="${p.nome}" class="img-produto">
             <h3 class="font-bold nome-produto">${p.nome}</h3>
-            <p class="text-gray-600 text-sm mb-2">${p.descricao || ''}</p>
+            <p class="text-gray-400 text-sm mb-2">${p.descricao || ''}</p>
             <div class="flex justify-between items-center">
                 <span class="font-bold text-green-600 text-lg">${formatarMoeda(p.preco)}</span>
                 <div class="caixa-botoes">
@@ -634,8 +634,7 @@ async function atualizarCarrinho() {
             <div>
                 <span class="texto-forte">${item.nome || `Produto ${item.id}`}</span>
                 <div class="text-sm text-gray-400">
-                    <button onclick="alterarQuantidade('
-${item.id}', -1)" class="text-blue-400">-</button>
+                    <button onclick="alterarQuantidade('${item.id}', -1)" class="text-blue-400">-</button>
                     ${item.quantidade}
                     <button onclick="alterarQuantidade('${item.id}', 1)" class="text-blue-400">+</button>
                     <span class="ml-2">x ${formatarMoeda(item.preco)}</span>
@@ -703,3 +702,4 @@ async function carregarMeusPedidos() {
 
 </body>
 </html>
+
