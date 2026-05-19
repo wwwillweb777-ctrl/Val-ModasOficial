@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+
+        /* ✅ FUNDO TOTALMENTE PRETO */
+        body { line-height: 1.6; background-color: #000000 !important; color: #ffffff !important; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        .shadow { box-shadow: 0 4px 6px -1px rgba(255,255,255,0.1), 0 2px 4px -1px rgba(255,255,255,0.06); }
+        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(255,255,255,0.1), 0 4px 6px -2px rgba(255,255,255,0.05); }
+        .rounded-xl { border-radius: 0.75rem; } .rounded-2xl { border-radius: 1rem; }
+        .transition { transition: all 0.1s ease; }
+
+        /* ✅ CORES DE FUNDO AJUSTADAS PARA TEMA PRETO */
+        .bg-blue-50 { background-color: #1a1a1a !important; } 
+        .bg-green-50 { background-color: #1a1a1a !important; } 
+        .bg-purple-50 { background-color: #1a1a1a !important; }
+        .bg-yellow-100 { background-color: #2b2b2b !important; } 
+        .bg-green-100 { background-color: #1a1a1a !important; } 
+        .bg-blue-100 { background-color: #1a1a1a !important; } 
+        .bg-red-100 { background-color: #2b2b2b !important; }
+
+        /* ✅ TODOS OS TEXTOS BRANCOS */
+        .text-yellow-800 { color: #FFD700 !important; } 
+        .text-green-800 { color: #ffffff !important; } 
+        .text-blue-800 { color: #ffffff !important; } 
+        .text-red-800 { color: #ffffff !important; }
+        h1, h2, h3, h4, h5, h6 { color: #FFD700 !important; } /* Apenas títulos dourados */
+        p, span, div, label, input, select, textarea { color: #ffffff !important; }
+
+        a { text-decoration: none; } nav a { transition: background-color 0.1s; }
+
+        ::-webkit-scrollbar { width: 6px; } 
+        ::-webkit-scrollbar-track { background: #1a1a1a; } 
+        ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+
+        /* ✅ Estilo da lixeira */
+        .lixeira {
+            color: #ef4444 !important;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 8px;
+            transition: color 0.2s;
+        }
+        .lixeira:hover {
+            color: #dc2626 !important;
+        }
+
+        /* ✅ Botões dentro de caixa - CORES AZUL E VERMELHO CONFORME PEDIDO */
+        .caixa-botoes {
+            background-color: #1f2937 !important;
+            padding: 10px;
+            border-radius: 0.75rem;
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            box-shadow: inset 1px 2px rgba(255,255,255,0.05);
+        }
+
+        .btn-adicionar {
+            background-color: #2563eb !important; /* Azul forte */
+            color: #ffffff !important;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.1s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .btn-adicionar:active {
+            background-color: #dc2626 !important; /* Vermelho forte */
+            color: #ffffff !important;
+            transform: scale(0.96);
+        }
+
+        .btn-qtd {
+            background-color: #374151 !important;
+            color: #ffffff !important;
+            width: 26px;
+            height: 26px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            font-weight: bold;
+        }
+        .btn-qtd:active {
+            background-color: #dc2626 !important; /* Vermelho forte */
+            color: #ffffff !important;
+        }
+
+        .btn-finalizar {
+            background-color: #2563eb !important; /* Azul */
+            color: #ffffff !important;
+            padding: 12px;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            border: none;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        .btn-finalizar:hover {
+            background-color: #1d4ed8 !important;
+        }
+
+        /* ✅ Cor branca para nome e valores */
+        .texto-forte {
+            color: #ffffff !important;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .valor-forte {
+            color: #ffffff !important;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .nome-produto {
+            font-size: 1rem !important;
+            color: #ffffff !important;
+        }
+
+        /* ✅ Estilos do Formulário */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8) !important;
+            padding-top: 60px;
+        }
+
+        .modal-conteudo {
+            background-color: #1f2937 !important;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #4b5563 !important;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+        }
+
+        .fechar {
+            color: #ffffff !important;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .fechar:hover,
+        .fechar:focus {
+            color: #FFD700 !important;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #ffffff !important;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #4b5563 !important;
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: #374151 !important;
+            color: #ffffff !important;
+        }
+
+        .btn-enviar {
+            background-color: #2563eb !important;
+            color: white !important;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .btn-enviar:hover {
+            background-color: #1d4ed8 !important;
+        }
+
+        /* ✅ Cabeçalho configurado: cor azul, imagem centralizada e fixa - INTACTO CONFORME PEDIDO */
+        .cabecalho-nosso {
+            background: url('https://i.postimg.cc/VvLMVFgG/IMG-20260518-085339-(2).webp') no-repeat center center;
+            background-color: #005bcc;
+            background-size: 100% 100%;
+            background-position: center;
+            height: 180px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            padding-left: 1rem;
+            border-bottom: none;
+        }
+
+        /* ✅ CONFIGURAÇÕES DE IMAGEM - TAMANHO, PROPORÇÃO E AJUSTES (TUDO IGUAL AO ANTERIOR) */
+        .img-produto {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            object-position: center !important;
+            border-radius: 8px !important;
+            margin-bottom: 8px !important;
+            background-color: #f3f4f6 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+            border: none !important;
+            min-height: 280px !important;
+        }
+
+        .codigo-produto {
+            font-size: 0.75rem !important;
+            font-weight: 600 !important;
+            color: #6b7280 !important;
+            letter-spacing: 1px !important;
+            margin-bottom: 0.25rem !important;
+        }
+
+        .bg-gray-50 {
+            background-color: #000000 !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- ##########################################################################
+     🟩🟩🟩 ÁREA DE LINKS DAS IMAGENS - CONFIGURAÇÃO ORIGINAL 🟩🟩🟩
+     ########################################################################## -->
+<script>
+const LINK1 = "https://i.postimg.cc/rs5Q48sf/IMG-20260517-WA0026-(1).jpg"; // ← COLE SEU LINK AQUI
+const LINK2 = ""; // ← COLE SEU LINK AQUI
+const LINK3 = ""; // ← COLE SEU LINK AQUI
+const LINK4 = ""; // ← COLE SEU LINK AQUI
+const LINK5 = ""; // ← COLE SEU LINK AQUI
+const LINK6 = ""; // ← COLE SEU LINK AQUI
+const LINK7 = ""; // ← COLE SEU LINK AQUI
+const LINK8 = ""; // ← COLE SEU LINK AQUI
+const LINK9 = ""; // ← COLE SEU LINK AQUI
+const LINK10 = ""; // ← COLE SEU LINK AQUI
+</script>
+<!-- ##########################################################################
+     🟩🟩🟩 FIM DA ÁREA DE LINKS 🟩🟩🟩
+     ########################################################################## -->
+
+    <header class="cabecalho-nosso">
+        <div class="container mx-auto flex justify-between items-center w-full">
+            <button onclick="abrirMenu()" class="text-2xl text-white">
+                <i class="fa fa-bars"></i>
+            </button>
+            <h1 class="font-bold text-lg text-white"></h1>
+            <div></div>
+        </div>
+    </header>
+
+    <div id="menuLateral" class="fixed top-0 left-0 h-full w-4/5 bg-blue-900/80 text-white shadow-2xl transform -translate-x-full transition-transform duration-100 z-50 p-6">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="font-bold text-xl text-yellow-400">Menu</h2>
+            <button onclick="fecharMenu()" class="text-xl text-white">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <nav class="flex flex-col gap-3">
+            <a href="index.html" class="py-3 px-4 rounded-lg bg-white/20 font-medium text-center text-white hover:bg-yellow-500/30" onclick="fecharMenu()">🏠 Loja da Val 🛍️🛒</a>
+            <a href="#meusPedidos" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="fecharMenu()">📋 Meus Pedidos</a>
+            <a href="#" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="fecharMenu()">👤 Área do Cliente</a>
+            <hr class="border-white/30 my-2">
+            
+            <!-- ✅ Área do Caixa / Atendente - COM SENHA: Deus321 -->
+            <a href="#" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="verificarSenhaAtendente('atendente.html')">🔐🖥️ Caixa Registradora</a>
+            <!-- ✅ Administração -->
+            <a href="#" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="verificarSenhaAdmin('admin.html')">🔐 Administração</a>
+        </nav>
+    </div>
+
+    <div id="fundoEscuro" onclick="fecharMenu()" class="fixed inset-0 bg-black/70 z-40 hidden"></div>
+
+    <section class="container mx-auto p-4 pt-44 pb-20">
+        <div class="bg-blue-50 border-l-4 border-yellow-500 p-4 rounded-lg mb-8 text-center">
+            <p class="text-blue-800 font-medium">👋 Olá! Faça seu pedido ou clique no <b>menu</b> para navegar.</p>
+        </div>
+
+        <div class="bg-white/5 rounded-2xl shadow-lg p-6 mb-10 border border-gray-800">
+            <h2 class="text-2xl font-bold text-yellow-500 mb-6 text-center">Nossos Produtos 🛍️✨</h2>
+            <div id="lista-produtos" class="space-y-4">
+                <!-- ✅ AQUI VÃO SER CARREGADOS OS PRODUTOS DO ATENDENTE DINAMICAMENTE -->
+                <p class="text-gray-500 text-center py-4">Carregando produtos...</p>
+             </div>
+        </div>
+
+        <div class="bg-white/5 rounded-2xl shadow-xl p-6 mb-10 border border-gray-800">
+    <h3 class="text-xl font-bold text-yellow-500 mb-4">🛒 Seu Pedido</h3>
+    <div id="carrinho-itens" class="mb-4 text-gray-300">Nenhum item adicionado ainda.</div>
+    <div class="text-right text-xl font-bold mb-4">Total: R$ <span id="carrinho-total" class="valor-forte">0,00</span></div>
+    <div id="nome-cliente-info" class="text-sm text-gray-300 mb-3 text-right"></div>
+    <button onclick="abrirFormulario()" class="btn-finalizar">Finalizar Pedido</button>
+</div>
+
+<div id="meusPedidos" class="bg-white/5 rounded-2xl shadow-lg p-6 border border-gray-800">
+    <h2 class="text-2xl font-bold text-yellow-500 mb-6 text-center">📋 Meus Pedidos</h2>
+    <div id="lista-meus-pedidos" class="space-y-4">
+        <div class="text-center text-gray-400 py-6">
+            <i class="fa fa-shopping-bag text-4xl mb-2"></i>
+            <p>Nenhum pedido pendente ou em andamento.</p>
+        </div>
+    </div>
+</div>
+
+</section>
+
+<!-- ✅ FORMULÁRIO MODAL -->
+<div id="formularioModal" class="modal">
+    <div class="modal-conteudo">
+        <span class="fechar">&times;</span>
+        <h2 class="text-xl font-bold text-center text-yellow-500 mb-4">Informações de Entrega</h2>
+        
+        <div class="form-group">
+            <label for="nome">Nome Completo *</label>
+            <input type="text" id="nome" required>
+        </div>
+
+        <div class="form-group">
+            <label for="cidade">Cidade *</label>
+            <input type="text" id="cidade" required>
+        </div>
+
+        <div class="form-group">
+            <label for="rua">Rua / Avenida *</label>
+            <input type="text" id="rua" required>
+        </div>
+
+        <div class="form-group">
+            <label for="numero">Número *</label>
+            <input type="text" id="numero" required>
+        </div>
+
+        <div class="form-group">
+            <label for="tipo_imovel">Tipo de Residência *</label>
+            <select id="tipo_imovel" required>
+                <option value="">Selecione...</option>
+                <option value="Casa">Casa</option>
+                <option value="Apartamento">Apartamento</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="ponto_referencia">Ponto de Referência</label>
+            <input type="text" id="ponto_referencia" placeholder="Ex: Próximo ao mercado, esquina, etc.">
+        </div>
+
+        <div class="form-group">
+            <label for="whatsapp">WhatsApp para Contato *</label>
+            <input type="tel" id="whatsapp" placeholder="(31) 9XXXX-XXXX" required>
+        </div>
+
+        <button id="btnEnviarPedido" class="btn-enviar">Enviar Pedido pelo WhatsApp</button>
+    </div>
+</div>
+
+<script>
+
+    // ✅ SENHAS DE ACESSO E CONFIGURAÇÕES
+    const SENHA_ATENDENTE = "Deus321";
+    const SENHA_ADMIN = "WJ@321";
+    const NUMERO_MENSAGENS = "5531990721928"; // 📩 Para este número vai só a mensagem: Boa noite!
+
+    function salvarDados(chave, dados) { localStorage.setItem(chave, JSON.stringify(dados)); }
+    function carregarDados(chave) { const d = localStorage.getItem(chave); return d ? JSON.parse(d) : []; }
+    function formatarMoeda(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+
+    function abrirMenu() { document.getElementById('menuLateral').classList.remove('-translate-x-full'); document.getElementById('fundoEscuro').classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    function fecharMenu() { document.getElementById('menuLateral').classList.add('-translate-x-full'); document.getElementById('fundoEscuro').classList.add('hidden'); document.body.style.overflow='auto'; }
+
+    function verificarSenhaAtendente(pagina) {
+        const senhaInformada = prompt("🔐 Digite a senha da Área do Caixa:");
+        fecharMenu();
+        if (senhaInformada === null) return;
+        if (senhaInformada === SENHA_ATENDENTE) {
+            window.location.href = pagina;
+        } else {
+            alert("❌ Senha incorreta!");
+        }
+    }
+
+    function verificarSenhaAdmin(pagina) {
+        const senhaInformada = prompt("🔐 Digite a senha de Administração:");
+        fecharMenu();
+        if (senhaInformada === null) return;
+        if (senhaInformada === SENHA_ADMIN) {
+            window.location.href = pagina;
+        } else {
+            alert("❌ Senha incorreta!");
+        }
+    }
+
+    const modal = document.getElementById("formularioModal");
+    const spanFechar = document.getElementsByClassName("fechar")[0];
+
+    function abrirFormulario() {
+        const carrinho = carregarDados('carrinho');
+        if(carrinho.length === 0) { 
+            alert('Adicione itens ao carrinho primeiro!'); 
+            return; 
+        }
+        modal.style.display = "block";
+    }
+
+    spanFechar.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    document.getElementById("btnEnviarPedido").addEventListener("click", function() {
+        const nome = document.getElementById('nome').value.trim();
+        const cidade = document.getElementById('cidade').value.trim();
+        const rua = document.getElementById('rua').value.trim();
+        const numero = document.getElementById('numero').value.trim();
+        const tipoImovel = document.getElementById('tipo_imovel').value;
+        const referencia = document.getElementById('ponto_referencia').value.trim();
+        const whatsapp = document.getElementById('whatsapp').value.trim();
+
+        // Validação básica
+        if (!nome || !cidade || !rua || !numero || !tipoImovel || !whatsapp) {
+            alert("⚠️ Preencha todos os campos obrigatórios!");
+            return;
+        }
+
+        // Dados do Pedido
+        const carrinho = carregarDados('carrinho');
+        const total = carrinho.reduce((s,i)=>s + (i.preco * i.quantidade),0);
+        
+        let listaItens = "";
+        carrinho.forEach(item => {
+            listaItens += `➡️ ${item.quantidade}x ${item.nome} - ${formatarMoeda(item.preco * item.quantidade)}\n`;
+        });
+
+        // ✅ REGRA PRINCIPAL:
+        // 1. Para o número 31990721928 -> SOMENTE mensagem de Boa noite
+        const mensagemApenasAgradecimento = `Boa noite! Recebemos seu pedido, em breve entraremos em contato.`;
+
+        // 🔗 Link APENAS com mensagem de boa noite
+        const linkMensagemSimples = `https://wa.me/${NUMERO_MENSAGENS}?text=${mensagemApenasAgradecimento}`;
+
+        // ✅ NÃO ENVIA MAIS DADOS POR WHATSAPP. DADOS FICAM SOMENTE NA ÁREA ADMINISTRATIVA (VARIÁVEIS)
+
+        // ✅ SALVA TODOS OS DADOS NO SISTEMA (ÁREA ADMINISTRATIVA) - INCLUSIVE O NÚMERO DO CLIENTE
+        const clientes = carregarDados('clientes');
+        const clienteExistente = clientes.find(c => c.whatsapp === whatsapp);
+        if (!clienteExistente) {
+            clientes.push({
+                id: Date.now().toString(),
+                nome: nome,
+                whatsapp: whatsapp, // ✅ SALVA O NÚMERO DIGITADO PELO CLIENTE
+                cidade: cidade,
+                endereco: `${rua}, ${numero} - ${tipoImovel}`,
+                referencia: referencia,
+                data_cadastro: new Date().toLocaleString('pt-BR')
+            });
+            salvarDados('clientes', clientes);
+        }
+
+        // Salva o pedido completo no sistema
+        const novoPedido = {
+            id: Date.now().toString(),
+            data: new Date().toLocaleString('pt-BR'),
+            itens: carrinho,
+            status: 'Pendente',
+            total: total,
+            cliente_nome: nome,
+            cliente_endereco: `${rua}, ${numero} - ${tipoImovel}. ${referencia}`,
+            cliente_cidade: cidade,
+            cliente_whatsapp: whatsapp, // ✅ NÚMERO DO CLIENTE SALVO PARA APARECER NA TELA ADMIN
+            atendente_nome: null,
+            observacao: '',
+            baixa_feita: false
+        };
+
+        const pedidos = carregarDados('pedidos');
+        pedidos.push(novoPedido);
+        salvarDados('pedidos', pedidos);
+        salvarDados('carrinho', []);
+        atualizarCarrinho();
+        carregarMeusPedidos();
+
+        // ✅ ABRE SOMENTE A MENSAGEM DE BOA NOITE PARA O NÚMERO DEFINIDO
+        window.open(linkMensagemSimples, '_blank');
+
+        // Fecha o formulário e avisa
+        modal.style.display = "none";
+        alert(`✅ Pedido enviado com sucesso, ${nome}! Agora já aparece na administração.`	);
+    });
+
+document.addEventListener('DOMContentLoaded', () => {
+    iniciarDadosPadrao();
+    carregarProdutosLoja();
+    atualizarCarrinho();
+    carregarMeusPedidos();
+});
+
+function iniciarDadosPadrao() {
+    if(carregarDados('pedidos').length === 0) salvarDados('pedidos', []);
+    if(carregarDados('carrinho').length === 0) salvarDados('carrinho', []);
+    if(carregarDados('produtos').length === 0) salvarDados('produtos', []);
+    if(carregarDados('clientes').length === 0) salvarDados('clientes', []);
+}
+
+// ✅ FUNÇÃO NOVA: Carrega produtos cadastrados pelo atendente
+function carregarProdutosLoja() {
+    const container = document.getElementById('lista-produtos');
+    const produtos = carregarDados('produtos') || [];
+    const produtosDisponiveis = produtos.filter(p => p.disponivel === true);
+
+    if(produtosDisponiveis.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhum produto cadastrado ou disponível no momento.</p>';
+        return;
+    }
+
+    let html = '';
+    produtosDisponiveis.forEach((p, index) => {
+        const numeroImagem = (index + 1);
+        const linkImagem = eval(`LINK${numeroImagem}`);
+        
+        html += `
+        <div class="border rounded-xl p-5 hover:shadow-md">
+            <div class="codigo-produto">${String(index + 1).padStart(3, '0')}</div>
+            <img src="${linkImagem}" alt="${p.nome}" class="img-produto">
+            <h3 class="font-bold nome-produto">${p.nome}</h3>
+            <p class="text-gray-600 text-sm mb-2">${p.descricao || ''}</p>
+            <div class="flex justify-between items-center">
+                <span class="font-bold text-green-600 text-lg">${formatarMoeda(p.preco)}</span>
+                <div class="caixa-botoes">
+                    <button onclick="adicionarItem('${p.id}', '${p.nome.replace(/'/g, "\\'")}', ${p.preco})" class="btn-adicionar">+ Adicionar</button>
+                </div>
+            </div>
+        </div>`;
+    });
+
+    container.innerHTML = html;
+}
+
+function adicionarItem(id, nome, preco) {
+    const carrinho = carregarDados('carrinho');
+    const itemExistente = carrinho.find(i => i.id === id);
+    
+    if (itemExistente) {
+        itemExistente.quantidade += 1;
+    } else {
+        carrinho.push({id, nome, preco, quantidade: 1});
+    }
+    
+    salvarDados('carrinho', carrinho);
+    atualizarCarrinho();
+}
+
+function atualizarCarrinho() {
+    const carrinho = carregarDados('carrinho');
+    const container = document.getElementById('carrinho-itens');
+    const totalEl = document.getElementById('carrinho-total');
+    const nomeInfo = document.getElementById('nome-cliente-info');
+
+    if(carrinho.length === 0) {
+        container.innerHTML = 'Nenhum item adicionado ainda.';
+        totalEl.innerText = '0,00';
+        nomeInfo.innerHTML = '';
+        return;
+    }
+
+    let html = '';
+    let total = 0;
+    carrinho.forEach(item => {
+        const subtotal = item.preco * item.quantidade;
+        total += subtotal;
+        html += `
+        <div class="flex justify-between items-center py-2 border-b border-gray-700">
+            <div>
+                <span class="texto-forte">${item.nome || `Produto ${item.id}`}</span>
+                <div class="text-sm text-gray-400">
+                    <button onclick="alterarQuantidade('${item.id}', -1)" class="text-blue-400">-</button>
+                    ${item.quantidade}
+                    <button onclick="alterarQuantidade('${item.id}', 1)" class="text-blue-400">+</button>
+                    <span class="ml-2">x ${formatarMoeda(item.preco)}</span>
+                </div>
+            </div>
+            <span class="valor-forte">${formatarMoeda(subtotal)}</span>
+            <i class="fa fa-trash lixeira" onclick="removerItemTodo('${item.id}')" title="Remover item"></i>
+        </div>`;
+    });
+
+    container.innerHTML = html;
+    totalEl.innerText = total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+}
+
+function alterarQuantidade(id, delta) {
+    const carrinho = carregarDados('carrinho');
+    const item = carrinho.find(i => i.id === id);
+    if (!item) return;
+
+    item.quantidade += delta;
+    if (item.quantidade <= 0) {
+        const index = carrinho.indexOf(item);
+        carrinho.splice(index, 1);
+    }
+    salvarDados('carrinho', carrinho);
+    atualizarCarrinho();
+}
+
+function removerItemTodo(id) {
+    const carrinho = carregarDados('carrinho');
+    const novaLista = carrinho.filter(i => i.id !== id);
+    salvarDados('carrinho', novaLista);
+    atualizarCarrinho();
+}
+
+function carregarMeusPedidos() {
+    const pedidos = carregarDados('pedidos');
+    const container = document.getElementById('lista-meus-pedidos');
+    const pedidosAtivos = pedidos.filter(p => p.status !== 'Entregue');
+
+    if(pedidosAtivos.length === 0) { 
+        container.innerHTML = '<div class="text-center text-gray-400 py-6"><i class="fa fa-shopping-bag text-4xl mb-2"></i><p>Nenhum pedido pendente ou em andamento.</p></div>'; 
+        return; 
+    }
+    
+    container.innerHTML = '';
+    pedidosAtivos.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'border rounded-lg p-4';
+        div.innerHTML = `
+            <div class="flex justify-between items-center mb-2">
+    <span class="font-bold">Pedido #${p.id.slice(-4)}</span>
+    <span class="px-2 py-1 rounded text-sm ${p.status==='Pendente'?'bg-yellow-100 text-yellow-800':p.status==='Entregue'?'bg-green-100 text-green-800':'bg-red-100 text-red-800'}">${p.status}</span>
+</div>
+<p class="text-sm text-gray-400">Data: ${p.data}</p>
+<p class="text-sm text-gray-400">Cliente: ${p.cliente_nome}</p>
+<p class="text-sm text-gray-400">WhatsApp: ${p.cliente_whatsapp}</p>
+<p class="font-bold text-green-600">Total: ${formatarMoeda(p.total)}</p>
+`;
+        container.appendChild(div);
+    });
+}
+
+</script>
+
+</body>
+
+</html>
