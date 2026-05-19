@@ -7,9 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js"></script>
+    <!-- ✅ CHAVE DE ACESSO PELO ARQUIVO EXTERNO (IGUAL NOS OUTROS) -->
+    <script src="config.js"></script>
+
+    <!-- ✅ Versão do Firebase IGUAL nas 3 páginas (8.10.1) → garante funcionamento -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -234,30 +236,30 @@
     </section>
 
     <script>
-        // Configuração do Firebase
+        // ✅ CONFIGURAÇÃO DO FIREBASE USANDO A CHAVE DO ARQUIVO EXTERNO
         const firebaseConfig = {
-          apiKey: "AIzaSyDUgHEX610xqLmEmM6F_d0sOzbYxLLxT8w",
-          authDomain: "willobras.firebaseapp.com",
-          databaseURL: "https://willobras-default-rtdb.firebaseio.com",
-          projectId: "willobras",
-          storageBucket: "willobras.firebasestorage.app",
-          messagingSenderId: "66370500400",
-          appId: "1:66370500400:web:42d6569ca2c8172ddf3af5"
+          apiKey: window.MINHA_CHAVE,
+          authDomain: "val-modas.firebaseapp.com",
+          databaseURL: "https://val-modas-default-rtdb.firebaseio.com",
+          projectId: "val-modas",
+          storageBucket: "val-modas.firebasestorage.app",
+          messagingSenderId: "1060099036181",
+          appId: "1:1060099036181:web:e677b3b6ae0ce1a499aa1c"
         };
 
         // Inicializa Firebase
-        const app = firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.database();
 
-        // Funções Firebase
-        function salvarDadosFB(caminho, dados) {
-            return db.ref(caminho).set(dados);
+        // ✅ FUNÇÕES PADRONIZADAS COM AS OUTRAS PÁGINAS
+        function salvarDados(caminho, dados) { 
+            return db.ref(caminho).set(dados); 
         }
-
-        function carregarDadosFB(caminho) {
-            return db.ref(caminho).once('value').then(snap => snap.val() || []);
+        function carregarDados(caminho) { 
+            return db.ref(caminho).once('value').then(snap => snap.val() || []); 
         }
-
         function formatarMoeda(v) { 
             return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); 
         }
@@ -271,8 +273,7 @@
             itemParaRemover.style.opacity = '0';
             itemParaRemover.style.transform = 'translateX(-20px)';
 
-            setTimeout(async () => {
-                const dados = await carregarDadosFB(caminho);
+            setTimeout(async () => {                 const dados = await carregarDados(caminho);
                 let dadosAtualizados;
 
                 if(Array.isArray(dados)) {
@@ -281,13 +282,13 @@
                     dadosAtualizados = {};
                 }
 
-                await salvarDadosFB(caminho, dadosAtualizados);
+                await salvarDados(caminho, dadosAtualizados);
                 
                 carregarDadosAdmin();
                 carregarMovimentacoes();
                 carregarCadastrados();
                 carregarClientes();
-                                verificarListaVazia();
+                verificarListaVazia();
              }, 300);
         }
 
@@ -295,7 +296,7 @@
             if(!confirm('⚠️ CUIDADO! Você está prestes a APAGAR TODOS OS CLIENTES cadastrados. Essa ação é definitiva e não pode ser desfeita. Tem certeza absoluta?')) {
                 return;
             }
-            salvarDadosFB('clientes', []);
+            salvarDados('clientes', []);
             carregarClientes();
             alert('✅ Todos os dados de clientes foram apagados com sucesso!');
         }
@@ -307,21 +308,21 @@
             }
 
             const listaAtend = document.getElementById('lista-atendentes-cad');
-            carregarDadosFB('atendente_cadastro').then(atendentes => {
+            carregarDados('atendente_cadastro').then(atendentes => {
                 if(!atendentes || Object.keys(atendentes).length === 0) {
                     listaAtend.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum atendente cadastrado.</p>';
                 }
             });
 
             const listaProd = document.getElementById('lista-produtos-cad');
-            carregarDadosFB('produtos').then(produtos => {
+            carregarDados('produtos').then(produtos => {
                 if(produtos.length === 0) {
                     listaProd.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum produto cadastrado.</p>';
                 }
             });
 
             const listaCli = document.getElementById('lista-clientes');
-            carregarDadosFB('clientes').then(clientes => {
+            carregarDados('clientes').then(clientes => {
                 if(clientes.length === 0) {
                     listaCli.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum dado de cliente foi salvo ainda.</p>';
                 }
@@ -348,7 +349,7 @@
         });
 
         async function carregarDadosAdmin() {
-            const pedidos = await carregarDadosFB('pedidos');
+            const pedidos = await carregarDados('pedidos');
             const totalPedidos = pedidos.length;
             const pendentes = pedidos.filter(p => p.status === 'Pendente').length;
             const entregues = pedidos.filter(p => p.status === 'Entregue').length;
@@ -370,7 +371,7 @@
         }
 
         async function carregarMovimentacoes() {
-            const pedidos = await carregarDadosFB('pedidos');
+            const pedidos = await carregarDados('pedidos');
             const container = document.getElementById('lista-movimentacoes');
             
             if(pedidos.length === 0) {
@@ -398,7 +399,7 @@
         }
 
         async function carregarClientes() {
-            const clientes = await carregarDadosFB('clientes');
+            const clientes = await carregarDados('clientes');
             const container = document.getElementById('lista-clientes');
 
             if(clientes.length === 0) {
@@ -424,7 +425,7 @@
         }
 
         async function carregarCadastrados() {
-            const atendenteCad = await carregarDadosFB('atendente_cadastro');
+            const atendenteCad = await carregarDados('atendente_cadastro');
             const containerProd = document.getElementById('lista-atendentes-cad');
             
             if (atendenteCad && atendenteCad.nome) {
@@ -442,7 +443,7 @@
                 containerProd.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum atendente cadastrado.</p>';
             }
 
-            const produtos = await carregarDadosFB('produtos');
+            const produtos = await carregarDados('produtos');
             const containerAtend = document.getElementById('lista-produtos-cad');
             
             if (produtos.length > 0) {
