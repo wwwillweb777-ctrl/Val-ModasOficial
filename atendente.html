@@ -3,24 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atendente</title>
+    <title>Caixa Registradora</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     
-    <!-- ✅ Versão EXATA do Index -->
+    <!-- ✅ Versão do Firebase igual nas 3 páginas -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
-
-        body { line-height: 1.6; background-color: #000000 !important; color: #ffffff !important; }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        body { 
+            line-height: 1.6; 
+            background-color: #000000 !important; 
+            color: #ffffff !important; 
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 8px; }
         .shadow { box-shadow: 0 4px 6px -1px rgba(255,255,255,0.1), 0 2px 4px -1px rgba(255,255,255,0.06); }
         .shadow-lg { box-shadow: 0 10px 15px -3px rgba(255,255,255,0.1), 0 4px 6px -2px rgba(255,255,255,0.05); }
         .rounded-xl { border-radius: 0.75rem; } .rounded-2xl { border-radius: 1rem; }
-        .transition { transition: all 0.1s ease; }
+        .transition { transition: all 0.15s ease; }
 
         .bg-blue-50 { background-color: #1a1a1a !important; } 
         .bg-green-50 { background-color: #1a1a1a !important; } 
@@ -32,16 +34,13 @@
 
         .text-yellow-800 { color: #FFD700 !important; } 
         .text-green-800 { color: #ffffff !important; } 
-        .text-blue-800 { color: #ffffff !important; } 
+        .text-blue-800 { color: #ffffff !important; }
         .text-red-800 { color: #ffffff !important; }
         h1, h2, h3, h4, h5, h6 { color: #FFD700 !important; }
         p, span, div, label, input, select, textarea { color: #ffffff !important; }
 
-        a { text-decoration: none; } nav a { transition: background-color 0.1s; }
-
-        ::-webkit-scrollbar { width: 6px; } 
-        ::-webkit-scrollbar-track { background: #1a1a1a; } 
-        ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+        a { text-decoration: none; } nav a { transition: all 0.2s ease; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #1a1a1a; } ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
 
         .btn-menu {
             border: none !important;
@@ -59,53 +58,59 @@
             margin: 0 2px !important;
             pointer-events: auto !important;
             opacity: 1 !important;
-            transition: all 0.2s ease !important;
-        }
-        .btn-menu:active {
-            transform: scale(0.96) !important;
-            filter: brightness(0.85) !important;
         }
         .btn-azul {
             background-color: #2563eb !important;
             color: #ffffff !important;
         }
-        .btn-vendido {
-            background-color: #dc2626 !important;
+        .btn-azul-claro {
+            background-color: rgba(37, 99, 235, 0.25) !important;
             color: #ffffff !important;
         }
-        .btn-cancelar {
-            background-color: #16a34a !important;
-            color: #000000 !important;
-            border: 1px solid #000000 !important;
-        }
-        .btn-enviar {
-            background-color: #16a34a !important;
-            color: #ffffff !important;
-        }
-        .btn-cancelar-form {
-            background-color: #f59e0b !important;
-            color: #ffffff !important;
-        }
-        .btn-excluir {
+
+        .btn-sair {
             background-color: #dc2626 !important;
             color: #ffffff !important;
             border: none !important;
-        }
-        .btn-excluir:hover {
-            background-color: #b91c1c !important;
+            border-radius: 10px !important;
+            padding: 4px 12px !important;
+            font-size: 14px !important; 
+            font-weight: bold !important;
+            position: absolute !important;
+            top: 4px !important;
+            right: 12px !important;
+            height: 28px !important;
+            z-index: 10;
         }
 
-        .titulo-admin {
-            color: #ffd700 !important;
+        .titulo-atendente {
+            color: #FFD700 !important;
             -webkit-text-stroke: 0.5px #000000;
             text-stroke: 0.5px #000000;
             text-shadow: 
                 1px 1px 1px rgba(0, 0, 0, 0.4),
                 -0.5px -0.5px 0.5px rgba(0, 0, 0, 0.4),
-                0 0 3px #ffd700;
+                0 0 3px #FFD700;
             display: inline-block;
             padding: 2px 8px;
         }
+
+        .btn-acao {
+            border: none;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 2px;
+            transition: all 0.2s ease;
+        }
+        .btn-entregue { background-color: #16a34a; color: white; }
+        .btn-entregue:hover { background-color: #15803d; }
+        .btn-cancelar { background-color: #dc2626; color: white; }
+        .btn-cancelar:hover { background-color: #b91c1c; }
+        .btn-editar { background-color: #eab308; color: black; }
+        .btn-editar:hover { background-color: #ca8a04; }
 
         .btn-remover {
             background: transparent !important;
@@ -116,8 +121,7 @@
             padding: 2px !important;
         }
         .btn-remover:hover {
-            color: #666666 !important;
-            background: transparent !important;
+            color: #ef4444 !important;
         }
 
         .item-container {
@@ -125,464 +129,521 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 10px;
-            transition: opacity 0.3s ease;
+            transition: all 0.3s ease;
             font-size: 16px !important;
         }
-        .item-container p {
-            font-size: 16px !important;
+        .item-container p { font-size: 15px !important; }
+        .item-container .font-bold { font-size: 16px !important; }
+
+        .status-pendente { color: #f59e0b; font-weight: bold; }
+        .status-entregue { color: #10b981; font-weight: bold; }
+        .status-cancelado { color: #ef4444; font-weight: bold; }
+
+        .input-padrao {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: #1f2937;
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s;
         }
-        .item-container .font-bold {
-            font-size: 17px !important;
+        .input-padrao:focus {
+            border-color: #2563eb;
         }
 
-        .cabecalho {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            width: 100%; height: 160px;
-            background-color: #7e22ce;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 999999;
-            padding-top: 8px; padding-bottom: 16px;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            gap: 16px;
+        .btn-cadastrar {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-cadastrar:hover {
+            background-color: #1d4ed8;
         }
 
-        .titulo-principal {
-            width: 100%; text-align: center;
-            font-size: 28px; font-weight: bold;
-            display: flex; align-items: center; justify-content: center;
-            gap: 8px;
+        .filtro-ativo {
+            background-color: #2563eb !important;
+            color: white !important;
         }
-        .titulo-principal .texto {
-            color: #000 !important;
-            -webkit-text-stroke: 0.4px #fff;
-        }
-        .titulo-principal .emoji {
-            color: #ffd700;
-            text-shadow: 0 0 8px #ffd700;
-        }
-
-        .botoes-principais {
-            display: flex; align-items: center; justify-content: center;
-            width: 90%; gap: 20px;
-        }
-        .botao-principal {
-            flex: 1; height: 50px !important;
-            border: none; border-radius: 14px;
-            background-color: rgba(255,255,255,0.2);
-            color: #fff; font-size: 15px !important; font-weight: 600;
-            cursor: pointer; transition: all 0.2s ease;
-            display: flex; align-items: center; justify-content: center;
-            text-decoration: none;
-        }
-        .botao-principal:hover { background-color: rgba(255,255,255,0.35); transform: translateY(-2px); }
-        .botao-principal.ativo { background-color: #2563eb !important; }
-
-        .conteudo-principal {
-            height: calc(100vh - 160px);
-            overflow-y: auto;
-            margin-top: 160px;
-        }
-
-        .info-atendente {
-            position: fixed; top: 165px; left: 15px;
-            font-size: 16px; color: #000 !important;
-            z-index: 99999; display: flex; align-items: center; gap: 6px;
-        }
-        .info-atendente .cadeado { cursor: pointer; font-size: 17px; }
-
-        .modal {
-            display: none; position: fixed;
-            z-index: 1000; left: 0; top: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.8) !important;
-            padding-top: 60px;
-        }
-        .modal-conteudo {
-            background-color: #1f2937 !important;
-            margin: 5% auto; padding: 20px;
-            border: 1px solid #4b5563 !important;
-            width: 90%; max-width: 500px; border-radius: 12px;
-        }
-
-        .bg-gray-50 { background-color: #000 !important; }
     </style>
 </head>
 <body class="bg-gray-50">
+    <header class="bg-purple-700 text-white py-3 shadow-lg fixed w-full z-50 top-0 left-0">
+        <div class="container mx-auto relative">
+            <a href="index.html" class="btn-sair">Sair</a>
+            <h1 class="font-bold text-center mb-3 titulo-atendente" style="font-size: 22px !important;">💵 Caixa Registradora</h1>
 
-    <div class="info-atendente">
-        <span>Atendente: <strong id="nome-logado"></strong></span>
-        <span class="cadeado" onclick="abrirModalEdicao()">🔒</span>
-    </div>
-
-    <header class="cabecalho">
-        <h1 class="titulo-principal">
-            <span class="emoji">🤝</span>
-            <span class="texto">Atendente</span>
-        </h1>
-        <div class="botoes-principais">
-            <a href="index.html" class="botao-principal">🏠 Início</a>
-            <a href="javascript:;" id="btn-vendas" class="botao-principal ativo" onclick="abrirAba('vendas')">📦 Vendas</a>
-            <a href="javascript:;" id="btn-produtos" class="botao-principal" onclick="abrirAba('produtos')">🛒 Produtos</a>
+            <nav class="flex justify-center items-center flex-nowrap overflow-hidden">
+                <a href="javascript:;" id="btn-pedidos" class="btn-menu btn-azul" onclick="abrirAba('pedidos')">Pedidos</a>
+                <a href="javascript:;" id="btn-produtos" class="btn-menu btn-azul-claro" onclick="abrirAba('produtos')">Produtos</a>
+                <a href="javascript:;" id="btn-cadastrar-atendente" class="btn-menu btn-azul-claro" onclick="abrirAba('cadastrar-atendente')">Meu Cadastro</a>
+            </nav>
         </div>
     </header>
 
-    <div class="conteudo-principal">
-        <section class="container mx-auto p-4">
+    <section class="container mx-auto p-4 pt-32">
+        <!-- ABA PEDIDOS -->
+        <div id="aba-pedidos" class="aba-conteudo">
+            <div class="bg-white/5 rounded-2xl shadow p-5 mb-6 border border-gray-800">
+                <div class="flex flex-wrap gap-2 mb-5 justify-center">
+                    <button class="btn-menu btn-azul filtro-btn" data-filtro="todos" onclick="filtrarPedidos('todos')">Todos</button>
+                    <button class="btn-menu btn-azul-claro filtro-btn" data-filtro="Pendente" onclick="filtrarPedidos('Pendente')">Pendentes</button>
+                    <button class="btn-menu btn-azul-claro filtro-btn" data-filtro="Entregue" onclick="filtrarPedidos('Entregue')">Entregues</button>
+                    <button class="btn-menu btn-azul-claro filtro-btn" data-filtro="Cancelado" onclick="filtrarPedidos('Cancelado')">Cancelados</button>
+                </div>
 
-            <div id="tela-cadastro" class="bg-blue-50 rounded-2xl shadow p-6 mb-8 border border-gray-800">
-                <h2 class="text-xl font-bold text-yellow-500 mb-4 text-center">🔐 Acesso Restrito</h2>
-                <form onsubmit="verificarSenha(event)" class="space-y-3 p-4 bg-gray-800/50 rounded-lg max-w-md mx-auto">
-                    <input type="password" id="senha-acesso" placeholder="Digite a senha" class="w-full p-3 border border-gray-700 rounded-lg text-center text-lg font-bold bg-gray-900" required>
-                    <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition">Entrar</button>
-                </form>
+                <div id="lista-pedidos" class="space-y-4">
+                    <p class="text-gray-400 text-center py-6">Nenhum pedido recebido ainda.</p>
+                </div>
             </div>
+        </div>
 
-            <div id="conteudo-principal" class="hidden">
-                <div id="aba-vendas" class="aba-conteudo">
-                    <div class="bg-blue-50 rounded-2xl shadow p-6 mb-8 border border-gray-800">
-                        <h2 class="text-xl font-bold text-yellow-500 mb-6 text-center">📦 Pedidos para Atender</h2>
-                        <div id="lista-pedidos-atendente" class="space-y-5">
-                            <p class="text-gray-400 text-center py-4">Nenhum pedido pendente.</p>
-                        </div>
+        <!-- ABA PRODUTOS -->
+        <div id="aba-produtos" class="aba-conteudo hidden">
+            <div class="bg-white/5 rounded-2xl shadow p-5 mb-6 border border-gray-800">
+                <h2 class="text-lg font-bold text-yellow-500 mb-5 text-center">📦 Cadastrar Novo Produto</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Nome do Produto</label>
+                        <input type="text" id="prod-nome" class="input-padrao" placeholder="Ex: Camiseta Azul">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Preço (R$)</label>
+                        <input type="number" id="prod-preco" class="input-padrao" step="0.01" min="0" placeholder="0,00">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium mb-1">Descrição / Detalhes</label>
+                        <textarea id="prod-descricao" class="input-padrao" rows="3" placeholder="Informações adicionais, cor, tamanho, material..."></textarea>
                     </div>
                 </div>
 
-                <div id="aba-produtos" class="aba-conteudo hidden">
-                    <div class="bg-blue-50 rounded-2xl shadow p-6 border border-gray-800">
-                        <h2 class="text-xl font-bold text-yellow-500 mb-6 text-center">Gerenciar Cardápio</h2>
-                        <form id="form-produto" onsubmit="salvarProduto(event)" class="space-y-4 mb-8 p-4 bg-gray-800/50 rounded-xl">
-                            
-                            <!-- ✅ LINHA EXATA QUE VOCÊ PEDIU -->
-                            <input type="text" id="nome-prod" placeholder="Nome do produto" class="w-full p-4 border border-gray-700 rounded-xl text-lg bg-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
-                            
-                            <input type="number" id="preco-prod" step="0.01" placeholder="Preço (ex: 15.90)" class="w-full p-4 border border-gray-700 rounded-xl text-lg bg-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
-                            <textarea id="desc-prod" placeholder="Descrição do produto" class="w-full p-4 border border-gray-700 rounded-xl text-lg bg-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
-                            
-                            <!-- ✅ LINKS: OPCIONAIS - ENVIA VAZIO SE QUISER -->
-                            <script>
-                                const LINK1 = "";
-                                const LINK2 = "";
-                                const LINK3 = "";
-                                const LINK4 = "";
-                                const LINK5 = "";
-                                const LINK6 = "";
-                                const LINK7 = "";
-                                const LINK8 = "";
-                                const LINK9 = "";
-                                const LINK10 = "";
-                            </script>
+                <button onclick="cadastrarProduto()" class="btn-cadastrar w-full mb-10">💾 Salvar Produto</button>
 
-                            <div class="flex gap-3">
-                                <button type="submit" class="w-1/2 btn-menu btn-enviar py-4 rounded-xl font-bold text-lg">Enviar</button>
-                                <button type="reset" onclick="limparFormulario()" class="w-1/2 btn-menu btn-cancelar-form py-4 rounded-xl font-bold text-lg">Cancelar</button>
-                            </div>
-                        </form>
-
-                        <h3 class="font-bold text-xl mb-4 text-center text-yellow-500">Produtos Cadastrados</h3>
-                        <div id="lista-produtos-atendente" class="space-y-4 text-base"></div>
-                    </div>
+                <h2 class="text-lg font-bold text-yellow-500 mb-5 text-center">📋 Produtos Cadastrados</h2>
+                <div id="lista-produtos-cadastrados" class="space-y-3">
+                    <p class="text-gray-400 text-center py-4">Nenhum produto cadastrado.</p>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
 
-    <div id="modalEditar" class="modal" style="display: none;">
-        <div class="modal-conteudo">
-            <h3 class="font-bold text-lg mb-3 text-center text-yellow-500">Alterar Atendente</h3>
-            <input type="text" id="novo-nome-atendente" maxlength="50" placeholder="Digite o nome (máx 50 caracteres)" class="w-full p-3 border border-gray-700 rounded-lg mb-4 bg-gray-900" required>
-            <div class="flex gap-2">
-                <button onclick="salvarNovoNome()" class="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">Salvar</button>
-                <button onclick="fecharModalEdicao()" class="flex-1 bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-500 transition">Cancelar</button>
+        <!-- ABA MEU CADASTRO -->
+        <div id="aba-cadastrar-atendente" class="aba-conteudo hidden">
+            <div class="bg-white/5 rounded-2xl shadow p-5 mb-6 border border-gray-800">
+                <h2 class="text-lg font-bold text-yellow-500 mb-5 text-center">👤 Meu Cadastro de Atendente</h2>
+                
+                <div class="space-y-4 max-w-md mx-auto mb-8">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Seu Nome Completo</label>
+                        <input type="text" id="atend-nome" class="input-padrao" placeholder="Seu nome">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Contato / Telefone</label>
+                        <input type="text" id="atend-contato" class="input-padrao" placeholder="(31) 9XXXX-XXXX">
+                    </div>
+                </div>
+
+                <button onclick="salvarCadastroAtendente()" class="btn-cadastrar w-full max-w-md mx-auto block">💾 Salvar Meus Dados</button>
+
+                <div id="dados-cadastrados" class="mt-10 p-4 bg-purple-900/30 rounded-xl hidden">
+                    <h3 class="font-bold text-center mb-2 text-yellow-400">Dados Cadastrados</h3>
+                    <p class="text-center" id="info-nome"></p>
+                    <p class="text-center text-sm text-gray-300" id="info-contato"></p>
+                    <p class="text-center text-xs text-gray-400 mt-1" id="info-data"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL DE EDIÇÃO DE PEDIDO -->
+    <div id="modalEditar" class="modal fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-gray-900 rounded-2xl p-6 shadow-2xl border border-gray-700">
+            <h3 class="text-xl font-bold text-yellow-500 mb-4 text-center">✏️ Editar Pedido</h3>
+            
+            <input type="hidden" id="edit-pedido-id">
+            
+            <div class="space-y-3 mb-4">
+                <div>
+                    <label class="text-sm block mb-1">Status do Pedido</label>
+                    <select id="edit-status" class="input-padrao">
+                        <option value="Pendente">Pendente</option>
+                        <option value="Entregue">Entregue</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm block mb-1">Forma de Pagamento</label>
+                    <select id="edit-forma-pagamento" class="input-padrao">
+                        <option value="Dinheiro">Dinheiro</option>
+                        <option value="Cartão de Crédito">Cartão de Crédito</option>
+                        <option value="Cartão de Débito">Cartão de Débito</option>
+                        <option value="Pix">Pix</option>
+                        <option value="Transferência Bancária">Transferência Bancária</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm block mb-1">Observações</label>
+                    <textarea id="edit-observacao" class="input-padrao" rows="3" placeholder="Alterar observações do pedido..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex gap-2 justify-end mt-4">
+                <button onclick="fecharModalEditar()" class="btn-cancelar px-4 py-2 rounded-lg">Cancelar</button>
+                <button onclick="salvarEdicaoPedido()" class="btn-entregue px-4 py-2 rounded-lg">Salvar Alterações</button>
             </div>
         </div>
     </div>
 
-<script>
-    // ✅ CONFIGURAÇÃO DO FIREBASE - IGUAL EXATAMENTE AO INDEX
-    const firebaseConfig = {
-      apiKey: "AIzaSyCYd655rBu8_UfwGtYWDgRzdtAw-UAR9Qg",
-      authDomain: "val-modas.firebaseapp.com",
-      databaseURL: "https://val-modas-default-rtdb.firebaseio.com",
-      projectId: "val-modas",
-      storageBucket: "val-modas.firebasestorage.app",
-      messagingSenderId: "1060099036181",
-      appId: "1:1060099036181:web:e677b3b6ae0ce1a499aa1c"
-    };
+    <!-- ✅ SCRIPT DO FIREBASE E FUNÇÕES - 100% CORRIGIDO -->
+    <script>
+        // ✅ CONFIGURAÇÃO DO FIREBASE IGUAL NAS 3 PÁGINAS
+        const firebaseConfig = {
+            apiKey: "AIzaSyCYd655rBu8_UfwGtYWDgRzdtAw-UAR9Qg",
+            authDomain: "val-modas.firebaseapp.com",
+            databaseURL: "https://val-modas-default-rtdb.firebaseio.com",
+            projectId: "val-modas",
+            storageBucket: "val-modas.firebasestorage.app",
+            messagingSenderId: "1060099036181",
+            appId: "1:1060099036181:web:e677b3b6ae0ce1a499aa1c"
+        };
 
-    // ✅ INICIALIZAÇÃO OBRIGATÓRIA
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.database();
-
-    // ✅ SENHA IGUAL AO INDEX
-    const SENHA_ATENDENTE = "Deus321";
-
-    // ✅ FUNÇÕES DE CONEXÃO
-    function salvarDados(caminho, dados) { 
-        return db.ref(caminho).set(dados); 
-    }
-    function carregarDados(caminho) { 
-        return db.ref(caminho).once('value').then(snap => snap.val() || []); 
-    }
-    function formatarMoeda(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
-
-    // ✅ ESTRUTURA DO BANCO
-    async function iniciarDadosPadrao() {
-        if((await carregarDados('pedidos')).length === 0) await salvarDados('pedidos', []);
-        if((await carregarDados('carrinho')).length === 0) await salvarDados('carrinho', []);
-        if((await carregarDados('produtos')).length === 0) await salvarDados('produtos', []);
-        if((await carregarDados('clientes')).length === 0) await salvarDados('clientes', []);
-        if((await carregarDados('registros_atendentes')).length === 0) await salvarDados('registros_atendentes', []);
-    }
-
-    // ✅ REGISTRO DE HORÁRIOS
-    async function registrarHorario(acao, nome) {
-        const registros = await carregarDados('registros_atendentes') || [];
-        registros.push({
-            nome: nome,
-            acao: acao,
-            data_hora: new Date().toLocaleString('pt-BR')
-        });
-        salvarDados('registros_atendentes', registros);
-    }
-
-    // ✅ INICIALIZAÇÃO
-    document.addEventListener('DOMContentLoaded', async () => {
-        await iniciarDadosPadrao();
-        const logado = localStorage.getItem('atendente_logado');
-        if(logado) {
-            const dados = JSON.parse(logado);
-            document.getElementById('nome-logado').innerText = dados.nome;
-            document.getElementById('tela-cadastro').classList.add('hidden');
-            document.getElementById('conteudo-principal').classList.remove('hidden');
-            carregarPedidos();
-            carregarProdutos();
+        // Inicializa Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
-    });
+        const db = firebase.database();
 
-    // ✅ LOGIN
-    async function verificarSenha(e) {
-        e.preventDefault();
-        const senhaDigitada = document.getElementById('senha-acesso').value.trim();
-        if(senhaDigitada === SENHA_ATENDENTE) {
-            const nome = prompt("Acesso liberado!\nDigite seu nome:");
-            if(nome && nome.trim() !== "") {
-                const nomeFinal = nome.trim().substring(0, 50);
-                const dados = { nome: nomeFinal };
-                localStorage.setItem('atendente_logado', JSON.stringify(dados));
-                registrarHorario('ENTRADA', nomeFinal);
-                
-                document.getElementById('tela-cadastro').classList.add('hidden');
-                document.getElementById('conteudo-principal').classList.remove('hidden');
-                document.getElementById('nome-logado').innerText = nomeFinal;
-
-                carregarPedidos();
-                carregarProdutos();
-            }
-        } else {
-            alert("❌ Senha incorreta!");
-        }
-    }
-
-    // ✅ NAVEGAÇÃO
-    function abrirAba(nomeAba) {
-        document.querySelectorAll('.aba-conteudo').forEach(el => el.classList.add('hidden'));
-        document.getElementById(`aba-${nomeAba}`).classList.remove('hidden');
-
-        document.querySelectorAll('.botao-principal').forEach(btn => btn.classList.remove('ativo'));
-        document.getElementById(`btn-${nomeAba}`).classList.add('ativo');
-    }
-
-    // ✅ MODAL DE EDIÇÃO
-    function abrirModalEdicao() {
-        document.getElementById('modalEditar').style.display = 'flex';
-        document.getElementById('novo-nome-atendente').value = document.getElementById('nome-logado').innerText;
-        document.getElementById('novo-nome-atendente').focus();
-    }
-    function fecharModalEdicao() {
-        document.getElementById('modalEditar').style.display = 'none';
-    }
-    async function salvarNovoNome() {
-        const novoNome = document.getElementById('novo-nome-atendente').value.trim().substring(0, 50);
-        if(novoNome) {
-            const nomeAntigo = document.getElementById('nome-logado').innerText;
-            registrarHorario('SAÍDA', nomeAntigo);
-            registrarHorario('ENTRADA', novoNome);
-
-            const dados = { nome: novoNome };
-            localStorage.setItem('atendente_logado', JSON.stringify(dados));
-            document.getElementById('nome-logado').innerText = novoNome;
-            fecharModalEdicao();
-        }
-    }
-
-    // ✅ LIMPAR FORMULÁRIO
-    function limparFormulario() {
-        document.getElementById('nome-prod').value = '';
-        document.getElementById('preco-prod').value = '';
-        document.getElementById('desc-prod').value = '';
-    }
-
-    // ✅ SALVAR PRODUTO -> ENVIA PARA O FIREBASE -> INDEX LÊ
-    async function salvarProduto(e) {
-        e.preventDefault();
-        const nome = document.getElementById('nome-prod').value.trim();
-        const preco = parseFloat(document.getElementById('preco-prod').value);
-        const descricao = document.getElementById('desc-prod').value.trim();
-        
-        if(!nome || isNaN(preco)) {
-            alert("⚠️ Preencha nome e preço corretamente!");
-            return;
+        // ✅ FUNÇÕES CORRIGIDAS - AGORA OS BOTÕES DE SALVAR FUNCIONAM
+        function salvarDados(caminho, dados) {
+            return db.ref(caminho).set(dados);
         }
 
-        try {
-            const produtos = await carregarDados('produtos') || [];
-            produtos.push({ 
-                id: Date.now().toString(), 
-                nome: nome, 
-                preco: preco, 
-                descricao: descricao, 
-                disponivel: true,
-                link1: LINK1,
-                link2: LINK2,
-                link3: LINK3,
-                link4: LINK4,
-                link5: LINK5,
-                link6: LINK6,
-                link7: LINK7,
-                link8: LINK8,
-                link9: LINK9,
-                link10: LINK10
+        function carregarDados(caminho) {
+            return db.ref(caminho).once('value').then(snap => {
+                const valor = snap.val();
+                // ✅ CORREÇÃO CRUCIAL: SEMPRE retorna ARRAY, mesmo vazio, para usar .push() sem erros
+                if (!valor) return [];
+                if (Array.isArray(valor)) return valor.filter(Boolean);
+                return Object.values(valor);
             });
-            
-            await salvarDados('produtos', produtos);
-            limparFormulario();
-            carregarProdutos();
-            alert("✅ Produto cadastrado! Já aparece no Index.");
-        } catch (erro) {
-            alert("❌ Erro: " + erro.message);
-        }
-    }
-
-    // ✅ CARREGAR PRODUTOS DO BANCO
-    async function carregarProdutos() {
-        const container = document.getElementById('lista-produtos-atendente');
-        const produtos = await carregarDados('produtos') || [];
-
-        if(produtos.length === 0) {
-            container.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhum produto cadastrado.</p>';
-            return;
         }
 
-        let html = '';
-        produtos.forEach(p => {
-            html += `
-            <div class="p-4 border border-gray-700 rounded-xl bg-gray-800/50 shadow-sm item-container">
-                <div>
-                    <p class="font-bold text-lg text-white">${p.nome}</p>
-                    <p class="text-green-400 font-semibold">${formatarMoeda(p.preco)}</p>
-                    <p class="text-sm text-gray-300 mt-1">${p.descricao || 'Sem descrição'}</p>
-                    <span class="text-xs ${p.disponivel ? 'text-green-400' : 'text-red-400'} font-bold mt-2 inline-block">
-                        ${p.disponivel ? '✅ Disponível' : '❌ Indisponível'}
-                    </span>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <button onclick="alterarDisponibilidade('${p.id}')" class="btn-menu btn-azul text-xs px-2 py-1">
-                        ${p.disponivel ? 'Desativar' : 'Ativar'}
-                    </button>
-                    <button onclick="removerProdutoDefinitivo('${p.id}')" class="btn-menu btn-excluir text-xs px-2 py-1">
-                        Excluir
-                    </button>
-                </div>
-            </div>`;
+        function formatarMoeda(v) {
+            return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        // Controle de Abas
+        function abrirAba(nome) {
+            document.querySelectorAll('.aba-conteudo').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`aba-${nome}`).classList.remove('hidden');
+
+            document.querySelectorAll('.btn-menu').forEach(btn => {
+                btn.classList.remove('btn-azul');
+                btn.classList.add('btn-azul-claro');
+            });
+            document.getElementById(`btn-${nome}`).classList.remove('btn-azul-claro');
+            document.getElementById(`btn-${nome}`).classList.add('btn-azul');
+        }
+
+        // Variável global para filtro
+        let filtroAtual = 'todos';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarPedidos();
+            carregarProdutosCadastrados();
+            verificarCadastroAtendente();
+
+            // Atualiza dados em tempo real
+            db.ref('pedidos').on('value', () => {
+                carregarPedidos();
+            });
+            db.ref('produtos').on('value', () => {
+                carregarProdutosCadastrados();
+            });
         });
-        container.innerHTML = html;
-    }
 
-    async function alterarDisponibilidade(idProduto) {
-        const produtos = await carregarDados('produtos') || [];
-        const novos = produtos.map(p => p.id === idProduto ? {...p, disponivel: !p.disponivel} : p);
-        salvarDados('produtos', novos);
-        carregarProdutos();
-    }
+        // -------------------- GERENCIAMENTO DE PEDIDOS --------------------
+        async function carregarPedidos() {
+            const pedidos = await carregarDados('pedidos');
+            const container = document.getElementById('lista-pedidos');
 
-    async function removerProdutoDefinitivo(idProduto) {
-        if(!confirm('Tem certeza?')) return;
-        const produtos = await carregarDados('produtos') || [];
-        const filtrados = produtos.filter(p => p.id !== idProduto);
-        salvarDados('produtos', filtrados);
-        carregarProdutos();
-    }
-
-    // ✅ CARREGAR PEDIDOS DO BANCO
-    async function carregarPedidos() {
-        const container = document.getElementById('lista-pedidos-atendente');
-        const pedidos = await carregarDados('pedidos') || [];
-        const pedidosAtivos = pedidos.filter(p => p.status !== 'entregue' && p.status !== 'cancelado');
-
-        if(pedidosAtivos.length === 0) {
-            container.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhum pedido pendente.</p>';
-            return;
-        }
-
-        let html = '';
-        pedidosAtivos.forEach(p => {
-            const total = p.itens.reduce((soma, item) => soma + (item.preco * item.quantidade), 0);
-            html += `
-            <div class="p-5 border border-gray-700 rounded-2xl bg-gray-800/50 shadow-lg mb-4">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-bold text-lg text-yellow-500">Pedido #${p.id.slice(-4)}</h3>
-                    <span class="text-sm font-bold ${p.status === 'preparando' ? 'text-yellow-400' : 'text-blue-400'}">
-                        ${p.status.toUpperCase()}
-                    </span>
-                </div>
-                <p class="text-sm text-gray-300 mb-2">Cliente: ${p.cliente_nome || 'Não identificado'}</p>
-                <div class="pl-2 mb-3 border-l-2 border-purple-500">
-                    ${p.itens.map(i => `<p class="text-sm text-gray-200">${i.quantidade}x ${i.nome} - ${formatarMoeda(i.preco * i.quantidade)}</p>`).join('')}
-                </div>
-                <p class="font-bold text-right text-lg text-green-400 mb-3">Total: ${formatarMoeda(total)}</p>
-                <div class="flex flex-wrap gap-2 justify-end">
-                    <button onclick="confirmarVendido('${p.id}')" class="btn-menu btn-vendido">⚠️ Vendido</button>
-                    <button onclick="confirmarCancelado('${p.id}')" class="btn-menu btn-cancelar">Cancelar</button>
-                </div>
-            </div>`;
-        });
-        container.innerHTML = html;
-    }
-
-    function confirmarVendido(idPedido) {
-        const temDivergencia = confirm('✅ Pedido Vendido?\n\nHá divergência?');
-        atualizarStatus(idPedido, 'entregue', temDivergencia);
-    }
-
-    function confirmarCancelado(idPedido) {
-        if(confirm('❌ Cancelar pedido?')) {
-            atualizarStatus(idPedido, 'cancelado', false);
-        }
-    }
-
-    // ✅ ATUALIZA STATUS -> ENVIA PARA O FIREBASE -> INDEX ATUALIZA
-    async function atualizarStatus(idPedido, novoStatus, divergencia = false) {
-        const pedidos = await carregarDados('pedidos') || [];
-        const atualizados = pedidos.map(p => {
-            if (p.id === idPedido) {
-                return {
-                    ...p,
-                    status: novoStatus,
-                    possui_divergencia: divergencia,
-                    data_baixa: new Date().toLocaleString('pt-BR'),
-                    atendente_baixa: JSON.parse(localStorage.getItem('atendente_logado'))?.nome || 'Desconhecido'
-                };
+            if (pedidos.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-6">Nenhum pedido recebido ainda.</p>';
+                return;
             }
-            return p;
-        });
-        await salvarDados('pedidos', atualizados);
-        carregarPedidos();
+
+            // Aplica filtro
+            let pedidosFiltrados = pedidos;
+            if (filtroAtual !== 'todos') {
+                pedidosFiltrados = pedidos.filter(p => p.status === filtroAtual);
+            }
+
+            if (pedidosFiltrados.length === 0) {
+                container.innerHTML = `<p class="text-gray-400 text-center py-6">Nenhum pedido com status "${filtroAtual}".</p>`;
+                return;
+            }
+
+            // Ordena os mais novos primeiro
+            pedidosFiltrados.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+
+            container.innerHTML = '';
+            pedidosFiltrados.forEach(p => {
+                const classeStatus = p.status === 'Entregue' ? 'status-entregue' : p.status === 'Cancelado' ? 'status-cancelado' : 'status-pendente';
+
+                let listaItens = '';
+                if (p.itens && Array.isArray(p.itens)) {
+                    p.itens.forEach(item => {
+                        listaItens += `<p class="text-sm text-gray-300">• ${item.nome} <span class="text-gray-500">x${item.quantidade}</span> - ${formatarMoeda(item.preco * item.quantidade)}</p>`;
+                    });
+                }
+
+                container.innerHTML += `
+                <div class="bg-white/5 rounded-xl p-4 shadow border border-gray-800 item-container" data-id="${p.id}">
+                    <div class="w-full">
+                        <div class="flex flex-wrap justify-between items-start mb-2 gap-2">
+                            <h4 class="font-bold text-lg">Pedido #${p.id ? p.id.slice(-6) : ''}</h4>
+                            <span class="${classeStatus}">${p.status || 'Pendente'}</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                            <div>
+                                <p class="text-sm"><strong>Cliente:</strong> ${p.cliente_nome || 'Não informado'}</p>
+                                <p class="text-sm"><strong>Contato:</strong> ${p.cliente_whatsapp || 'Não informado'}</p>
+                                <p class="text-sm"><strong>Endereço:</strong> ${p.cliente_endereco || 'Não informado'}</p>
+                                <p class="text-sm text-xs text-gray-400"><strong>Ref:</strong> ${p.cliente_referencia || 'Sem referência'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm"><strong>Pagamento:</strong> ${p.forma_pagamento || 'A definir'}</p>
+                                <p class="text-sm"><strong>Observação:</strong> ${p.observacao || 'Nenhuma'}</p>
+                                <p class="text-sm text-yellow-500 font-bold text-lg mt-1">Total: ${formatarMoeda(p.total || 0)}</p>
+                                <p class="text-xs text-gray-500">Atendente: ${p.atendente_nome || 'Não identificado'}</p>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 p-2 bg-black/30 rounded-lg">
+                            <p class="text-sm font-medium mb-1">Itens do Pedido:</p>
+                            ${listaItens || '<p class="text-sm text-gray-400">Nenhum item encontrado</p>'}
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 justify-end border-t border-gray-700 pt-3">
+                            <button class="btn-acao btn-entregue" onclick="alterarStatusPedido('${p.id}', 'Entregue')">✅ Entregue</button>
+                            <button class="btn-acao btn-cancelar" onclick="alterarStatusPedido('${p.id}', 'Cancelado')">❌ Cancelar</button>
+                            <button class="btn-acao btn-editar" onclick="abrirModalEditarPedido('${p.id}')">✏️ Editar</button>
+                            <button class="btn-remover" onclick="removerItem('pedidos', '${p.id}', this)">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+        }
+
+        function filtrarPedidos(status) {
+            filtroAtual = status;
+            document.querySelectorAll('.filtro-btn').forEach(btn => {
+                btn.classList.remove('filtro-ativo', 'btn-azul');
+                btn.classList.add('btn-azul-claro');
+            });
+            event.target.classList.remove('btn-azul-claro');
+            event.target.classList.add('filtro-ativo', 'btn-azul');
+            carregarPedidos();
+        }
+
+        async function alterarStatusPedido(idPedido, novoStatus) {
+            const atendente = await carregarDados('atendente_cadastro');
+            const nomeAtendente = atendente?.nome || 'Não identificado';
+
+            const pedidos = await carregarDados('pedidos');
+            const pedidosAtualizados = pedidos.map(p => {
+                if (p.id === idPedido) {
+                    return { ...p, status: novoStatus, atendente_nome: nomeAtendente };
+                }
+                return p;
+            });
+
+            await salvarDados('pedidos', pedidosAtualizados);
+        }
+
+        let pedidoEmEdicao = null;
+        async function abrirModalEditarPedido(idPedido) {
+            const pedidos = await carregarDados('pedidos');
+            const pedido = pedidos.find(p => p.id === idPedido);
+            if (!pedido) return;
+
+            pedidoEmEdicao = pedido;
+            document.getElementById('edit-pedido-id').value = pedido.id;
+            document.getElementById('edit-status').value = pedido.status || 'Pendente';
+            document.getElementById('edit-forma-pagamento').value = pedido.forma_pagamento || 'Dinheiro';
+            document.getElementById('edit-observacao').value = pedido.observacao || '';
+
+            document.getElementById('modalEditar').classList.remove('hidden');
+        }
+
+        function fecharModalEditar() {
+            document.getElementById('modalEditar').classList.add('hidden');
+            pedidoEmEdicao = null;
+        }
+
+        async function salvarEdicaoPedido() {
+            if (!pedidoEmEdicao) return;
+
+            const novoStatus = document.getElementById('edit-status').value;
+            const novaForma = document.getElementById('edit-forma-pagamento').value;
+            const novaObs = document.getElementById('edit-observacao').value;
+
+            const atendente = await carregarDados('atendente_cadastro');
+            const nomeAtendente = atendente?.nome || 'Não identificado';
+
+            const pedidos = await carregarDados('pedidos');
+            const pedidosAtualizados = pedidos.map(p => {
+                if (p.id === pedidoEmEdicao.id) {
+                    return {
+                        ...p,
+                        status: novoStatus,
+                        forma_pagamento: novaForma,
+                        observacao: novaObs,
+                        atendente_nome: nomeAtendente
+                    };
+                }
+                return p;
+            });
+
+            await salvarDados('pedidos', pedidosAtualizados);
+            fecharModalEditar();
+        }
+
+        // -------------------- GERENCIAMENTO DE PRODUTOS --------------------
+        async function cadastrarProduto() {
+            const nome = document.getElementById('prod-nome').value.trim();
+            const preco = parseFloat(document.getElementById('prod-preco').value);
+            const descricao = document.getElementById('prod-descricao').value.trim();
+
+            if (!nome || isNaN(preco) || preco <= 0) {
+                alert('❌ Preencha nome e preço válido!');
+                return;
+            }
+
+            const atendente = await carregarDados('atendente_cadastro');
+            const nomeAtendente = atendente?.nome || 'Atendente não identificado';
+
+            // ✅ AGORA SEMPRE É UM ARRAY, ENTÃO .push() FUNCIONA!
+            const produtos = await carregarDados('produtos');
+            produtos.push({
+                id: Date.now().toString(),
+                nome: nome,
+                preco: preco,
+                descricao: descricao,
+                disponivel: true,
+                cadastrado_por: nomeAtendente,
+                data_cadastro: new Date().toLocaleString('pt-BR')
+            });
+
+            await salvarDados('produtos', produtos);
+            alert('✅ Produto cadastrado com sucesso!');
+
+            // Limpa formulário
+            document.getElementById('prod-nome').value = '';
+            document.getElementById('prod-preco').value = '';
+            document.getElementById('prod-descricao').value = '';
+        }
+
+        async function carregarProdutosCadastrados() {
+            const produtos = await carregarDados('produtos');
+            const container = document.getElementById('lista-produtos-cadastrados');
+
+            if (produtos.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhum produto cadastrado.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            produtos.forEach(prod => {
+                container.innerHTML += `
+                <div class="p-3 bg-white/5 rounded-lg shadow-sm item-container" data-id="${prod.id}">
+                    <div>
+                        <p class="font-bold">${prod.nome}</p>
+                        <p class="text-green-500 font-medium">${formatarMoeda(prod.preco)}</p>
+                        <p class="text-xs text-gray-400">${prod.descricao || 'Sem descrição'}</p>
+                        <p class="text-xs text-gray-500">Cadastrado por: ${prod.cadastrado_por}</p>
+                    </div>
+                    <button class="btn-remover" onclick="removerItem('produtos', '${prod.id}', this)">🗑️</button>
+                </div>
+                `;
+            });
+        }
+
+        // -------------------- GERENCIAMENTO DE ATENDENTE --------------------
+        async function salvarCadastroAtendente() {
+            const nome = document.getElementById('atend-nome').value.trim();
+            const contato = document.getElementById('atend-contato').value.trim();
+
+            if (!nome) {
+                alert('❌ Informe pelo menos o nome completo!');
+                return;
+            }
+
+            const dadosAtendente = {
+                id: 'atendente_principal',
+                nome: nome,
+                contato: contato,
+                data_cadastro: new Date().toLocaleString('pt-BR')
+            };
+
+            await salvarDados('atendente_cadastro', dadosAtendente);
+            alert('✅ Seus dados foram salvos!');
+            verificarCadastroAtendente();
+        }
+
+        async function verificarCadastroAtendente() {
+            const atendente = await carregarDados('atendente_cadastro');
+            const containerInfo = document.getElementById('dados-cadastrados');
+
+            if (atendente && atendente.nome) {
+                document.getElementById('info-nome').innerText = `Nome: ${atendente.nome}`;
+            document.getElementById('info-contato').innerText = `Contato: ${atendente.contato || 'Não informado'}`;
+            document.getElementById('info-data').innerText = `Cadastrado em: ${atendente.data_cadastro}`;
+            containerInfo.classList.remove('hidden');
+
+            // Preenche o input também
+            document.getElementById('atend-nome').value = atendente.nome;
+            document.getElementById('atend-contato').value = atendente.contato || '';
+        } else {
+            containerInfo.classList.add('hidden');
+        }
+    }
+
+    // -------------------- FUNÇÃO DE EXCLUSÃO GENÉRICA --------------------
+    function removerItem(caminho, idItem, botaoClicado) {
+        if (!confirm('⚠️ ATENÇÃO! Essa ação irá APAGAR DEFINITIVAMENTE este item do sistema. Não poderá ser recuperado. Deseja continuar?')) {
+            return;
+        }
+
+        const itemParaRemover = botaoClicado.closest('.item-container');
+        itemParaRemover.style.opacity = '0';
+        itemParaRemover.style.transform = 'translateX(-20px)';
+
+        setTimeout(async () => {
+            const dados = await carregarDados(caminho);
+            let dadosAtualizados;
+
+            if (Array.isArray(dados)) {
+                dadosAtualizados = dados.filter(item => String(item.id) !== String(idItem));
+            } else {
+                dadosAtualizados = {};
+            }
+
+            await salvarDados(caminho, dadosAtualizados);
+        }, 300);
     }
 </script>
 
 </body>
+
 </html>
