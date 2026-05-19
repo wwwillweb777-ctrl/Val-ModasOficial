@@ -6,6 +6,11 @@
     <title>Administração</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
@@ -130,7 +135,7 @@
 <body class="bg-gray-50">
     <header class="bg-purple-700 text-white py-3 shadow-lg fixed w-full z-50 top-0 left-0">
         <div class="container mx-auto relative">
-            <a href="inicial.html" class="btn-sair">Sair</a>
+            <a href="index.html" class="btn-sair">Sair</a>
             <h1 class="font-bold text-center mb-3 titulo-admin" style="font-size: 22px !important;">🔐 Administração</h1>
 
             <nav class="flex justify-center items-center flex-nowrap overflow-hidden">
@@ -229,56 +234,68 @@
     </section>
 
     <script>
-        function salvarDados(chave, dados) { 
-            localStorage.setItem(chave, JSON.stringify(dados)); 
-        }
-        function carregarDados(chave) { 
-            const d = localStorage.getItem(chave); 
-            return d ? JSON.parse(d) : []; 
-        }
-        function formatarMoeda(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+        // Configuração do Firebase
+        const firebaseConfig = {
+          apiKey: "AIzaSyDUgHEX610xqLmEmM6F_d0sOzbYxLLxT8w",
+          authDomain: "willobras.firebaseapp.com",
+          databaseURL: "https://willobras-default-rtdb.firebaseio.com",
+          projectId: "willobras",
+          storageBucket: "willobras.firebasestorage.app",
+          messagingSenderId: "66370500400",
+          appId: "1:66370500400:web:42d6569ca2c8172ddf3af5"
+        };
 
-        function removerItem(chave, idItem, botaoClicado) {
+        // Inicializa Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Funções Firebase
+        function salvarDadosFB(caminho, dados) {
+            return db.ref(caminho).set(dados);
+        }
+
+        function carregarDadosFB(caminho) {
+            return db.ref(caminho).once('value').then(snap => snap.val() || []);
+        }
+
+        function formatarMoeda(v) { 
+            return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); 
+        }
+
+        function removerItem(caminho, idItem, botaoClicado) {
             if(!confirm('⚠️ ATENÇÃO! Essa ação irá APAGAR DEFINITIVAMENTE este item do sistema. Não poderá ser recuperado. Deseja continuar?')) {
                 return;
-            }
-
-            let dados = carregarDados(chave);
-
-            if(Array.isArray(dados)) {
-                dados = dados.filter(item => String(item.id) !== String(idItem));
-            } else {
-                dados = {};
-                localStorage.removeItem(chave);
-            }
-
-            if(dados && Object.keys(dados).length !== 0 || Array.isArray(dados) && dados.length > 0) {
-                salvarDados(chave, dados);
-            } else if (Array.isArray(dados)) {
-                salvarDados(chave, []);
             }
 
             const itemParaRemover = botaoClicado.closest('.item-container');
             itemParaRemover.style.opacity = '0';
             itemParaRemover.style.transform = 'translateX(-20px)';
-            
-            setTimeout(() => {
-                itemParaRemover.remove();
+
+            setTimeout(async () => {
+                const dados = await carregarDadosFB(caminho);
+                let dadosAtualizados;
+
+                if(Array.isArray(dados)) {
+                    dadosAtualizados = dados.filter(item => String(item.id) !== String(idItem));
+                } else {
+                    dadosAtualizados = {};
+                }
+
+                await salvarDadosFB(caminho, dadosAtualizados);
                 
                 carregarDadosAdmin();
                 carregarMovimentacoes();
                 carregarCadastrados();
                 carregarClientes();
-                verificarListaVazia();
-
-            }, 300);
+                                verificarListaVazia();
+             }, 300);
         }
 
         function apagarTodosClientes() {
             if(!confirm('⚠️ CUIDADO! Você está prestes a APAGAR TODOS OS CLIENTES cadastrados. Essa ação é definitiva e não pode ser desfeita. Tem certeza absoluta?')) {
                 return;
             }
-            salvarDados('clientes', []);
+            salvarDadosFB('clientes', []);
             carregarClientes();
             alert('✅ Todos os dados de clientes foram apagados com sucesso!');
         }
@@ -286,29 +303,29 @@
         function verificarListaVazia() {
             const listaMov = document.getElementById('lista-movimentacoes');
             if(listaMov.children.length <= 1) {
-                                listaMov.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhuma movimentação registrada.</p>';
+                listaMov.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhuma movimentação registrada.</p>';
             }
 
-            // Verifica atendentes
             const listaAtend = document.getElementById('lista-atendentes-cad');
-            const atendentes = carregarDados('atendente_cadastro');
-            if(!atendentes || Object.keys(atendentes).length === 0) {
-                listaAtend.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum atendente cadastrado.</p>';
-            }
+            carregarDadosFB('atendente_cadastro').then(atendentes => {
+                if(!atendentes || Object.keys(atendentes).length === 0) {
+                    listaAtend.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum atendente cadastrado.</p>';
+                }
+            });
 
-            // Verifica produtos
             const listaProd = document.getElementById('lista-produtos-cad');
-            const produtos = carregarDados('produtos');
-            if(produtos.length === 0) {
-                listaProd.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum produto cadastrado.</p>';
-            }
+            carregarDadosFB('produtos').then(produtos => {
+                if(produtos.length === 0) {
+                    listaProd.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum produto cadastrado.</p>';
+                }
+            });
 
-            // Verifica clientes
             const listaCli = document.getElementById('lista-clientes');
-            const clientes = carregarDados('clientes');
-            if(clientes.length === 0) {
-                listaCli.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum dado de cliente foi salvo ainda.</p>';
-            }
+            carregarDadosFB('clientes').then(clientes => {
+                if(clientes.length === 0) {
+                    listaCli.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum dado de cliente foi salvo ainda.</p>';
+                }
+            });
         }
 
         function abrirAba(nome) {
@@ -330,9 +347,8 @@
             carregarClientes();
         });
 
-        // ✅ CARREGA E ATUALIZA OS DADOS GERAIS DIRETO DA ORIGEM
-        function carregarDadosAdmin() {
-            const pedidos = carregarDados('pedidos');
+        async function carregarDadosAdmin() {
+            const pedidos = await carregarDadosFB('pedidos');
             const totalPedidos = pedidos.length;
             const pendentes = pedidos.filter(p => p.status === 'Pendente').length;
             const entregues = pedidos.filter(p => p.status === 'Entregue').length;
@@ -353,9 +369,8 @@
             document.getElementById('caixa-atual').innerText = formatarMoeda(faturamento);
         }
 
-        // ✅ CARREGA MOVIMENTAÇÕES SEMPRE DA FONTE, ATUALIZANDO APÓS EXCLUSÕES
-        function carregarMovimentacoes() {
-            const pedidos = carregarDados('pedidos');
+        async function carregarMovimentacoes() {
+            const pedidos = await carregarDadosFB('pedidos');
             const container = document.getElementById('lista-movimentacoes');
             
             if(pedidos.length === 0) {
@@ -382,10 +397,8 @@
             });
         }
 
-        // ✅ CARREGA LISTA DE CLIENTES SALVOS COM TODOS OS DADOS PREENCHIDOS
-        function carregarClientes() {
-            // Pega os dados salvos (são salvos automaticamente quando o cliente finaliza pedido)
-            const clientes = carregarDados('clientes');
+        async function carregarClientes() {
+            const clientes = await carregarDadosFB('clientes');
             const container = document.getElementById('lista-clientes');
 
             if(clientes.length === 0) {
@@ -410,9 +423,8 @@
             });
         }
 
-        // ✅ CARREGA CADASTRADOS DIRETO DA ORIGEM, GARANTINDO ATUALIZAÇÃO TOTAL
-        function carregarCadastrados() {
-            const atendenteCad = carregarDados('atendente_cadastro');
+        async function carregarCadastrados() {
+            const atendenteCad = await carregarDadosFB('atendente_cadastro');
             const containerProd = document.getElementById('lista-atendentes-cad');
             
             if (atendenteCad && atendenteCad.nome) {
@@ -430,7 +442,7 @@
                 containerProd.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum atendente cadastrado.</p>';
             }
 
-            const produtos = carregarDados('produtos');
+            const produtos = await carregarDadosFB('produtos');
             const containerAtend = document.getElementById('lista-produtos-cad');
             
             if (produtos.length > 0) {
