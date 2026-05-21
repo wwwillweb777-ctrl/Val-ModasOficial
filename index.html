@@ -4,18 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loja da Val</title>
-    <!-- ✅ ADICIONADO: Chamada para o arquivo de configuração com a chave -->
     <script src="config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- ✅ FIREBASE - MESMA VERSÃO DO ATENDENTE -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Poppins', sans-serif; 
+            scroll-behavior: smooth; 
+        }
 
-        /* ✅ FUNDO TOTALMENTE PRETO */
-        body { line-height: 1.6; background-color: #000000 !important; color: #ffffff !important; }
+        body { 
+            line-height: 1.6; 
+            background-color: #000000 !important; 
+            color: #ffffff !important; 
+        }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
         .shadow { box-shadow: 0 4px 6px -1px rgba(255,255,255,0.1), 0 2px 4px -1px rgba(255,255,255,0.06); }
@@ -23,7 +30,6 @@
         .rounded-xl { border-radius: 0.75rem; } .rounded-2xl { border-radius: 1rem; }
         .transition { transition: all 0.1s ease; }
 
-        /* ✅ CORES DE FUNDO AJUSTADAS PARA TEMA PRETO */
         .bg-blue-50 { background-color: #1a1a1a !important; } 
         .bg-green-50 { background-color: #1a1a1a !important; } 
         .bg-purple-50 { background-color: #1a1a1a !important; }
@@ -32,12 +38,11 @@
         .bg-blue-100 { background-color: #1a1a1a !important; } 
         .bg-red-100 { background-color: #2b2b2b !important; }
 
-        /* ✅ TODOS OS TEXTOS BRANCOS */
         .text-yellow-800 { color: #FFD700 !important; } 
         .text-green-800 { color: #ffffff !important; } 
         .text-blue-800 { color: #ffffff !important; } 
         .text-red-800 { color: #ffffff !important; }
-        h1, h2, h3, h4, h5, h6 { color: #FFD700 !important; } /* Apenas títulos dourados */
+        h1, h2, h3, h4, h5, h6 { color: #FFD700 !important; }
         p, span, div, label, input, select, textarea { color: #ffffff !important; }
 
         a { text-decoration: none; } nav a { transition: background-color 0.1s; }
@@ -46,7 +51,6 @@
         ::-webkit-scrollbar-track { background: #1a1a1a; } 
         ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
 
-        /* ✅ Estilo da lixeira */
         .lixeira {
             color: #ef4444 !important;
             cursor: pointer;
@@ -58,30 +62,47 @@
             color: #dc2626 !important;
         }
 
-        /* ✅ Botões dentro de caixa - CORES AZUL E VERMELHO CONFORME PEDIDO */
         .caixa-botoes {
-            background-color: #1f2937 !important;
-            padding: 10px;
-            border-radius: 0.75rem;
-            display: inline-flex;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
             gap: 8px;
+        }
+
+        .btn-carrinho {
+            background-color: #2563eb !important;
+            color: #ffffff !important;
+            width: 70px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
             align-items: center;
-            box-shadow: inset 1px 2px rgba(255,255,255,0.05);
+            justify-content: center;
+            border: 2px solid #ffffff;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            font-size: 18px;
+            box-shadow: 0 2px 4px rgba(255,255,255,0.1);
+        }
+        .btn-carrinho:active {
+            background-color: #1d4ed8 !important;
+            transform: scale(0.95);
         }
 
         .btn-adicionar {
-            background-color: #2563eb !important; /* Azul forte */
+            background-color: #2563eb !important;
             color: #ffffff !important;
-            padding: 6px 12px;
-            border-radius: 6px;
-            transition: all 0.1s ease;
-            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 2px solid #ffffff;
             cursor: pointer;
-            font-size: 0.85rem;
+            transition: all 0.1s ease;
+            font-size: 0.9rem;
             font-weight: 500;
+            box-shadow: 0 2px 4px rgba(255,255,255,0.1);
         }
         .btn-adicionar:active {
-            background-color: #dc2626 !important; /* Vermelho forte */
+            background-color: #dc2626 !important;
             color: #ffffff !important;
             transform: scale(0.96);
         }
@@ -98,12 +119,12 @@
             font-weight: bold;
         }
         .btn-qtd:active {
-            background-color: #dc2626 !important; /* Vermelho forte */
+            background-color: #dc2626 !important;
             color: #ffffff !important;
         }
 
         .btn-finalizar {
-            background-color: #2563eb !important; /* Azul */
+            background-color: #2563eb !important;
             color: #ffffff !important;
             padding: 12px;
             border-radius: 0.75rem;
@@ -116,7 +137,6 @@
             background-color: #1d4ed8 !important;
         }
 
-        /* ✅ Cor branca para nome e valores */
         .texto-forte {
             color: #ffffff !important;
             font-weight: 600;
@@ -132,9 +152,10 @@
         .nome-produto {
             font-size: 1rem !important;
             color: #ffffff !important;
+            margin-top: 12px;
+            margin-bottom: 4px;
         }
 
-        /* ✅ Estilos do Formulário */
         .modal {
             display: none;
             position: fixed;
@@ -210,7 +231,6 @@
             background-color: #1d4ed8 !important;
         }
 
-        /* ✅ Cabeçalho configurado: cor azul, imagem centralizada e fixa */
         .cabecalho-nosso {
             background: url('https://i.postimg.cc/VvLMVFgG/IMG-20260518-085339-(2).webp') no-repeat center center;
             background-color: #005bcc;
@@ -228,19 +248,22 @@
             border-bottom: none;
         }
 
-        /* ✅ CONFIGURAÇÕES DE IMAGEM - TAMANHO, PROPORÇÃO E AJUSTES */
+        .moldura-produto {
+            width: 100% !important;
+            aspect-ratio: 1/1 !important;
+            border-radius: 8px 8px 0 0 !important;
+            background-color: #f3f4f6 !important;
+            overflow: hidden !important;
+            border: none !important;
+            box-sizing: border-box !important;
+        }
+
         .img-produto {
             width: 100% !important;
             height: 100% !important;
-            object-fit: contain !important;
+            object-fit: cover !important;
             object-position: center !important;
-            border-radius: 8px !important;
-            margin-bottom: 8px !important;
-            background-color: #f3f4f6 !important;
-            padding: 0 !important;
-            box-sizing: border-box !important;
-            border: none !important;
-            min-height: 280px !important;
+            display: block !important;
         }
 
         .codigo-produto {
@@ -249,33 +272,46 @@
             color: #6b7280 !important;
             letter-spacing: 1px !important;
             margin-bottom: 0.25rem !important;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0,0,0,0.6);
+            padding: 2px 6px;
+            border-radius: 4px;
+            z-index: 2;
         }
 
         .bg-gray-50 {
             background-color: #000000 !important;
         }
+
+        .card-produto {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px !important;
+            background-color: #111 !important;
+            padding: 12 !important;
+        }
+
+        .conteudo-produto {
+            padding: 16px !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
 
-<!-- ##########################################################################
-     🟩🟩🟩 ÁREA DE LINKS DAS IMAGENS - CONFIGURAÇÃO ORIGINAL 🟩🟩🟩
-     ########################################################################## -->
 <script>
-const LINK1 = "https://i.postimg.cc/rs5Q48sf/IMG-20260517-WA0026-(1).jpg"; // ← COLE SEU LINK AQUI
-const LINK2 = ""; // ← COLE SEU LINK AQUI
-const LINK3 = ""; // ← COLE SEU LINK AQUI
-const LINK4 = ""; // ← COLE SEU LINK AQUI
-const LINK5 = ""; // ← COLE SEU LINK AQUI
-const LINK6 = ""; // ← COLE SEU LINK AQUI
-const LINK7 = ""; // ← COLE SEU LINK AQUI
-const LINK8 = ""; // ← COLE SEU LINK AQUI
-const LINK9 = ""; // ← COLE SEU LINK AQUI
-const LINK10 = ""; // ← COLE SEU LINK AQUI
+const LINK1 = "https://i.postimg.cc/rs5Q48sf/IMG-20260517-WA0026-(1).jpg";
+const LINK2 = "";
+const LINK3 = "";
+const LINK4 = "";
+const LINK5 = "";
+const LINK6 = "";
+const LINK7 = "";
+const LINK8 = "";
+const LINK9 = "";
+const LINK10 = "";
 </script>
-<!-- ##########################################################################
-     🟩🟩🟩 FIM DA ÁREA DE LINKS 🟩🟩🟩
-     ########################################################################## -->
 
     <header class="cabecalho-nosso">
         <div class="container mx-auto flex justify-between items-center w-full">
@@ -299,10 +335,7 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
             <a href="#meusPedidos" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="fecharMenu()">📋 Meus Pedidos</a>
             <a href="#" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="fecharMenu()">👤 Área do Cliente</a>
             <hr class="border-white/30 my-2">
-            
-            <!-- ✅ Área do Caixa / Atendente - COM SENHA: Deus321 -->
             <a href="#" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="verificarSenhaAtendente('atendente.html')">🔐🖥️ Caixa Registradora</a>
-            <!-- ✅ Administração -->
             <a href="#" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="verificarSenhaAdmin('admin.html')">🔐 Administração</a>
         </nav>
     </div>
@@ -317,17 +350,17 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
         <div class="bg-white/5 rounded-2xl shadow-lg p-6 mb-10 border border-gray-800">
             <h2 class="text-2xl font-bold text-yellow-500 mb-6 text-center">Nossos Produtos 🛍️✨</h2>
             <div id="lista-produtos" class="space-y-4">
-                <!-- ✅ AQUI VÃO SER CARREGADOS OS PRODUTOS DO ATENDENTE DINAMICAMENTE -->
                  <p class="text-gray-500 text-center py-4">Carregando produtos...</p>
              </div>
         </div>
 
-        <div class="bg-white/5 rounded-2xl shadow-xl p-6 mb-10 border border-gray-800">
+         </div>
+         <div class="bg-white/5 rounded-2xl shadow-xl p-6 mb-10 border border-gray-800">
     <h3 class="text-xl font-bold text-yellow-500 mb-4">🛒 Seu Pedido</h3>
     <div id="carrinho-itens" class="mb-4 text-gray-300">Nenhum item adicionado ainda.</div>
     <div class="text-right text-xl font-bold mb-4">Total: R$ <span id="carrinho-total" class="valor-forte">0,00</span></div>
-    <div id="nome-cliente-info" class="text-sm text-gray-300 mb-3 text-right"></div>
-    <button onclick="abrirFormulario()" class="btn-finalizar">Finalizar Pedido</button>
+         <div id="nome-cliente-info" class="text-sm text-gray-300 mb-3 text-right"></div>
+     <button onclick="abrirFormulario()" class="btn-finalizar">Finalizar Pedido</button>
 </div>
 
 <div id="meusPedidos" class="bg-white/5 rounded-2xl shadow-lg p-6 border border-gray-800">
@@ -365,7 +398,7 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
 
         <div class="form-group">
             <label for="numero">Número *</label>
-            <input type="text" id="numero" required>
+            <input type="text" id="numeroUMero" required>
         </div>
 
         <div class="form-group">
@@ -393,7 +426,7 @@ const LINK10 = ""; // ← COLE SEU LINK AQUI
 
 <script>
 
-    // ✅ SENHAS DE ACESSO E CONFIGURAÇÕES
+    // ✅ SENHA DE ACESSO E CONFIGURAÇÕES
     const SENHA_ATENDENTE = "Deus321";
     const SENHA_ADMIN = "WJ@321";
     const NUMERO_MENSAGENS = "5531990721928"; // 📩 Para este número vai só a mensagem: Boa noite!
@@ -569,15 +602,23 @@ async function carregarProdutosLoja() {
             const linkImagem = eval(`LINK${numeroImagem}`) || 'https://i.postimg.cc/VvLMVFgG/IMG-20260518-085339-(2).webp';
             
             html += `
-            <div class="border rounded-xl p-5 hover:shadow-md">
+            <div class="border rounded-xl p-5 hover:shadow-md card-produto">
                 <div class="codigo-produto">${String(index + 1).padStart(3, '0')}</div>
-                <img src="${linkImagem}" alt="${p.nome}" class="img-produto">
-                <h3 class="font-bold nome-produto">${p.nome}</h3>
-                <p class="text-gray-600 text-sm mb-2">${p.descricao || ''}</p>
-                <div class="flex justify-between items-center">
-                    <span class="font-bold text-green-600 text-lg">${formatarMoeda(p.preco)}</span>
-                    <div class="caixa-botoes">
-                        <button onclick="adicionarItem('${p.id}', '${p.nome.replace(/'/g, "\\'")}', ${p.preco})" class="btn-adicionar">+ Adicionar</button>
+                <div class="moldura-produto">
+                    <img src="${linkImagem}" alt="${p.nome}" class="img-produto">
+                </div>
+                <div class="conteudo-produto">
+                    <h3 class="font-bold nome-produto">${p.nome}</h3>
+                    <p class="text-gray-600 text-sm mb-2">${p.descricao || ''}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-green-600 text-lg">${formatarMoeda(p.preco)}</span>
+                        <div class="caixa-botoes">
+                            <!-- ✅ NOVO BOTÃO DO CARRINHO ACIMA DO ADICIONAR -->
+                            <button onclick="window.location.href='#meusPedidos'" class="btn-carrinho" title="Ver Meus Pedidos">
+                                <i class="fa fa-shopping-cart"></i>
+                            </button>
+                            <button onclick="adicionarItem('${p.id}', '${p.nome.replace(/'/g, "\\'")}', ${p.preco})" class="btn-adicionar">+ Adicionar</button>
+                        </div>
                     </div>
                 </div>
             </div>`;
@@ -670,22 +711,22 @@ async function carregarMeusPedidos() {
 
         if(pedidosAtivos.length === 0) { 
             container.innerHTML = '<div class="text-center text-gray-400 py-6"><i class="fa fa-shopping-bag text-4xl mb-2"></i><p>Nenhum pedido pendente ou em andamento.</p></div>'; 
-        return; 
-    }
+            return; 
+        }
     
-    container.innerHTML = '';
-    pedidosAtivos.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'border rounded-lg p-4';
-        div.innerHTML = `
-            <div class="flex justify-between items-center mb-2">
-    <span class="font-bold">Pedido #${p.id.slice(-4)}</span>
-    <span class="px-2 py-1 rounded text-sm ${p.status==='Pendente'?'bg-yellow-100 text-yellow-800':p.status==='Entregue'?'bg-green-100 text-green-800':'bg-red-100 text-red-800'}">${p.status}</span>
-</div>
-<p class="text-sm text-gray-400">Data: ${p.data}</p>
-<p class="text-sm text-gray-400">Cliente: ${p.cliente_nome}</p>
-<p class="text-sm text-gray-400">WhatsApp: ${p.cliente_whatsapp}</p>
-<p class="font-bold text-green-600">Total: ${formatarMoeda(p.total)}</p>
+        container.innerHTML = '';
+        pedidosAtivos.forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'border rounded-lg p-4';
+                        div.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+        <span class="font-bold">Pedido #${p.id.slice(-4)}</span>
+        <span class="px-2 py-1 rounded text-sm ${p.status==='Pendente'?'bg-yellow-100 text-yellow-800':p.status==='Entregue'?'bg-green-100 text-green-800':'bg-red-100 text-red-800'}">${p.status}</span>
+    </div>
+    <p class="text-sm text-gray-400">Data: ${p.data}</p>
+    <p class="text-sm text-gray-400">Cliente: ${p.cliente_nome}</p>
+    <p class="text-sm text-gray-400">WhatsApp: ${p.cliente_whatsapp}</p>
+    <p class="font-bold text-green-600">Total: ${formatarMoeda(p.total)}</p>
 `;
         container.appendChild(div);
     });
@@ -699,3 +740,4 @@ async function carregarMeusPedidos() {
 </body>
 
 </html>
+    
