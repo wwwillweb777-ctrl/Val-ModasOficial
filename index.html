@@ -6,10 +6,10 @@
     <title>Loja da Val</title>
     <script src="config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         * { 
             margin: 0; 
             padding: 0; 
@@ -39,11 +39,11 @@
         .bg-red-100 { background-color: #2b2b2b !important; }
 
         .text-yellow-800 { color: #FFD700 !important; } 
-        .text-green-800 { color: #ffffff !important; } 
-        .text-blue-800 { color: #ffffff !important; } 
-        .text-red-800 { color: #ffffff !important; }
+        .text-green-800 { color: #e6e6e6 !important; } /* ✅ Branco com menos brilho */
+        .text-blue-800 { color: #e6e6e6 !important; } /* ✅ Branco com menos brilho */
+        .text-red-800 { color: #e6e6e6 !important; } /* ✅ Branco com menos brilho */
         h1, h2, h3, h4, h5, h6 { color: #FFD700 !important; }
-        p, span, div, label, input, select, textarea { color: #ffffff !important; }
+        p, span, div, label, input, select, textarea { color: #e6e6e6 !important; } /* ✅ Branco com menos brilho */
 
         a { text-decoration: none; } nav a { transition: background-color 0.1s; }
 
@@ -75,12 +75,12 @@
             background-color: #2563eb !important;
             color: #ffffff !important;
             width: 70px;
-            height: 50px;
+            height: 55px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid #ffffff;
+            border: 2.2px solid #ffffff !important;
             cursor: pointer;
             transition: all 0.1s ease;
             font-size: 22px !important;
@@ -96,12 +96,13 @@
             color: #ffffff !important;
             padding: 8px 16px;
             border-radius: 8px;
-            border: 2px solid #ffffff;
+            border: 2.2px solid #ffffff !important;
             cursor: pointer;
             transition: all 0.1s ease;
             font-size: 0.9rem;
             font-weight: 500;
             box-shadow: 0 2px 4px rgba(255,255,255,0.1);
+            margin-top: 4% !important;
         }
         .btn-adicionar:active {
             background-color: #dc2626 !important;
@@ -140,31 +141,37 @@
         }
 
         .texto-forte {
-            color: #ffffff !important;
+            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
             font-weight: 600;
             font-size: 0.9rem;
         }
 
         .valor-forte {
-            color: #ffffff !important;
+            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
             font-weight: 700;
             font-size: 1rem;
         }
 
         .nome-produto {
-            font-size: 1.25rem !important;
+            font-size: 90% !important;
             font-weight: bold !important;
-            color: #ffffff !important;
-            margin: 4% 0 0 0 !important;
+            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
+            margin: -0% 0 0 0 !important;
             align-self: flex-start;
+            line-height: 1.3;
         }
 
         .preco-produto {
-            font-size: 1.15rem !important;
+            font-size: 1.54rem !important;
             font-weight: bold !important;
-            color: #ffffff !important;
-            margin: 2% 0 0 0 !important;
+            margin: 1% 0 0 0 !important;
             align-self: flex-start;
+        }
+        .preco-produto span.dourado {
+            color: #FFD700 !important;
+        }
+        .preco-produto span.branco {
+            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
         }
 
         .modal {
@@ -192,7 +199,7 @@
         }
 
         .fechar {
-            color: #ffffff !important;
+            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
             float: right;
             font-size: 28px;
             font-weight: bold;
@@ -213,7 +220,7 @@
             display: block;
             margin-bottom: 5px;
             font-weight: 500;
-            color: #ffffff !important;
+            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
         }
 
         .form-group input, .form-group select, .form-group textarea {
@@ -223,7 +230,7 @@
             border-radius: 6px;
             font-size: 1rem;
             background-color: #374151 !important;
-            color: #ffffff !important;
+            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
         }
 
         .btn-enviar {
@@ -263,26 +270,28 @@
             width: 100% !important;
             aspect-ratio: 1 / 1.4 !important;
             border-radius: 12px 12px 12px 12px !important;
-            background-color: #000000 !important;
+            background-color: #ffffff !important;
             overflow: hidden !important;
             border: none !important;
             box-sizing: border-box !important;
             position: relative;
+            margin-top: 15% !important; /* ✅ Abaixou a parte superior em 15% */
         }
 
         .img-produto {
             width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
+            height: 125% !important;
+            object-fit: contain !important; /* ✅ Proporcional ao tamanho da moldura */
             object-position: center !important;
             display: block !important;
             border-radius: 12px !important;
+            background-color: #ffffff !important;
         }
 
         .codigo-produto {
-            font-size: 0.75rem !important;
+            font-size: 0.86rem !important;
             font-weight: 600 !important;
-            color: #6b7280 !important;
+            color: #FFD700 !important;
             letter-spacing: 1px !important;
             position: static !important;
             background: transparent !important;
@@ -352,8 +361,6 @@ const LINK10 = "";
         <nav class="flex flex-col gap-3">
             <a href="index.html" class="py-3 px-4 rounded-lg bg-white/20 font-medium text-center text-white hover:bg-yellow-500/30" onclick="fecharMenu()">🏠 Loja da Val 🛍️🛒</a>
             <a href="#meusPedidos" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="fecharMenu()">📋 Meus Pedidos</a>
-            <a href="#" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="fecharMenu()">👤 Área do Cliente</a>
-            <hr class="border-white/30 my-2">
             <a href="#" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="verificarSenhaAtendente('atendente.html')">🔐🖥️ Caixa Registradora</a>
             <a href="#" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="verificarSenhaAdmin('admin.html')">🔐 Administração</a>
         </nav>
@@ -362,8 +369,8 @@ const LINK10 = "";
     <div id="fundoEscuro" onclick="fecharMenu()" class="fixed inset-0 bg-black/70 z-40 hidden"></div>
 
     <section class="container mx-auto p-4 pt-44 pb-20">
-                <div class="bg-blue-50 border-l-4 border-yellow-500 p-4 rounded-lg mb-8 text-center">
-                    <p class="text-blue-800 font-medium">👋 Olá! Faça seu pedido ou clique no <b>menu</b> para navegar.</p>
+        <div class="bg-blue-50 border-l-4 border-yellow-500 p-4 rounded-lg mb-8 text-center">
+            <p class="text-blue-800 font-medium">👋 Olá! Faça seu pedido ou clique no <b>menu</b> para navegar.</p>
         </div>
 
         <div class="bg-white/5 rounded-2xl shadow-lg p-6 mb-10 border border-gray-800">
@@ -376,7 +383,7 @@ const LINK10 = "";
         <div class="bg-white/5 rounded-2xl shadow-xl p-6 mb-10 border border-gray-800">
             <h3 class="text-xl font-bold text-yellow-500 mb-4">🛒 Seu Pedido</h3>
             <div id="carrinho-itens" class="mb-4 text-gray-300">Nenhum item adicionado ainda.</div>
-            <div class="text-right text-xl font-bold mb-4">Total: R$ <span id="carrinho-total" class="valor-forte">0,00</span></div>
+            <div class="text-right text-xl font-bold mb-4">Total: <span class="text-yellow-500">R$</span> <span id="carrinho-total" class="valor-forte">0,00</span></div>
             <div id="nome-cliente-info" class="text-sm text-gray-300 mb-3 text-right"></div>
             <button onclick="abrirFormulario()" class="btn-finalizar">Finalizar Pedido</button>
         </div>
@@ -390,15 +397,14 @@ const LINK10 = "";
                 </div>
             </div>
         </div>
-
     </section>
 
-    <!-- ✅ FORMULÁRIO MODAL -->
+    <!-- MODAL FORMULÁRIO -->
     <div id="formularioModal" class="modal">
         <div class="modal-conteudo">
             <span class="fechar">&times;</span>
             <h2 class="text-xl font-bold text-center text-yellow-500 mb-4">Informações de Entrega</h2>
-            
+
             <div class="form-group">
                 <label for="nome">Nome Completo *</label>
                 <input type="text" id="nome" required>
@@ -443,18 +449,14 @@ const LINK10 = "";
     </div>
 
     <script>
-
-        // ✅ SENHA DE ACESSO E CONFIGURAÇÕES
         const SENHA_ATENDENTE = "Deus321";
         const SENHA_ADMIN = "WJ@321";
-        const NUMERO_MENSAGENS = "5531990721928"; // 📩 Número para mensagem do cliente
+        const NUMERO_MENSAGENS = "5531990721928";
 
-        // ✅ CONFIGURAÇÃO FIREBASE - MESMA CHAVE E DADOS DOS DEMAIS ARQUIVOS
         let firebaseConfig;
         if (typeof CONFIG_FIREBASE !== 'undefined') {
             firebaseConfig = CONFIG_FIREBASE;
         } else {
-            // Fallback caso o arquivo não carregue
             firebaseConfig = {
                 apiKey: "AIzaSyCYd655rBu8_UfwGtYWDgRzdtAw-UAR9Qg",
                 authDomain: "val-modas.firebaseapp.com",
@@ -466,17 +468,15 @@ const LINK10 = "";
             };
         }
 
-        // ✅ INICIALIZAÇÃO DO FIREBASE - IGUAL AO ATENDENTE
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.database();
 
-        // ✅ FUNÇÕES PADRÃO DO SISTEMA
-        function salvarDados(chave, dados) { 
-            return db.ref(chave).set(dados); 
+        function salvarDados(chave, dados) {
+            return db.ref(chave).set(dados);
         }
-        function carregarDados(chave) { 
+        function carregarDados(chave) {
             return db.ref(chave).once('value').then(snap => {
                 const valor = snap.val();
                 if (!valor) return [];
@@ -484,10 +484,20 @@ const LINK10 = "";
                 return Object.values(valor);
             });
         }
-        function formatarMoeda(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+        function formatarMoeda(v) {
+            return `<span class="dourado">R$</span> <span class="branco">${v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
+        }
 
-        function abrirMenu() { document.getElementById('menuLateral').classList.remove('-translate-x-full'); document.getElementById('fundoEscuro').classList.remove('hidden'); document.body.style.overflow='hidden'; }
-        function fecharMenu() { document.getElementById('menuLateral').classList.add('-translate-x-full'); document.getElementById('fundoEscuro').classList.add('hidden'); document.body.style.overflow='auto'; }
+        function abrirMenu() {
+            document.getElementById('menuLateral').classList.remove('-translate-x-full');
+            document.getElementById('fundoEscuro').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function fecharMenu() {
+            document.getElementById('menuLateral').classList.add('-translate-x-full');
+            document.getElementById('fundoEscuro').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
 
         function verificarSenhaAtendente(pagina) {
             const senhaInformada = prompt("🔐 Digite a senha da Área do Caixa:");
@@ -516,9 +526,9 @@ const LINK10 = "";
 
         function abrirFormulario() {
             const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
-            if(carrinho.length === 0) { 
-                alert('Adicione itens ao carrinho primeiro!'); 
-                return; 
+            if (carrinho.length === 0) {
+                alert('Adicione itens ao carrinho primeiro!');
+                return;
             }
             modal.style.display = "block";
         }
@@ -548,19 +558,23 @@ const LINK10 = "";
             }
 
             const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
-            const total = carrinho.reduce((s,i)=>s + (i.preco * i.quantidade),0);
-            
-            // ✅ MENSAGEM EXATA CONFORME PEDIDO: SEM DADOS DO FORMULÁRIO, APENAS TEXTO E EMOJIS 🛍️💳🕓😃
-            const mensagemApenasTexto = `🛍️ Olá! Já anotei todas as suas informações. 😃
- 
-💳 O pagamento é feito diretamente pelo WhatsApp, de forma prática, rápida e 100% segura, através do Pix: williamempreiteiro007@gmail.com
+            const total = carrinho.reduce((s, i) => s + (i.preco * i.quantidade), 0);
 
+            let mensagem = `🛍️ *NOVO PEDIDO - VAL MODAS* 🛍️\n\n`;
+            mensagem += `👤 *Cliente:* ${nome}\n`;
+            mensagem += `📍 *Entrega:* ${rua}, ${numero} - ${tipoImovel}\n`;
+            mensagem += `🏙️ *Cidade:* ${cidade}\n`;
+            if (referencia) mensagem += `🔎 *Referência:* ${referencia}\n`;
+            if (whatsapp) mensagem += `📱 *Contato:* ${whatsapp}\n`;
+            mensagem += `\n📝 *Itens do Pedido:*\n`;
+            carrinho.forEach(item => {
+                mensagem += `• ${item.nome} - Qtd: ${item.quantidade} - Valor: R$ ${item.preco.toLocaleString('pt-BR', {minimumFractionDigits:2})}\n`;
+            });
+            mensagem += `\n💰 *TOTAL A PAGAR:* R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits:2})}\n\n`;
+            mensagem += `💳 *Forma de pagamento:* A combinar na entrega 🚚`;
 
-🕓 Trabalhamos com total transparência e compromisso com o cliente. Assim que o pagamento for confirmado, a sua encomenda será separada, embalada e enviada o mais rápido possível.`;
+            const linkMensagem = `https://wa.me/${NUMERO_MENSAGENS}?text=${encodeURIComponent(mensagem)}`;
 
-            const linkMensagem = `https://wa.me/${NUMERO_MENSAGENS}?text=${encodeURIComponent(mensagemApenasTexto)}`;
-
-            // ✅ DADOS QUE VÃO PARA O ADMIN/FIREBASE: TODOS OS DADOS, MENOS TELEFONE/WHATSAPP PARA NÃO DAR ERRO
             const novoPedido = {
                 id: Date.now().toString(),
                 data: new Date().toLocaleString('pt-BR'),
@@ -570,22 +584,20 @@ const LINK10 = "";
                 cliente_nome: nome,
                 cliente_endereco: `${rua}, ${numero} - ${tipoImovel}. ${referencia}`,
                 cliente_cidade: cidade
-                // ⛔ CAMPO DE CONTATO REMOVIDO TOTALMENTE
             };
 
             try {
                 const pedidos = await carregarDados('pedidos');
                 pedidos.push(novoPedido);
                 await salvarDados('pedidos', pedidos);
-                
+
                 localStorage.removeItem('carrinho');
                 atualizarCarrinho();
                 carregarMeusPedidos();
 
-                // ✅ ABRE O WHATSAPP COM A MENSAGEM PADRÃO APENAS
                 window.open(linkMensagem, '_blank');
                 modal.style.display = "none";
-                alert(`✅ Pedido enviado com sucesso, ${nome}! Agora já aparece na administração.`);
+                alert(`✅ Pedido enviado com sucesso, ${nome}! Em breve entraremos em contato.`);
             } catch (erro) {
                 alert("❌ Erro ao enviar pedido: " + erro.message);
             }
@@ -596,20 +608,18 @@ const LINK10 = "";
             atualizarCarrinho();
             carregarMeusPedidos();
 
-            // ✅ ATUALIZA PRODUTOS EM TEMPO REAL
             db.ref('produtos').on('value', () => {
                 carregarProdutosLoja();
             });
         });
 
-        // ✅ FUNÇÃO CORRIGIDA: Carrega produtos diretamente do Firebase
         async function carregarProdutosLoja() {
             const container = document.getElementById('lista-produtos');
             try {
                 const produtos = await carregarDados('produtos');
                 const produtosDisponiveis = produtos.filter(p => p.disponivel === true);
 
-                if(produtosDisponiveis.length === 0) {
+                if (produtosDisponiveis.length === 0) {
                     container.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhum produto cadastrado ou disponível no momento.</p>';
                     return;
                 }
@@ -618,16 +628,17 @@ const LINK10 = "";
                 produtosDisponiveis.forEach((p, index) => {
                     const numeroImagem = (index + 1);
                     const linkImagem = eval(`LINK${numeroImagem}`) || 'https://i.postimg.cc/VvLMVFgG/IMG-20260518-085339-(2).webp';
-                    
+
                     html += `
                     <div class="border rounded-xl p-5 hover:shadow-md card-produto">
-                        <div class="codigo-produto">${String(index + 1).padStart(3, '0')}</div>
+                        <div class="codigo-produto">${String(index + 1
+                    ).padStart(3, '0')}</div>
                         <div class="moldura-produto">
                             <img src="${linkImagem}" alt="${p.nome}" class="img-produto">
                         </div>
                         <div class="conteudo-produto">
                             <div>
-                                <p class="font-bold text-green-600 text-lg preco-produto">${formatarMoeda(p.preco)}</p>
+                                <p class="font-bold text-lg preco-produto">${formatarMoeda(p.preco)}</p>
                                 <h3 class="font-bold nome-produto">${p.nome}</h3>
                             </div>
                             <div class="caixa-botoes">
@@ -649,13 +660,13 @@ const LINK10 = "";
         function adicionarItem(id, nome, preco) {
             const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
             const itemExistente = carrinho.find(i => i.id === id);
-            
+
             if (itemExistente) {
                 itemExistente.quantidade += 1;
             } else {
-                carrinho.push({id, nome, preco, quantidade: 1});
+                carrinho.push({ id, nome, preco, quantidade: 1 });
             }
-            
+
             localStorage.setItem('carrinho', JSON.stringify(carrinho));
             atualizarCarrinho();
         }
@@ -666,7 +677,7 @@ const LINK10 = "";
             const totalEl = document.getElementById('carrinho-total');
             const nomeInfo = document.getElementById('nome-cliente-info');
 
-            if(carrinho.length === 0) {
+            if (carrinho.length === 0) {
                 container.innerHTML = 'Nenhum item adicionado ainda.';
                 totalEl.innerText = '0,00';
                 nomeInfo.innerHTML = '';
@@ -695,62 +706,62 @@ const LINK10 = "";
             });
 
             container.innerHTML = html;
-            totalEl.innerText = total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+            totalEl.innerHTML = formatarMoeda(total);
         }
 
         function alterarQuantidade(id, delta) {
-                const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
-    const item = carrinho.find(i => i.id === id);
-    if (!item) return;
+            const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
+            const item = carrinho.find(i => i.id === id);
+            if (!item) return;
 
-    item.quantidade += delta;
-    if (item.quantidade <= 0) {
-        const index = carrinho.indexOf(item);
-        carrinho.splice(index, 1);
-    }
-    localStorage.setItem('carrinho', JSON.stringify(carrinho));
-    atualizarCarrinho();
-}
-
-function removerItemTodo(id) {
-    const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
-    const novaLista = carrinho.filter(i => i.id !== id);
-    localStorage.setItem('carrinho', JSON.stringify(novaLista));
-    atualizarCarrinho();
-}
-
-async function carregarMeusPedidos() {
-    try {
-        const pedidos = await carregarDados('pedidos');
-        const pedidosAtivos = pedidos.filter(p => p.status !== 'Entregue');
-
-        if(pedidosAtivos.length === 0) { 
-            document.getElementById('lista-meus-pedidos').innerHTML = '<div class="text-center text-gray-400 py-6"><i class="fa fa-shopping-bag text-4xl mb-2"></i><p>Nenhum pedido pendente ou em andamento.</p></div>'; 
-            return; 
+            item.quantidade += delta;
+            if (item.quantidade <= 0) {
+                const index = carrinho.indexOf(item);
+                carrinho.splice(index, 1);
+            }
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+            atualizarCarrinho();
         }
-    
-        const container = document.getElementById('lista-meus-pedidos');
-        container.innerHTML = '';
-        pedidosAtivos.forEach(p => {
-            const div = document.createElement('div');
-            div.className = 'border rounded-lg p-4';
-            div.innerHTML = `
-                <div class="flex justify-between items-center mb-2">
-                    <span class="font-bold">Pedido #${p.id.slice(-4)}</span>
-                    <span class="px-2 py-1 rounded text-sm ${p.status==='Pendente'?'bg-yellow-100 text-yellow-800':p.status==='Entregue'?'bg-green-100 text-green-800':'bg-red-100 text-red-800'}">${p.status}</span>
-                </div>
-                <p class="text-sm text-gray-400">Data: ${p.data}</p>
-                <p class="text-sm text-gray-400">Cliente: ${p.cliente_nome}</p>
-                <p class="text-sm text-gray-400">Endereço: ${p.cliente_endereco}</p>
-                <p class="text-sm text-gray-400">Cidade: ${p.cliente_cidade}</p>
-                <p class="font-bold text-green-600">Total: ${formatarMoeda(p.total)}</p>
-            `;
-            container.appendChild(div);
-        });
-    } catch (erro) {
-        document.getElementById('lista-meus-pedidos').innerHTML = '<p class="text-red-500 text-center py-4">Erro ao carregar seus pedidos.</p>';
-    }
-}
+
+        function removerItemTodo(id) {
+            const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
+            const novaLista = carrinho.filter(i => i.id !== id);
+            localStorage.setItem('carrinho', JSON.stringify(novaLista));
+            atualizarCarrinho();
+        }
+
+        async function carregarMeusPedidos() {
+            try {
+                const pedidos = await carregarDados('pedidos');
+                const pedidosAtivos = pedidos.filter(p => p.status !== 'Entregue');
+
+                if(pedidosAtivos.length === 0) { 
+                    document.getElementById('lista-meus-pedidos').innerHTML = '<div class="text-center text-gray-400 py-6"><i class="fa fa-shopping-bag text-4xl mb-2"></i><p>Nenhum pedido pendente ou em andamento.</p></div>'; 
+                    return; 
+                }
+            
+                const container = document.getElementById('lista-meus-pedidos');
+                container.innerHTML = '';
+                pedidosAtivos.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'border rounded-lg p-4';
+                    div.innerHTML = `
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold">Pedido #${p.id.slice(-4)}</span>
+                            <span class="px-2 py-1 rounded text-sm ${p.status==='Pendente'?'bg-yellow-100 text-yellow-800':p.status==='Entregue'?'bg-green-100 text-green-800':'bg-red-100 text-red-800'}">${p.status}</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Data: ${p.data}</p>
+                        <p class="text-sm text-gray-400">Cliente: ${p.cliente_nome}</p>
+                        <p class="text-sm text-gray-400">Endereço: ${p.cliente_endereco}</p>
+                        <p class="text-sm text-gray-400">Cidade: ${p.cliente_cidade}</p>
+                        <p class="font-bold text-green-600">Total: ${formatarMoeda(p.total)}</p>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (erro) {
+                document.getElementById('lista-meus-pedidos').innerHTML = '<p class="text-red-500 text-center py-4">Erro ao carregar seus pedidos.</p>';
+            }
+        }
 
 </script>
 
