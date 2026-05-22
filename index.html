@@ -9,6 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase.js"></script>
+    
+    <!-- ✅ CONEXÃO COM OS DEMAIS ARQUIVOS -->
+    <script src="conexao-admin-atendente.html"></script>
+    <script src="admin.html"></script>
+    <script src="atendente.html"></script>
+    <script src="chat.html"></script>
+
     <style>
         * { 
             margin: 0; 
@@ -339,6 +346,13 @@ const LINK7 = "https://i.postimg.cc/RVRkhz8W/IMG-20260517-WA0032-(1).webp";
 const LINK8 = "";
 const LINK9 = "";
 const LINK10 = "";
+
+// ✅ VARIÁVEIS GLOBAIS COMPARTILHADAS COM TODOS OS ARQUIVOS
+window.SENHA_ATENDENTE = "Deus321";
+window.SENHA_ADMIN = "WJ@321";
+window.NUMERO_MENSAGENS = "5531990721928";
+window.db = null;
+window.firebaseConfig = null;
 </script>
 
     <header class="cabecalho-nosso">
@@ -354,15 +368,19 @@ const LINK10 = "";
     <div id="menuLateral" class="fixed top-0 left-0 h-full w-4/5 bg-blue-900/80 text-white shadow-2xl transform -translate-x-full transition-transform duration-100 z-50 p-6">
         <div class="flex justify-between items-center mb-8">
             <h2 class="font-bold text-xl text-yellow-400">Menu</h2>
-                        <button onclick="fecharMenu()" class="text-xl text-white">
+            <button onclick="fecharMenu()" class="text-xl text-white">
                 <i class="fa fa-times"></i>
             </button>
         </div>
         <nav class="flex flex-col gap-3">
             <a href="index.html" class="py-3 px-4 rounded-lg bg-white/20 font-medium text-center text-white hover:bg-yellow-500/30" onclick="fecharMenu()">🏠 Loja da Val 🛍️🛒</a>
             <a href="#meusPedidos" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="fecharMenu()">📋 Meus Pedidos</a>
+            
+            <!-- ✅ CONEXÃO DIRETA COM OS OUTROS ARQUIVOS -->
             <a href="#" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="verificarSenhaAtendente('atendente.html')">🔐🖥️ Caixa Registradora</a>
             <a href="#" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="verificarSenhaAdmin('admin.html')">🔐 Administração</a>
+            <a href="chat.html" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="fecharMenu()">💬 Atendimento / Chat</a>
+            <a href="conexao-admin-atendente.html" class="py-3 px-4 rounded-lg hover:bg-white/10 transition text-center text-white" onclick="fecharMenu()">🔗 Central de Controle</a>
         </nav>
     </div>
 
@@ -454,11 +472,7 @@ const LINK10 = "";
     </div>
 
     <script>
-        const SENHA_ATENDENTE = "Deus321";
-        const SENHA_ADMIN = "WJ@321";
-        const NUMERO_MENSAGENS = "5531990721928";
-
-        let firebaseConfig;
+        // ✅ INICIALIZAÇÃO COMPARTILHADA DO FIREBASE PARA TODOS OS ARQUIVOS
         if (typeof CONFIG_FIREBASE !== 'undefined') {
             firebaseConfig = CONFIG_FIREBASE;
         } else {
@@ -476,9 +490,9 @@ const LINK10 = "";
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
-        const db = firebase.database();
+        window.db = firebase.database();
 
-        // 🆕 FUNÇÃO PARA GERAR OU PEGAR O CÓDIGO ÚNICO DO CLIENTE
+        // 🆕 FUNÇÃO PARA GERAR OU PEGAR O CÓDIGO ÚNICO DO CLIENTE (COMPARTILHADA)
         function pegarOuGerarCodigoCliente() {
             let codigo = localStorage.getItem('codigoClienteValModas');
             if (!codigo) {
@@ -488,6 +502,7 @@ const LINK10 = "";
             return codigo;
         }
 
+        // ✅ FUNÇÕES DE DADOS COMPARTILHADAS ENTRE TODOS OS ARQUIVOS
         function salvarDados(chave, dados) {
             return db.ref(chave).push(dados);
         }
@@ -513,11 +528,14 @@ const LINK10 = "";
             document.body.style.overflow = 'auto';
         }
 
+        // ✅ FUNÇÕES DE ACESSO INTEGRADAS COM OS ARQUIVOS DE ADM E ATENDENTE
         function verificarSenhaAtendente(pagina) {
             const senhaInformada = prompt("🔐 Digite a senha da Área do Caixa:");
             fecharMenu();
             if (senhaInformada === null) return;
             if (senhaInformada === SENHA_ATENDENTE) {
+                // ✅ ENVIA DADOS DE CONEXÃO PARA O ARQUIVO ALVO
+                localStorage.setItem('dadosConexao', JSON.stringify({ origem: 'index', acesso: 'atendente', data: new Date().toISOString() }));
                 window.location.href = pagina;
             } else {
                 alert("❌ Senha incorreta!");
@@ -529,6 +547,8 @@ const LINK10 = "";
             fecharMenu();
             if (senhaInformada === null) return;
             if (senhaInformada === SENHA_ADMIN) {
+                // ✅ ENVIA DADOS DE CONEXÃO PARA O ARQUIVO ALVO
+                localStorage.setItem('dadosConexao', JSON.stringify({ origem: 'index', acesso: 'admin', data: new Date().toISOString() }));
                 window.location.href = pagina;
             } else {
                 alert("❌ Senha incorreta!");
@@ -604,6 +624,10 @@ Trabalhamos com total transparência e responsabilidade ☺️. Você vai recebe
             try {
                 await salvarDados('pedidos', novoPedido);
 
+                // ✅ SINCRONIZA COM TODOS OS ARQUIVOS
+                localStorage.setItem('ultimoPedido', JSON.stringify(novoPedido));
+                window.dispatchEvent(new CustomEvent('novoPedido', { detail: novoPedido }));
+
                 localStorage.removeItem('carrinho');
                 atualizarCarrinho();
                 carregarMeusPedidos();
@@ -622,8 +646,17 @@ Trabalhamos com total transparência e responsabilidade ☺️. Você vai recebe
             atualizarCarrinho();
             carregarMeusPedidos();
 
+            // ✅ OUVINTE DE ALTERAÇÕES PARA SINCRONIZAR COM TODOS OS ARQUIVOS
             db.ref('produtos').on('value', () => {
                 carregarProdutosLoja();
+                // Avisa os outros arquivos que produtos mudaram
+                window.dispatchEvent(new Event('produtosAtualizados'));
+            });
+
+            db.ref('pedidos').on('value', () => {
+                carregarMeusPedidos();
+                // Avisa os outros arquivos que pedidos mudaram
+                window.dispatchEvent(new Event('pedidosAtualizados'));
             });
         });
 
@@ -683,6 +716,8 @@ Trabalhamos com total transparência e responsabilidade ☺️. Você vai recebe
 
             localStorage.setItem('carrinho', JSON.stringify(carrinho));
             atualizarCarrinho();
+            // ✅ Atualiza carrinho em todos os arquivos
+            window.dispatchEvent(new Event('carrinhoAtualizado'));
         }
 
         function atualizarCarrinho() {
@@ -735,6 +770,8 @@ Trabalhamos com total transparência e responsabilidade ☺️. Você vai recebe
             }
             localStorage.setItem('carrinho', JSON.stringify(carrinho));
             atualizarCarrinho();
+            // ✅ Atualiza carrinho em todos os arquivos
+            window.dispatchEvent(new Event('carrinhoAtualizado'));
         }
 
         function removerItemTodo(id) {
@@ -742,9 +779,11 @@ Trabalhamos com total transparência e responsabilidade ☺️. Você vai recebe
             const novaLista = carrinho.filter(i => i.id !== id);
             localStorage.setItem('carrinho', JSON.stringify(novaLista));
             atualizarCarrinho();
+            // ✅ Atualiza carrinho em todos os arquivos
+            window.dispatchEvent(new Event('carrinhoAtualizado'));
         }
 
-        // ✅ REGRA 2: MOSTRAR SOMENTE PEDIDOS DO CLIENTE
+        // ✅ REGRA 2: MOSTRAR SOMENTE PEDIDOS DO CLIENTE + SINCRONIZAÇÃO GERAL
         async function carregarMeusPedidos() {
             try {
                 const codigoAtual = pegarOuGerarCodigoCliente();
