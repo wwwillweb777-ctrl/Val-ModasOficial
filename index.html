@@ -482,7 +482,6 @@ const LINK10 = "";
         function pegarOuGerarCodigoCliente() {
             let codigo = localStorage.getItem('codigoClienteValModas');
             if (!codigo) {
-                // Gera um código aleatório de 12 caracteres
                 codigo = Math.random().toString(36).substring(2, 14).toUpperCase();
                 localStorage.setItem('codigoClienteValModas', codigo);
             }
@@ -566,7 +565,7 @@ const LINK10 = "";
             const bairro = document.getElementById('bairro').value.trim();
             const tipoImovel = document.getElementById('tipo_imovel').value;
             const referencia = document.getElementById('ponto_referencia').value.trim();
-            const whatsapp = document.getElementById('whatsapp').value.trim(); // 📥 Pega o telefone, mas NÃO SALVA
+            const whatsapp = document.getElementById('whatsapp').value.trim();
 
             if (!nome || !cidade || !rua || !numero || !bairro || !tipoImovel) {
                 alert("⚠️ Preencha todos os campos obrigatórios!");
@@ -576,14 +575,13 @@ const LINK10 = "";
             const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
             const total = carrinho.reduce((s, i) => s + (i.preco * i.quantidade), 0);
 
-            // ✅ MENSAGEM CORRIGIDA COMO VOCÊ PEDIU
             const mensagem = `🛡️ Olá, já anotei todas as suas informações! O pagamento é realizado aqui pelo próprio WhatsApp, de maneira fácil e segura 💳.
  
 Trabalhamos com total transparência e responsabilidade ☺️. Você vai receber seu produto o mais rápido possível 🕓, tudo perfeito e organizado 🛍️🛒. Agora é só aguardar um instante que já providencio tudo para você! Val Modas agradece a preferência. 🤝`;
 
             const linkMensagem = `https://wa.me/${NUMERO_MENSAGENS}?text=${encodeURIComponent(mensagem)}`;
 
-            // ✅ DADOS SALVOS: TUDO MENOS O WHATSAPP/TELEFONE + CÓDIGO DO CLIENTE
+            // ✅ REGRA 1: NÃO SALVAR WHATSAPP NO BANCO
             const dadosCliente = {
                 nome: nome,
                 cidade: cidade,
@@ -592,7 +590,6 @@ Trabalhamos com total transparência e responsabilidade ☺️. Você vai recebe
                 bairro: bairro,
                 tipoImovel: tipoImovel,
                 pontoReferencia: referencia
-                // ❌ CAMPO WHATSAPP NÃO EXISTE AQUI, NÃO É SALVO
             };
 
             const novoPedido = {
@@ -601,7 +598,7 @@ Trabalhamos com total transparência e responsabilidade ☺️. Você vai recebe
                 status: 'Pendente',
                 total: total,
                 cliente: dadosCliente,
-                codigoCliente: pegarOuGerarCodigoCliente() // 🆕 CÓDIGO ÚNICO PARA PRIVACIDADE
+                codigoCliente: pegarOuGerarCodigoCliente()
             };
 
             try {
@@ -747,12 +744,12 @@ Trabalhamos com total transparência e responsabilidade ☺️. Você vai recebe
             atualizarCarrinho();
         }
 
+        // ✅ REGRA 2: MOSTRAR SOMENTE PEDIDOS DO CLIENTE
         async function carregarMeusPedidos() {
             try {
-                const codigoAtual = pegarOuGerarCodigoCliente(); // 🆕 PEGA O CÓDIGO DO CLIENTE ATUAL
+                const codigoAtual = pegarOuGerarCodigoCliente();
                 const pedidos = await carregarDados('pedidos');
                 
-                // 🆕 FILTRA SÓ OS PEDIDOS DESSE CLIENTE + NÃO ENTREGUES
                 const pedidosAtivos = pedidos.filter(p => 
                     p.status !== 'Entregue' && 
                     p.codigoCliente === codigoAtual
