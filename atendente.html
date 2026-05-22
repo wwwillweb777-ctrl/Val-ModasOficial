@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caixa Registradora</title>
+   <title>Caixa Registradora</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     
-    <!-- ✅ Versão do Firebase igual nas 3 páginas -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase.js"></script>
 
     <style>
@@ -98,11 +97,11 @@
         .btn-acao {
             border: none;
             border-radius: 6px;
-            padding: 4px 8px;
-            font-size: 12px;
+            padding: 8px 12px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            margin: 0 2px;
+            margin: 0 4px;
             transition: all 0.2s ease;
         }
         .btn-entregue { background-color: #16a34a; color: white; }
@@ -131,6 +130,11 @@
             gap: 10px;
             transition: all 0.3s ease;
             font-size: 16px !important;
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 10px 0;
+            border: 1px solid #333;
         }
         .item-container p { font-size: 15px !important; }
         .item-container .font-bold { font-size: 16px !important; }
@@ -151,10 +155,9 @@
             transition: border 0.2s;
         }
         .input-padrao:focus {
-            border-color: #2563eb;
-        }
-
-        .btn-cadastrar {
+             border-color: #2563eb;
+         }
+         .btn-cadastrar {
             background-color: #2563eb;
             color: white;
             border: none;
@@ -166,6 +169,22 @@
         }
         .btn-cadastrar:hover {
             background-color: #1d4ed8;
+        }
+
+        .btn-trocar {
+            background-color: #9333ea !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 8px 16px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: background 0.2s !important;
+            margin-top: 12px !important;
+            width: 100% !important;
+        }
+        .btn-trocar:hover {
+            background-color: #7e22ce !important;
         }
 
         .filtro-ativo {
@@ -181,22 +200,21 @@
             <h1 class="font-bold text-center mb-3 titulo-atendente" style="font-size: 22px !important;">💵 Caixa Registradora</h1>
 
             <nav class="flex justify-center items-center flex-nowrap overflow-hidden">
-                <a href="javascript:;" id="btn-pedidos" class="btn-menu btn-azul" onclick="abrirAba('pedidos')">Pedidos</a>
-                <a href="javascript:;" id="btn-produtos" class="btn-menu btn-azul-claro" onclick="abrirAba('produtos')">Produtos</a>
-                <a href="javascript:;" id="btn-cadastrar-atendente" class="btn-menu btn-azul-claro" onclick="abrirAba('cadastrar-atendente')">Meu Cadastro</a>
+                <button id="btn-pedidos" class="btn-menu btn-azul" onclick="abrirAba('pedidos')">Pedidos</button>
+                <button id="btn-produtos" class="btn-menu btn-azul-claro" onclick="abrirAba('produtos')">Produtos</button>
+                <button id="btn-cadastrar-atendente" class="btn-menu btn-azul-claro" onclick="abrirAba('cadastrar-atendente')">Meu Cadastro</button>
             </nav>
         </div>
     </header>
 
     <section class="container mx-auto p-4 pt-32">
-        <!-- ABA PEDIDOS -->
         <div id="aba-pedidos" class="aba-conteudo">
             <div class="bg-white/5 rounded-2xl shadow p-5 mb-6 border border-gray-800">
                 <div class="flex flex-wrap gap-2 mb-5 justify-center">
-                    <button class="btn-menu btn-azul filtro-btn" data-filtro="todos" onclick="filtrarPedidos('todos')">Todos</button>
-                    <button class="btn-menu btn-azul-claro filtro-btn" data-filtro="Pendente" onclick="filtrarPedidos('Pendente')">Pendentes</button>
-                    <button class="btn-menu btn-azul-claro filtro-btn" data-filtro="Entregue" onclick="filtrarPedidos('Entregue')">Entregues</button>
-                    <button class="btn-menu btn-azul-claro filtro-btn" data-filtro="Cancelado" onclick="filtrarPedidos('Cancelado')">Cancelados</button>
+                    <button class="btn-menu btn-azul filtro-btn" onclick="filtrarPedidos('todos')">Todos</button>
+                    <button class="btn-menu btn-azul-claro filtro-btn" onclick="filtrarPedidos('Pendente')">Pendentes</button>
+                    <button class="btn-menu btn-azul-claro filtro-btn" onclick="filtrarPedidos('Entregue')">Entregues</button>
+                    <button class="btn-menu btn-azul-claro filtro-btn" onclick="filtrarPedidos('Cancelado')">Cancelados</button>
                 </div>
 
                 <div id="lista-pedidos" class="space-y-4">
@@ -205,7 +223,6 @@
             </div>
         </div>
 
-        <!-- ABA PRODUTOS -->
         <div id="aba-produtos" class="aba-conteudo hidden">
             <div class="bg-white/5 rounded-2xl shadow p-5 mb-6 border border-gray-800">
                 <h2 class="text-lg font-bold text-yellow-500 mb-5 text-center">📦 Cadastrar Novo Produto</h2>
@@ -234,7 +251,6 @@
             </div>
         </div>
 
-        <!-- ABA MEU CADASTRO -->
         <div id="aba-cadastrar-atendente" class="aba-conteudo hidden">
             <div class="bg-white/5 rounded-2xl shadow p-5 mb-6 border border-gray-800">
                 <h2 class="text-lg font-bold text-yellow-500 mb-5 text-center">👤 Meu Cadastro de Atendente</h2>
@@ -242,27 +258,27 @@
                 <div class="space-y-4 max-w-md mx-auto mb-8">
                     <div>
                         <label class="block text-sm font-medium mb-1">Seu Nome Completo</label>
-                        <input type="text" id="atend-nome" class="input-padrao" placeholder="Seu nome">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Contato / Telefone</label>
-                        <input type="text" id="atend-contato" class="input-padrao" placeholder="(31) 9XXXX-XXXX">
+                        <input type="text" id="atend-nome" class="input-padrao" placeholder="Digite seu nome">
                     </div>
                 </div>
 
                 <button onclick="salvarCadastroAtendente()" class="btn-cadastrar w-full max-w-md mx-auto block">💾 Salvar Meus Dados</button>
 
                 <div id="dados-cadastrados" class="mt-10 p-4 bg-purple-900/30 rounded-xl hidden">
-                    <h3 class="font-bold text-center mb-2 text-yellow-400">Dados Cadastrados</h3>
-                    <p class="text-center" id="info-nome"></p>
-                    <p class="text-center text-sm text-gray-300" id="info-contato"></p>
-                    <p class="text-center text-xs text-gray-400 mt-1" id="info-data"></p>
+                    <h3 class="font-bold text-center mb-2 text-yellow-400">Atendente Atual</h3>
+                    <p class="text-center text-lg font-semibold" id="info-nome"></p>
+                    <p class="text-center text-sm text-green-400 mt-1" id="info-entrada"></p>
+                    <button onclick="trocarAtendente()" class="btn-trocar">🔄 Trocar Atendente</button>
+                </div>
+
+                <div id="historico-trocas" class="mt-8 p-3 bg-black/30 rounded-lg hidden">
+                    <h4 class="text-sm font-bold text-yellow-400 mb-2 text-center">📜 Histórico de Troca de Turno</h4>
+                    <div id="lista-historico" class="text-xs space-y-1 max-h-40 overflow-y-auto"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- MODAL DE EDIÇÃO DE PEDIDO -->
     <div id="modalEditar" class="modal fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/80"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-gray-900 rounded-2xl p-6 shadow-2xl border border-gray-700">
@@ -302,9 +318,7 @@
          </div>
      </div>
 
-     <!-- ✅ SCRIPT DO FIREBASE E FUNÇÕES - 100% CORRIGIDO -->
      <script>
-         // ✅ CONFIGURAÇÃO DO FIREBASE IGUAL NAS 3 PÁGINAS
          const firebaseConfig = {
              apiKey: "AIzaSyCYd655rBu8_UfwGtYWDgRzdtAw-UAR9Qg",
              authDomain: "val-modas.firebaseapp.com",
@@ -315,32 +329,55 @@
              appId: "1:1060099036181:web:e677b3b6ae0ce1a499aa1c"
          };
 
-         // Inicializa Firebase
          if (!firebase.apps.length) {
              firebase.initializeApp(firebaseConfig);
          }
          const db = firebase.database();
 
-         // ✅ FUNÇÕES CORRIGIDAS - AGORA OS BOTÕES DE SALVAR FUNCIONAM
-         function salvarDados(caminho, dados) {
+         function enviarParaAdmin(caminho, dados, tipo = 'geral') {
+             db.ref(`admin_dados/${caminho}`).set(dados);
+             db.ref(`admin_logs/${Date.now()}`).set({
+                 tipo: tipo,
+                 dados: dados,
+                 data_hora: new Date().toLocaleString('pt-BR'),
+                 origem: 'caixa_registradora'
+             });
              return db.ref(caminho).set(dados);
+         }
+
+         function salvarDados(caminho, dados) {
+             return enviarParaAdmin(caminho, dados, 'alteracao_dados');
          }
 
          function carregarDados(caminho) {
              return db.ref(caminho).once('value').then(snap => {
                  const valor = snap.val();
-                 // ✅ CORREÇÃO CRUCIAL: SEMPRE retorna ARRAY, mesmo vazio, para usar .push() sem erros
                  if (!valor) return [];
-                 if (Array.isArray(valor)) return valor.filter(Boolean);
-                 return Object.values(valor);
+                 return Array.isArray(valor) ? valor.filter(Boolean) : Object.values(valor);
              });
+         }
+
+         let nomeAtendenteGlobal = "Não identificado";
+
+         async function getNomeAtendenteAtual() {
+             const atendente = await db.ref('atendente_cadastro').once('value');
+             const dados = atendente.val();
+             if (dados && dados.nome) {
+                 nomeAtendenteGlobal = dados.nome;
+                 localStorage.setItem('atendente_nome_atual', dados.nome);
+                 enviarParaAdmin('atendente_atual_operando', dados, 'status_atendente');
+                 return dados.nome;
+             }
+             nomeAtendenteGlobal = "Não identificado";
+             localStorage.removeItem('atendente_nome_atual');
+             enviarParaAdmin('atendente_atual_operando', {nome: 'Nenhum', status: 'inativo'}, 'status_atendente');
+             return 'Não identificado';
          }
 
          function formatarMoeda(v) {
              return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
          }
 
-         // Controle de Abas
          function abrirAba(nome) {
              document.querySelectorAll('.aba-conteudo').forEach(el => el.classList.add('hidden'));
              document.getElementById(`aba-${nome}`).classList.remove('hidden');
@@ -351,36 +388,58 @@
              });
              document.getElementById(`btn-${nome}`).classList.remove('btn-azul-claro');
              document.getElementById(`btn-${nome}`).classList.add('btn-azul');
+
+             if(nome === 'pedidos') carregarPedidos();
          }
 
-         // Variável global para filtro
          let filtroAtual = 'todos';
 
-         document.addEventListener('DOMContentLoaded', () => {
+         document.addEventListener('DOMContentLoaded', async () => {
+             await getNomeAtendenteAtual();
              carregarPedidos();
              carregarProdutosCadastrados();
              verificarCadastroAtendente();
+             carregarHistoricoTrocas();
 
-             // Atualiza dados em tempo real
              db.ref('pedidos').on('value', () => {
-                 carregarPedidos();
+                 if(!document.getElementById('aba-pedidos').classList.contains('hidden')) {
+                     carregarPedidos();
+                 }
+                 window.dispatchEvent(new Event('pedidosAtualizados'));
+                 carregarDados('pedidos').then(lista => enviarParaAdmin('todos_pedidos_lista', lista, 'atualizacao_pedidos'));
              });
+
              db.ref('produtos').on('value', () => {
                  carregarProdutosCadastrados();
+                 window.dispatchEvent(new Event('produtosAtualizados'));
+                 carregarDados('produtos').then(lista => enviarParaAdmin('todos_produtos_lista', lista, 'atualizacao_produtos'));
+             });
+
+             db.ref('atendente_cadastro').on('value', async () => {
+                 await getNomeAtendenteAtual();
+                 window.dispatchEvent(new Event('atendenteAlterado'));
+             });
+
+             db.ref('historico_trocas').on('value', () => {
+                 carregarDados('historico_trocas').then(lista => enviarParaAdmin('historico_completo_trocas', lista, 'historico'));
+             });
+
+             window.addEventListener('storage', (e) => {
+                 if (e.key === 'ultimoPedido') carregarPedidos();
+                 if (e.key === 'carrinho') carregarPedidos();
              });
          });
 
-         // -------------------- GERENCIAMENTO DE PEDIDOS --------------------
          async function carregarPedidos() {
              const pedidos = await carregarDados('pedidos');
              const container = document.getElementById('lista-pedidos');
 
              if (pedidos.length === 0) {
                  container.innerHTML = '<p class="text-gray-400 text-center py-6">Nenhum pedido recebido ainda.</p>';
+                 enviarParaAdmin('resumo_pedidos', {quantidade: 0, mensagem: 'Nenhum pedido'}, 'resumo');
                  return;
              }
 
-             // Aplica filtro
              let pedidosFiltrados = pedidos;
              if (filtroAtual !== 'todos') {
                  pedidosFiltrados = pedidos.filter(p => p.status === filtroAtual);
@@ -391,7 +450,6 @@
                  return;
              }
 
-             // Ordena os mais novos primeiro
              pedidosFiltrados.sort((a, b) => parseInt(b.id) - parseInt(a.id));
 
              container.innerHTML = '';
@@ -401,15 +459,15 @@
                  let listaItens = '';
                  if (p.itens && Array.isArray(p.itens)) {
                      p.itens.forEach(item => {
-                         listaItens += `<p class="text-sm text-gray-300">• ${item.nome} <span class="text-gray-500">x${item.quantidade}</span> - ${formatarMoeda(item.preco * item.quantidade)}</p>`;
+                         listaItens += `<p class="text-sm text-gray-300">• ${item.nome} <span class="text-gray-500">x${item.quantidade}</span> - ${formatarMoeda(item.preco * item.quantidade)}<br><span class="text-xs text-gray-400">${item.descricao || ''}</span></p>`;
                      });
                  }
 
                  container.innerHTML += `
-                 <div class="bg-white/5 rounded-xl p-4 shadow border border-gray-800 item-container" data-id="${p.id}">
+                 <div class="item-container">
                      <div class="w-full">
                          <div class="flex flex-wrap justify-between items-start mb-2 gap-2">
-                             <h4 class="font-bold text-lg">Pedido #${p.id ? p.id.slice(-6) : ''}</h4>
+                             <h4 class="font-bold text-lg text-yellow-400">Pedido</h4>
                              <span class="${classeStatus}">${p.status || 'Pendente'}</span>
                          </div>
 
@@ -424,7 +482,7 @@
                                  <p class="text-sm"><strong>Pagamento:</strong> ${p.forma_pagamento || 'A definir'}</p>
                                  <p class="text-sm"><strong>Observação:</strong> ${p.observacao || 'Nenhuma'}</p>
                                  <p class="text-sm text-yellow-500 font-bold text-lg mt-1">Total: ${formatarMoeda(p.total || 0)}</p>
-                                 <p class="text-xs text-gray-500">Atendente: ${p.atendente_nome || 'Não identificado'}</p>
+                                 <p class="text-xs text-gray-500">Atendente: ${p.atendente_nome || nomeAtendenteGlobal}</p>
                              </div>
                          </div>
 
@@ -443,6 +501,15 @@
                  </div>
                  `;
              });
+
+             const totalGeral = pedidos.reduce((soma, p) => soma + (p.total || 0), 0);
+             enviarParaAdmin('resumo_pedidos', {
+                 quantidade_total: pedidos.length,
+                 pendentes: pedidos.filter(p => p.status === 'Pendente').length,
+                 entregues: pedidos.filter(p => p.status === 'Entregue').length,
+                 cancelados: pedidos.filter(p => p.status === 'Cancelado').length,
+                 valor_total: totalGeral
+             }, 'resumo');
          }
 
          function filtrarPedidos(status) {
@@ -457,25 +524,25 @@
          }
 
          async function alterarStatusPedido(idPedido, novoStatus) {
-             const atendente = await carregarDados('atendente_cadastro');
-             const nomeAtendente = atendente?.nome || 'Não identificado';
-
+             if (!idPedido) { alert("Erro: ID do pedido não encontrado!"); return; }
+             const nomeAtendente = await getNomeAtendenteAtual();
              const pedidos = await carregarDados('pedidos');
              const pedidosAtualizados = pedidos.map(p => {
                  if (p.id === idPedido) {
-                     return { ...p, status: novoStatus, atendente_nome: nomeAtendente };
+                     return { ...p, status: novoStatus, atendente_nome: nomeAtendente, alterado_por: nomeAtendente, data_alteracao: new Date().toLocaleString('pt-BR') };
                  }
                  return p;
              });
-
              await salvarDados('pedidos', pedidosAtualizados);
+             alert(`✅ Pedido marcado como ${novoStatus} com sucesso!`);
+             enviarParaAdmin(`alteracao_status_${idPedido}`, {id: idPedido, novo_status: novoStatus, atendente: nomeAtendente}, 'alteracao_status');
          }
 
          let pedidoEmEdicao = null;
          async function abrirModalEditarPedido(idPedido) {
              const pedidos = await carregarDados('pedidos');
              const pedido = pedidos.find(p => p.id === idPedido);
-             if (!pedido) return;
+             if (!pedido) { alert("Pedido não encontrado!"); return; }
 
              pedidoEmEdicao = pedido;
              document.getElementById('edit-pedido-id').value = pedido.id;
@@ -497,9 +564,7 @@
              const novoStatus = document.getElementById('edit-status').value;
              const novaForma = document.getElementById('edit-forma-pagamento').value;
              const novaObs = document.getElementById('edit-observacao').value;
-
-             const atendente = await carregarDados('atendente_cadastro');
-             const nomeAtendente = atendente?.nome || 'Não identificado';
+             const nomeAtendente = await getNomeAtendenteAtual();
 
              const pedidos = await carregarDados('pedidos');
              const pedidosAtualizados = pedidos.map(p => {
@@ -509,7 +574,8 @@
                          status: novoStatus,
                          forma_pagamento: novaForma,
                          observacao: novaObs,
-                         atendente_nome: nomeAtendente
+                         atendente_nome: nomeAtendente,
+                         ultima_alteracao: new Date().toLocaleString('pt-BR')
                      };
                  }
                  return p;
@@ -517,9 +583,10 @@
 
              await salvarDados('pedidos', pedidosAtualizados);
              fecharModalEditar();
+             alert('✅ Pedido atualizado com sucesso!');
+             enviarParaAdmin(`edicao_pedido_${pedidoEmEdicao.id}`, {id: pedidoEmEdicao.id, alterado_por: nomeAtendente}, 'edicao');
          }
 
-         // -------------------- GERENCIAMENTO DE PRODUTOS --------------------
          async function cadastrarProduto() {
              const nome = document.getElementById('prod-nome').value.trim();
              const preco = parseFloat(document.getElementById('prod-preco').value);
@@ -530,12 +597,10 @@
                  return;
              }
 
-             const atendente = await carregarDados('atendente_cadastro');
-             const nomeAtendente = atendente?.nome || 'William Jonathan Soares';
+             const nomeAtendente = await getNomeAtendenteAtual();
 
-             // ✅ AGORA SEMPRE É UM ARRAY, ENTÃO .push() FUNCIONA!
              const produtos = await carregarDados('produtos');
-             produtos.push({
+             const novoProduto = {
                  id: Date.now().toString(),
                  nome: nome,
                  preco: preco,
@@ -543,12 +608,16 @@
                  disponivel: true,
                  cadastrado_por: nomeAtendente,
                  data_cadastro: new Date().toLocaleString('pt-BR')
-             });
+             };
+             produtos.push(novoProduto);
 
              await salvarDados('produtos', produtos);
              alert('✅ Produto cadastrado e já disponível para os clientes!');
 
-             // Limpa formulário
+             enviarParaAdmin('novo_produto_cadastrado', novoProduto, 'cadastro_produto');
+
+             window.dispatchEvent(new Event('produtosAtualizados'));
+
              document.getElementById('prod-nome').value = '';
              document.getElementById('prod-preco').value = '';
              document.getElementById('prod-descricao').value = '';
@@ -566,7 +635,7 @@
              container.innerHTML = '';
              produtos.forEach(prod => {
                  container.innerHTML += `
-                 <div class="p-3 bg-white/5 rounded-lg shadow-sm item-container" data-id="${prod.id}">
+                 <div class="p-3 bg-white/5 rounded-lg shadow-sm item-container">
                      <div>
                          <p class="font-bold">${prod.nome}</p>
                          <p class="text-green-500 font-medium">${formatarMoeda(prod.preco)}</p>
@@ -579,71 +648,133 @@
              });
          }
 
-         // -------------------- GERENCIAMENTO DE ATENDENTE --------------------
          async function salvarCadastroAtendente() {
              const nome = document.getElementById('atend-nome').value.trim();
-             const contato = document.getElementById('atend-contato').value.trim();
 
              if (!nome) {
-                 alert('❌ Informe pelo menos o nome completo!');
+                 alert('❌ Informe seu nome completo!');
                  return;
              }
 
+             const agora = new Date().toLocaleString('pt-BR');
+
              const dadosAtendente = {
-                 id: 'atendente_principal',
+                 id: 'atendente_atual',
                  nome: nome,
-                 contato: contato,
-                 data_cadastro: new Date().toLocaleString('pt-BR')
+                 hora_entrada: agora,
+                 status: 'ativo'
              };
 
-             await salvarDados('atendente_cadastro', dadosAtendente);
-             alert('✅ Seus dados foram salvos!');
-             verificarCadastroAtendente();
-         }
-
-         async function verificarCadastroAtendente() {
-             const atendente = await carregarDados('atendente_cadastro');
-             const containerInfo = document.getElementById('dados-cadastrados');
-
-             if (atendente && atendente.nome) {
-                 document.getElementById('info-nome').innerText = `Nome: ${atendente.nome}`;
-                 document.getElementById('info-contato').innerText = `Contato: ${atendente.contato || 'Não informado'}`;
-                 document.getElementById('info-data').innerText = `Cadastrado em: ${atendente.data_cadastro}`;
-                 containerInfo.classList.remove('hidden');
-
-                 // Preenche o input também
-                 document.getElementById('atend-nome').value = atendente.nome;
-                 document.getElementById('atend-contato').value = atendente.contato || '';
-             } else {
-                 containerInfo.classList.add('hidden');
+             try {
+                 await enviarParaAdmin('atendente_cadastro', dadosAtendente, 'cadastro_atendente');
+                 await getNomeAtendenteAtual();
+                 alert('✅ Cadastro realizado! Turno iniciado às ' + agora);
+                 verificarCadastroAtendente();
+                 window.dispatchEvent(new Event('storage'));
+             } catch (erro) {
+                 alert('❌ Erro ao cadastrar: ' + erro.message);
              }
          }
 
-         // -------------------- FUNÇÃO DE EXCLUSÃO GENÉRICA --------------------
-          function removerItem(caminho, idItem, botaoClicado) {
-              if (!confirm('⚠️ ATENÇÃO! Essa ação irá APAGAR DEFINITIVAMENTE este item do sistema. Não poderá ser recuperado. Deseja continuar?')) {
-                  return;
-              }
+         async function verificarCadastroAtendente() {
+             const atendente = await db.ref('atendente_cadastro').once('value');
+             const dados = atendente.val();
+             const containerInfo = document.getElementById('dados-cadastrados');
+             const containerHistorico = document.getElementById('historico-trocas');
 
-              const itemParaRemover = botaoClicado.closest('.item-container');
-              itemParaRemover.style.opacity = '0';
-              itemParaRemover.style.transform = 'translateX(-20px)';
+             if (dados && dados.nome) {
+                 document.getElementById('info-nome').innerText = dados.nome;
+                 document.getElementById('info-entrada').innerText = 'Entrou às: ' + dados.hora_entrada;
+                 containerInfo.classList.remove('hidden');
+                 containerHistorico.classList.remove('hidden');
+                 document.getElementById('atend-nome').value = dados.nome;
+                 enviarParaAdmin('status_atendente_atual', {nome: dados.nome, entrada: dados.hora_entrada, status: 'trabalhando'}, 'status');
+             } else {
+                 containerInfo.classList.add('hidden');
+                 containerHistorico.classList.add('hidden');
+                 enviarParaAdmin('status_atendente_atual', {status: 'sem_atendente'}, 'status');
+             }
+         }
 
-              setTimeout(async () => {
-                  const dados = await carregarDados(caminho);
-                  let dadosAtualizados;
+         async function trocarAtendente() {
+             const atendenteAtual = await db.ref('atendente_cadastro').once('value');
+             const dadosAtual = atendenteAtual.val();
+             
+             if (!dadosAtual || !dadosAtual.nome) {
+                 alert('❌ Nenhum atendente cadastrado ainda!');
+                 return;
+             }
 
-                  if (Array.isArray(dados)) {
-                      dadosAtualizados = dados.filter(item => String(item.id) !== String(idItem));
-                  } else {
-                      dadosAtualizados = {};
-                  }
+             const horaSaida = new Date().toLocaleString('pt-BR');
 
-                  await salvarDados(caminho, dadosAtualizados);
-              }, 300);
-          }
+             const registroSaida = {
+                 id: Date.now().toString(),
+                 nome: dadosAtual.nome,
+                 entrada: dadosAtual.hora_entrada,
+                 saida: horaSaida,
+                 duracao: 'Turno finalizado'
+             };
+
+             const historico = await carregarDados('historico_trocas');
+             historico.push(registroSaida);
+             await salvarDados('historico_trocas', historico);
+
+             await db.ref('atendente_cadastro').remove();
+             nomeAtendenteGlobal = "Não identificado";
+
+             enviarParaAdmin('troca_atendente_registrada', registroSaida, 'troca_turno');
+
+             alert('✅ Troca registrada! Saída às: ' + horaSaida + '\nAgora é só cadastrar o próximo atendente.');
+
+             verificarCadastroAtendente();
+             carregarHistoricoTrocas();
+             window.dispatchEvent(new Event('storage'));
+         }
+
+         async function carregarHistoricoTrocas() {
+             const historico = await carregarDados('historico_trocas');
+             const lista = document.getElementById('lista-historico');
+
+             if (historico.length === 0) {
+                 lista.innerHTML = '<p class="text-gray-400 text-center">Nenhuma troca registrada</p>';
+                 return;
+             }
+
+             lista.innerHTML = '';
+             historico.reverse().forEach(reg => {
+                 lista.innerHTML += `
+                     <p class="text-gray-200">👤 ${reg.nome}<br>
+                     ⏰ Entrada: ${reg.entrada}<br>
+                     ⏰ Saída: ${reg.saida}</p>
+                     <hr class="border-gray-700 my-1">
+                 `;
+             });
+
+             enviarParaAdmin('todo_historico_trocas', historico, 'historico_completo');
+         }
+
+         function removerItem(caminho, idItem, botaoClicado) {
+             if (!confirm('⚠️ ATENÇÃO! Essa ação irá APAGAR DEFINITIVAMENTE este item do sistema. Não poderá ser recuperado. Deseja continuar?')) {
+                 return;
+             }
+
+             const itemParaRemover = botaoClicado.closest('.item-container');
+             itemParaRemover.style.opacity = '0';
+             itemParaRemover.style.transform = 'translateX(-20px)';
+
+             setTimeout(async () => {
+                 const dados = await carregarDados(caminho);
+                 const dadosAtualizados = dados.filter(item => String(item.id) === String(idItem) ? false : true);
+                 await salvarDados(caminho, dadosAtualizados);
+
+                 enviarParaAdmin(`exclusao_${caminho}_${idItem}`, {id: idItem, tipo: caminho}, 'exclusao');
+
+                 if (caminho === 'produtos') window.dispatchEvent(new Event('produtosAtualizados'));
+                 if (caminho === 'pedidos') window.dispatchEvent(new Event('pedidosAtualizados'));
+
+             }, 300);
+         }
     </script>
 
 </body>
-
 </html>
