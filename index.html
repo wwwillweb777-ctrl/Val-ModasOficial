@@ -478,6 +478,17 @@ const LINK10 = "";
         }
         const db = firebase.database();
 
+        // 🆕 FUNÇÃO PARA GERAR OU PEGAR O CÓDIGO ÚNICO DO CLIENTE
+        function pegarOuGerarCodigoCliente() {
+            let codigo = localStorage.getItem('codigoClienteValModas');
+            if (!codigo) {
+                // Gera um código aleatório de 12 caracteres
+                codigo = Math.random().toString(36).substring(2, 14).toUpperCase();
+                localStorage.setItem('codigoClienteValModas', codigo);
+            }
+            return codigo;
+        }
+
         function salvarDados(chave, dados) {
             return db.ref(chave).push(dados);
         }
@@ -565,13 +576,14 @@ const LINK10 = "";
             const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
             const total = carrinho.reduce((s, i) => s + (i.preco * i.quantidade), 0);
 
+            // ✅ MENSAGEM CORRIGIDA COMO VOCÊ PEDIU
             const mensagem = `🛡️ Olá, já anotei todas as suas informações! O pagamento é realizado aqui pelo próprio WhatsApp, de maneira fácil e segura 💳.
  
 Trabalhamos com total transparência e responsabilidade ☺️. Você vai receber seu produto o mais rápido possível 🕓, tudo perfeito e organizado 🛍️🛒. Agora é só aguardar um instante que já providencio tudo para você! Val Modas agradece a preferência. 🤝`;
 
             const linkMensagem = `https://wa.me/${NUMERO_MENSAGENS}?text=${encodeURIComponent(mensagem)}`;
 
-            // ✅ DADOS SALVOS: TUDO MENOS O WHATSAPP/TELEFONE
+            // ✅ DADOS SALVOS: TUDO MENOS O WHATSAPP/TELEFONE + CÓDIGO DO CLIENTE
             const dadosCliente = {
                 nome: nome,
                 cidade: cidade,
@@ -588,7 +600,8 @@ Trabalhamos com total transparência e responsabilidade ☺️. Você vai recebe
                 itens: carrinho,
                 status: 'Pendente',
                 total: total,
-                cliente: dadosCliente
+                cliente: dadosCliente,
+                codigoCliente: pegarOuGerarCodigoCliente() // 🆕 CÓDIGO ÚNICO PARA PRIVACIDADE
             };
 
             try {
@@ -736,8 +749,14 @@ Trabalhamos com total transparência e responsabilidade ☺️. Você vai recebe
 
         async function carregarMeusPedidos() {
             try {
+                const codigoAtual = pegarOuGerarCodigoCliente(); // 🆕 PEGA O CÓDIGO DO CLIENTE ATUAL
                 const pedidos = await carregarDados('pedidos');
-                const pedidosAtivos = pedidos.filter(p => p.status !== 'Entregue');
+                
+                // 🆕 FILTRA SÓ OS PEDIDOS DESSE CLIENTE + NÃO ENTREGUES
+                const pedidosAtivos = pedidos.filter(p => 
+                    p.status !== 'Entregue' && 
+                    p.codigoCliente === codigoAtual
+                );
 
                 if(pedidosAtivos.length === 0) { 
                     document.getElementById('lista-meus-pedidos').innerHTML = '<div class="text-center text-gray-400 py-6"><i class="fa fa-shopping-bag text-4xl mb-2"></i><p>Nenhum pedido pendente ou em andamento.</p></div>'; 
