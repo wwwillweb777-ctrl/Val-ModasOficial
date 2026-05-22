@@ -39,11 +39,11 @@
         .bg-red-100 { background-color: #2b2b2b !important; }
 
         .text-yellow-800 { color: #FFD700 !important; } 
-        .text-green-800 { color: #e6e6e6 !important; } /* ✅ Branco com menos brilho */
-        .text-blue-800 { color: #e6e6e6 !important; } /* ✅ Branco com menos brilho */
-        .text-red-800 { color: #e6e6e6 !important; } /* ✅ Branco com menos brilho */
+        .text-green-800 { color: #e6e6e6 !important; } 
+        .text-blue-800 { color: #e6e6e6 !important; } 
+        .text-red-800 { color: #e6e6e6 !important; } 
         h1, h2, h3, h4, h5, h6 { color: #FFD700 !important; }
-        p, span, div, label, input, select, textarea { color: #e6e6e6 !important; } /* ✅ Branco com menos brilho */
+        p, span, div, label, input, select, textarea { color: #e6e6e6 !important; } 
 
         a { text-decoration: none; } nav a { transition: background-color 0.1s; }
 
@@ -141,13 +141,13 @@
         }
 
         .texto-forte {
-            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
+            color: #e6e6e6 !important; 
             font-weight: 600;
             font-size: 0.9rem;
         }
 
         .valor-forte {
-            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
+            color: #e6e6e6 !important; 
             font-weight: 700;
             font-size: 1rem;
         }
@@ -155,7 +155,7 @@
         .nome-produto {
             font-size: 90% !important;
             font-weight: bold !important;
-            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
+            color: #e6e6e6 !important; 
             margin: -0% 0 0 0 !important;
             align-self: flex-start;
             line-height: 1.3;
@@ -171,7 +171,7 @@
             color: #FFD700 !important;
         }
         .preco-produto span.branco {
-            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
+            color: #e6e6e6 !important; 
         }
 
         .modal {
@@ -199,7 +199,7 @@
         }
 
         .fechar {
-            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
+            color: #e6e6e6 !important; 
             float: right;
             font-size: 28px;
             font-weight: bold;
@@ -220,7 +220,7 @@
             display: block;
             margin-bottom: 5px;
             font-weight: 500;
-            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
+            color: #e6e6e6 !important; 
         }
 
         .form-group input, .form-group select, .form-group textarea {
@@ -230,7 +230,7 @@
             border-radius: 6px;
             font-size: 1rem;
             background-color: #374151 !important;
-            color: #e6e6e6 !important; /* ✅ Branco com menos brilho */
+            color: #e6e6e6 !important; 
         }
 
         .btn-enviar {
@@ -275,13 +275,13 @@
             border: none !important;
             box-sizing: border-box !important;
             position: relative;
-            margin-top: 15% !important; /* ✅ Abaixou a parte superior em 15% */
+            margin-top: 15% !important; 
         }
 
         .img-produto {
             width: 100% !important;
             height: 125% !important;
-            object-fit: contain !important; /* ✅ Proporcional ao tamanho da moldura */
+            object-fit: contain !important; 
             object-position: center !important;
             display: block !important;
             border-radius: 12px !important;
@@ -354,7 +354,7 @@ const LINK10 = "";
     <div id="menuLateral" class="fixed top-0 left-0 h-full w-4/5 bg-blue-900/80 text-white shadow-2xl transform -translate-x-full transition-transform duration-100 z-50 p-6">
         <div class="flex justify-between items-center mb-8">
             <h2 class="font-bold text-xl text-yellow-400">Menu</h2>
-            <button onclick="fecharMenu()" class="text-xl text-white">
+                        <button onclick="fecharMenu()" class="text-xl text-white">
                 <i class="fa fa-times"></i>
             </button>
         </div>
@@ -426,6 +426,11 @@ const LINK10 = "";
             </div>
 
             <div class="form-group">
+                <label for="bairro">Bairro *</label>
+                <input type="text" id="bairro" required>
+            </div>
+
+            <div class="form-group">
                 <label for="tipo_imovel">Tipo de Residência *</label>
                 <select id="tipo_imovel" required>
                     <option value="">Selecione...</option>
@@ -474,14 +479,13 @@ const LINK10 = "";
         const db = firebase.database();
 
         function salvarDados(chave, dados) {
-            return db.ref(chave).set(dados);
+            return db.ref(chave).push(dados);
         }
         function carregarDados(chave) {
             return db.ref(chave).once('value').then(snap => {
                 const valor = snap.val();
                 if (!valor) return [];
-                if (Array.isArray(valor)) return valor.filter(Boolean);
-                return Object.values(valor);
+                return Object.entries(valor).map(([id, dados]) => ({ id, ...dados }));
             });
         }
         function formatarMoeda(v) {
@@ -548,11 +552,12 @@ const LINK10 = "";
             const cidade = document.getElementById('cidade').value.trim();
             const rua = document.getElementById('rua').value.trim();
             const numero = document.getElementById('numero').value.trim();
+            const bairro = document.getElementById('bairro').value.trim();
             const tipoImovel = document.getElementById('tipo_imovel').value;
             const referencia = document.getElementById('ponto_referencia').value.trim();
-            const whatsapp = document.getElementById('whatsapp').value.trim();
+            const whatsapp = document.getElementById('whatsapp').value.trim(); // 📥 Pega o telefone, mas NÃO SALVA
 
-            if (!nome || !cidade || !rua || !numero || !tipoImovel) {
+            if (!nome || !cidade || !rua || !numero || !bairro || !tipoImovel) {
                 alert("⚠️ Preencha todos os campos obrigatórios!");
                 return;
             }
@@ -560,36 +565,34 @@ const LINK10 = "";
             const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
             const total = carrinho.reduce((s, i) => s + (i.preco * i.quantidade), 0);
 
-            let mensagem = `🛍️ *NOVO PEDIDO - VAL MODAS* 🛍️\n\n`;
-            mensagem += `👤 *Cliente:* ${nome}\n`;
-            mensagem += `📍 *Entrega:* ${rua}, ${numero} - ${tipoImovel}\n`;
-            mensagem += `🏙️ *Cidade:* ${cidade}\n`;
-            if (referencia) mensagem += `🔎 *Referência:* ${referencia}\n`;
-            if (whatsapp) mensagem += `📱 *Contato:* ${whatsapp}\n`;
-            mensagem += `\n📝 *Itens do Pedido:*\n`;
-            carrinho.forEach(item => {
-                mensagem += `• ${item.nome} - Qtd: ${item.quantidade} - Valor: R$ ${item.preco.toLocaleString('pt-BR', {minimumFractionDigits:2})}\n`;
-            });
-            mensagem += `\n💰 *TOTAL A PAGAR:* R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits:2})}\n\n`;
-            mensagem += `💳 *Forma de pagamento:* A combinar na entrega 🚚`;
+            const mensagem = `🛡️ Olá, já anotei todas as suas informações! O pagamento é realizado aqui pelo próprio WhatsApp, de maneira fácil e segura 💳.
+ 
+Trabalhamos com total transparência e responsabilidade ☺️. Você vai receber seu produto o mais rápido possível 🕓, tudo perfeito e organizado 🛍️🛒. Agora é só aguardar um instante que já providencio tudo para você! Val Modas agradece a preferência. 🤝`;
 
             const linkMensagem = `https://wa.me/${NUMERO_MENSAGENS}?text=${encodeURIComponent(mensagem)}`;
 
+            // ✅ DADOS SALVOS: TUDO MENOS O WHATSAPP/TELEFONE
+            const dadosCliente = {
+                nome: nome,
+                cidade: cidade,
+                rua: rua,
+                numero: numero,
+                bairro: bairro,
+                tipoImovel: tipoImovel,
+                pontoReferencia: referencia
+                // ❌ CAMPO WHATSAPP NÃO EXISTE AQUI, NÃO É SALVO
+            };
+
             const novoPedido = {
-                id: Date.now().toString(),
                 data: new Date().toLocaleString('pt-BR'),
                 itens: carrinho,
                 status: 'Pendente',
                 total: total,
-                cliente_nome: nome,
-                cliente_endereco: `${rua}, ${numero} - ${tipoImovel}. ${referencia}`,
-                cliente_cidade: cidade
+                cliente: dadosCliente
             };
 
             try {
-                const pedidos = await carregarDados('pedidos');
-                pedidos.push(novoPedido);
-                await salvarDados('pedidos', pedidos);
+                await salvarDados('pedidos', novoPedido);
 
                 localStorage.removeItem('carrinho');
                 atualizarCarrinho();
@@ -600,6 +603,7 @@ const LINK10 = "";
                 alert(`✅ Pedido enviado com sucesso, ${nome}! Em breve entraremos em contato.`);
             } catch (erro) {
                 alert("❌ Erro ao enviar pedido: " + erro.message);
+                console.error(erro);
             }
         });
 
@@ -631,8 +635,7 @@ const LINK10 = "";
 
                     html += `
                     <div class="border rounded-xl p-5 hover:shadow-md card-produto">
-                        <div class="codigo-produto">${String(index + 1
-                    ).padStart(3, '0')}</div>
+                        <div class="codigo-produto">${String(index + 1).padStart(3, '0')}</div>
                         <div class="moldura-produto">
                             <img src="${linkImagem}" alt="${p.nome}" class="img-produto">
                         </div>
@@ -654,6 +657,7 @@ const LINK10 = "";
                 container.innerHTML = html;
             } catch (erro) {
                 container.innerHTML = '<p class="text-red-500 text-center py-4">Erro ao carregar produtos.</p>';
+                console.error(erro);
             }
         }
 
@@ -751,19 +755,20 @@ const LINK10 = "";
                             <span class="px-2 py-1 rounded text-sm ${p.status==='Pendente'?'bg-yellow-100 text-yellow-800':p.status==='Entregue'?'bg-green-100 text-green-800':'bg-red-100 text-red-800'}">${p.status}</span>
                         </div>
                         <p class="text-sm text-gray-400">Data: ${p.data}</p>
-                        <p class="text-sm text-gray-400">Cliente: ${p.cliente_nome}</p>
-                        <p class="text-sm text-gray-400">Endereço: ${p.cliente_endereco}</p>
-                        <p class="text-sm text-gray-400">Cidade: ${p.cliente_cidade}</p>
+                        <p class="text-sm text-gray-400">Cliente: ${p.cliente.nome}</p>
+                        <p class="text-sm text-gray-400">Endereço: ${p.cliente.rua}, ${p.cliente.numero} - ${p.cliente.bairro}. ${p.cliente.tipoImovel}</p>
+                        <p class="text-sm text-gray-400">Cidade: ${p.cliente.cidade}</p>
                         <p class="font-bold text-green-600">Total: ${formatarMoeda(p.total)}</p>
                     `;
                     container.appendChild(div);
                 });
             } catch (erro) {
                 document.getElementById('lista-meus-pedidos').innerHTML = '<p class="text-red-500 text-center py-4">Erro ao carregar seus pedidos.</p>';
+                console.error(erro);
             }
         }
 
-</script>
+    </script>
 
 </body>
 </html>
