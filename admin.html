@@ -6,13 +6,7 @@
     <title>Administração</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    
-    <!-- ✅ CHAVE DE ACESSO PELO ARQUIVO EXTERNO (IGUAL NOS OUTROS) -->
-    <script src="config.js"></script>
-
-    <!-- ✅ Versão do Firebase IGUAL nas 3 páginas (8.10.1) → garante funcionamento -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase.js"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
@@ -20,15 +14,15 @@
             line-height: 1.6; 
             background-color: #f9fafb; 
             color: #1f2937; 
-            padding-top: 120px; 
+            padding-top: 160px; 
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 8px; }
         .shadow { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); }
-        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); }
+        .shadow-lg { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); }
         .rounded-xl { border-radius: 0.75rem; } .rounded-2xl { border-radius: 1rem; }
         .transition { transition: all 0.15s ease; }
         .bg-blue-50 { background-color: #eff6ff; } .bg-green-50 { background-color: #f0fdf4; } .bg-purple-50 { background-color: #faf5ff; }
-        .bg-yellow-100 { background-color: #fef3c7; } .bg-green-100 { background-color: #d1fae5; } .bg-blue-100 { background-color: #dbeafe; } .bg-red-100 { background-color: #fecdd3; }
+        .bg-yellow-100 { background-color: #fef3c7; } .bg-green-100 { background-color: #dbeafe; } .bg-red-100 { background-color: #fecdd3; }
         .text-yellow-800 { color: #854d0e; } .text-green-800 { color: #166534; } .text-blue-800 { color: #1e40af; } .text-red-800 { color: #991b1b; }
         a { text-decoration: none; } nav a { transition: all 0.2s ease; }
         ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f1f1f1; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
@@ -59,410 +53,617 @@
             color: #ffffff !important;
         }
 
-        .btn-sair {
-            background-color: #dc2626 !important;
-            color: #ffffff !important;
-            border: none !important;
-            border-radius: 10px !important;
-            padding: 4px 12px !important;
-            font-size: 14px !important; 
-            font-weight: bold !important;
-            position: absolute !important;
-            top: 4px !important;
-            right: 12px !important;
-            height: 28px !important;
-            z-index: 10;
-        }
-
         .titulo-admin {
             color: #ffd700 !important;
             -webkit-text-stroke: 0.5px #000000;
             text-stroke: 0.5px #000000;
-            text-shadow: 
-                1px 1px 1px rgba(0, 0, 0, 0.4),
-                -0.5px -0.5px 0.5px rgba(0, 0, 0, 0.4),
-                0 0 3px #ffd700;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4), -0.5px -0.5px 0.5px rgba(0, 0, 0, 0.4), 0 0 3px #ffd700;
             display: inline-block;
             padding: 2px 8px;
         }
 
-        .btn-remover {
-            background: transparent !important;
-            border: none !important;
-            font-size: 16px !important;
-            cursor: pointer !important;
-            color: inherit !important;
-            padding: 2px !important;
+        /* ✅ LIXEIRA NOS ITENS DA ÁREA ADMIN */
+        .btn-lixeira {
+            background: transparent;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #dc2626;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            position: absolute;
+            top: 8px;
+            right: 8px;
         }
-        .btn-remover:hover {
-            color: #666 !important;
-            background: transparent !important;
+        .btn-lixeira:hover {
+            background-color: #fee2e2;
+            transform: scale(1.1);
         }
 
-        .btn-apagar-tudo {
-            background-color: #dc2626 !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 8px !important;
-            padding: 6px 12px !important;
-            font-size: 12px !important;
-            font-weight: bold !important;
-            cursor: pointer !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 5px !important;
-            margin-left: auto !important;
-            transition: all 0.2s ease !important;
+        /* ✅ X FINO PRETO PARA AS MENSAGENS DO CHAT */
+        .btn-x-chat {
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            font-weight: 300;
+            cursor: pointer;
+            color: #000000;
+            padding: 0 6px;
+            line-height: 1;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
         }
-        .btn-apagar-tudo:hover {
-            background-color: #b91c1c !important;
+        .btn-x-chat:hover {
+            opacity: 1;
         }
 
         .item-container {
+            position: relative;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             gap: 10px;
-            transition: opacity 0.3s ease;
-            font-size: 16px !important;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            padding: 8px;
         }
-        .item-container p {
-            font-size: 16px !important;
+        .item-container p { font-size: 16px; }
+        .item-container .font-bold { font-size: 17px; }
+
+        .cabecalho {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 160px;
+            background-color: #7e22ce;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 999999;
+            contain: strict;
+            padding-top: 8px;
+            padding-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            pointer-events: auto;
+            overscroll-behavior: contain;
         }
-        .item-container .font-bold {
-            font-size: 17px !important;
+
+        .titulo-principal {
+            width: 100%;
+            text-align: center;
+            font-size: 28px;
+            color: #ffd700;
+            font-weight: bold;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 0 8px #ffd700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .navegacao-superior {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 16px;
+            width: 90%;
+            position: relative;
+        }
+
+        .botao-nav {
+            font-size: 14px;
+            height: 38px;
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.22);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            transform: translateY(-3px);
+            text-decoration: none;
+            font-weight: 500;
+            max-width: 150px;
+            position: relative;
+        }
+        .botao-nav:hover {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        /* ✅ BOTÃO SAIR / DESLOGAR */
+        .botao-sair {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background-color: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: none; /* SÓ APARECE QUANDO ESTIVER LOGADO */
+            z-index: 10;
+        }
+        .botao-sair.mostrar {
+            display: block;
+        }
+
+        /* ✅ BADGE DE NOTIFICAÇÃO */
+        .notif-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+        .notif-badge.ativo {
+            opacity: 1;
+            transform: scale(1);
+            animation: piscar 1s infinite alternate;
+        }
+        @keyframes piscar {
+            from { box-shadow: 0 0 0px rgba(239, 68, 68, 0.5); }
+            to { box-shadow: 0 0 8px rgba(239, 68, 68, 0.8); }
+        }
+
+        .botoes-principais {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 90%;
+            gap: 20px;
+        }
+
+        .botao-principal {
+            font-size: 15.2px;
+            height: 48.6px;
+            flex: 1;
+            max-width: 180px;
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .botao-principal:hover { transform: translateY(-2px); opacity: 0.95; }
+
+        .botao-geral { background-color: #2563eb; }
+        .botao-financeiro { background-color: rgba(37, 99, 235, 0.25); }
+        .botao-cadastrados { background-color: rgba(37, 99, 235, 0.25); }
+        .botao-complementos { 
+            background-color: #7e22ce; 
+            max-width: 50px;
+            flex: none;
+            font-size: 20px;
+        }
+
+        .botao-principal.ativo {
+            background-color: #2563eb;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        .conteudo-principal {
+            height: calc(100vh - 160px);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            position: relative;
+        }
+
+        .aviso-complemento {
+            position: relative;
+            background-color: #faf5ff;
+            border-left: 4px solid #7e22ce;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            text-align: center;
+        }
+
+        .quadro-dado {
+            position: relative;
+            background-color: #faf5ff;
+            padding: 1.2rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+        /* ✅ ESTILOS DO CHAT E PRIVACIDADE */
+        .mensagem-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid #7e22ce;
+            max-width: 85%;
+        }
+        .mensagem-admin {
+            background-color: #eff6ff;
+            border-left-color: #2563eb;
+            margin-left: auto;
+            flex-direction: row-reverse;
+        }
+        .area-resposta {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding: 10px 0;
+        }
+        .campo-texto {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .btn-enviar {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .lista-contatos {
+            border-right: 1px solid #eee;
+            padding-right: 12px;
+        }
+        .contato-item {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .contato-item.ativo, .contato-item:hover {
+            background-color: #f3e8ff;
+        }
+
+        /* ✅ TELA DE LOGIN (SÓ APARECE QUANDO PRECISAR) */
+        .tela-login {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #7e22ce;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999999;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            display: none; /* ✅ COMEÇA OCULTA */
+        }
+        .btn-google {
+            background-color: white;
+            color: #333;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+        }
+        .btn-google:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body class="bg-gray-50">
-    <header class="bg-purple-700 text-white py-3 shadow-lg fixed w-full z-50 top-0 left-0">
-        <div class="container mx-auto relative">
-            <a href="index.html" class="btn-sair">Sair</a>
-            <h1 class="font-bold text-center mb-3 titulo-admin" style="font-size: 22px !important;">🔐 Administração</h1>
 
-            <nav class="flex justify-center items-center flex-nowrap overflow-hidden">
-                <a href="javascript:;" id="btn-geral" class="btn-menu btn-azul-claro" onclick="abrirAba('geral')">Geral</a>
-                <a href="javascript:;" id="btn-financeiro" class="btn-menu btn-azul" onclick="abrirAba('financeiro')">Financeiro</a>
-                <a href="javascript:;" id="btn-clientes" class="btn-menu btn-azul-claro" onclick="abrirAba('clientes')">Clientes</a>
-                <a href="javascript:;" id="btn-cadastrados" class="btn-menu btn-azul-claro" onclick="abrirAba('cadastrados')">Cadastrados</a>
-            </nav>
+    <!-- ✅ BOTÃO SAIR / DESLOGAR -->
+    <button id="btnSairLogin" class="botao-sair">Sair / Deslogar</button>
+
+    <!-- ✅ TELA DE LOGIN (SÓ APARECE AO TENTAR ENVIAR) -->
+    <div id="telaLogin" class="tela-login">
+        <h2 class="text-2xl font-bold mb-4">🔐 Acesso ao Sistema</h2>
+        <p class="mb-6 opacity-90">Entre com sua conta Google/Gmail<br>para acessar e manter suas conversas privadas</p>
+        <button id="btnLoginGoogle" class="btn-google">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+            Entrar com Google
+        </button>
+        <p class="text-xs mt-4 opacity-70">Você poderá escolher entre contas já logadas ou adicionar uma nova</p>
+    </div>
+
+    <header id="cabecalhoPrincipal" class="cabecalho">
+        <h1 class="titulo-principal">🔐 Administração</h1>
+
+        <div class="navegacao-superior">
+            <a href="inicial.html" class="botao-nav">🏠 Início</a>
+            <a href="atendente.html" class="botao-nav">🤝 Atendente</a>
+            <!-- ✅ BOTÃO CHAT: ABRE SEU ARQUIVO chat.html E CARREGA TODAS AS CONVERSAS -->
+            <a href="chat.html" target="_blank" class="botao-nav" onclick="salvarConversasAdmin()">
+                💬 Chat Geral
+                <span id="notif-chat" class="notif-badge">0</span>
+            </a>
+        </div>
+
+        <div class="botoes-principais">
+            <a href="javascript:;" id="btn-geral" class="botao-principal botao-geral ativo" onclick="abrirAba('geral')">Geral</a>
+            <a href="javascript:;" id="btn-financeiro" class="botao-principal botao-financeiro" onclick="abrirAba('financeiro')">Financeiro</a>
+            <a href="javascript:;" id="btn-cadastrados" class="botao-principal botao-cadastrados" onclick="abrirAba('cadastrados')">Cadastrados</a>
+            <a href="javascript:;" id="btn-complementos" class="botao-principal botao-complementos">📎</a>
         </div>
     </header>
 
-    <section class="container mx-auto p-4">
-        <div id="aba-geral" class="aba-conteudo">
-            <div class="bg-white rounded-2xl shadow p-5 mb-6">
-                <h2 class="text-lg font-bold text-purple-700 mb-5 text-center flex items-center justify-center gap-2">
-                    📊 Resumo Geral
-                </h2>
-                <div class="grid grid-cols-2 gap-4 text-center">
-                    <div class="p-5 bg-purple-50 rounded-xl">
-                        <p class="text-sm font-medium text-gray-700 mb-1">Total de Pedidos</p>
-                        <p id="total-pedidos" class="text-3xl font-bold text-blue-600">0</p>
+    <div id="conteudoPrincipal" class="conteudo-principal">
+        <section class="container mx-auto p-4">
+            <!-- ✅ ABA GERAL - COM LIXEIRA EM CADA ITEM -->
+            <div id="aba-geral" class="aba-conteudo">
+                <div class="bg-white rounded-2xl shadow p-5 mb-6">
+                    <h2 class="text-lg font-bold text-purple-700 mb-5 text-center flex items-center justify-center gap-2">📊 Resumo Geral</h2>
+
+                    <div class="aviso-complemento">
+                        <button class="btn-lixeira" onclick="apagarAviso(this)">🗑️</button>
+                        <p class="font-semibold text-purple-800">📌 Dados completos de caixa, lixeira e mensagens disponíveis no botão <strong>"📎 Complementos"</strong></p>
                     </div>
-                    <div class="p-5 bg-purple-50 rounded-xl">
-                        <p class="text-sm font-medium text-gray-700 mb-1">Pendentes</p>
-                        <p id="pedidos-pendentes" class="text-3xl font-bold text-yellow-600">0</p>
-                    </div>
-                    <div class="p-5 bg-purple-50 rounded-xl">
-                        <p class="text-sm font-medium text-gray-700 mb-1">Entregues</p>
-                        <p id="pedidos-entregues" class="text-3xl font-bold text-green-600">0</p>
-                    </div>
-                    <div class="p-5 bg-purple-50 rounded-xl">
-                        <p class="text-sm font-medium text-gray-700 mb-1">Cancelados</p>
-                        <p id="pedidos-cancelados" class="text-3xl font-bold text-red-600">0</p>
+
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <!-- ✅ TOTAL DE PEDIDOS COM LIXEIRA -->
+                        <div class="quadro-dado">
+                            <button class="btn-lixeira" onclick="zerarValor(this, 'total-pedidos')">🗑️</button>
+                            <p class="text-sm font-medium text-gray-700 mb-1">Total de Pedidos</p>
+                            <p id="total-pedidos" class="text-3xl font-bold text-blue-600">0</p>
+                        </div>
+                        
+                        <!-- ✅ PENDENTES COM LIXEIRA -->
+                        <div class="quadro-dado">
+                            <button class="btn-lixeira" onclick="zerarValor(this, 'pedidos-pendentes')">🗑️</button>
+                            <p class="text-sm font-medium text-gray-700 mb-1">Pendentes</p>
+                            <p id="pedidos-pendentes" class="text-3xl font-bold text-yellow-600">0</p>
+                        </div>
+                        
+                        <!-- ✅ ENTREGUES COM LIXEIRA -->
+                        <div class="quadro-dado">
+                            <button class="btn-lixeira" onclick="zerarValor(this, 'pedidos-entregues')">🗑️</button>
+                            <p class="text-sm font-medium text-gray-700 mb-1">Entregues</p>
+                            <p id="pedidos-entregues" class="text-3xl font-bold text-green-600">0</p>
+                        </div>
+                        
+                        <!-- ✅ CANCELADOS COM LIXEIRA -->
+                        <div class="quadro-dado">
+                            <button class="btn-lixeira" onclick="zerarValor(this, 'pedidos-cancelados')">🗑️</button>
+                            <p class="text-sm font-medium text-gray-700 mb-1">Cancelados</p>
+                            <p id="pedidos-cancelados" class="text-3xl font-bold text-red-600">0</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="aba-financeiro" class="aba-conteudo hidden">
-            <div class="bg-white rounded-2xl shadow p-5 mb-6">
-                <h2 class="text-lg font-bold text-purple-700 mb-4 text-center flex items-center justify-center gap-2">
-                    💰 Relatório Financeiro
-                </h2>
-                <div class="grid grid-cols-1 gap-3 text-center mb-5">
-                    <div class="p-4 bg-green-50 rounded-xl">
-                        <p class="text-sm text-gray-700 mb-1">Faturamento Total</p>
-                        <p id="faturamento-total" class="text-xl font-bold text-green-600">R$ 0,00</p>
+            <!-- ABA FINANCEIRO -->
+            <div id="aba-financeiro" class="aba-conteudo hidden">
+                <div class="bg-white rounded-2xl shadow p-5 mb-6">
+                    <h2 class="text-lg font-bold text-purple-700 mb-4 text-center flex items-center justify-center gap-2">💰 Relatório Financeiro</h2>
+                    <div class="grid grid-cols-1 gap-3 text-center mb-5">
+                        <div class="p-4 bg-green-50 rounded-xl item-container">
+                            <div>
+                                <p class="text-sm text-gray-700 mb-1">Faturamento Total</p>
+                                <p id="faturamento-total" class="text-xl font-bold text-green-600">R$ 0,00</p>
+                            </div>
+                            <button class="btn-lixeira" onclick="apagarItem(this)">🗑️</button>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-xl item-container">
+                            <div>
+                                <p class="text-sm text-gray-700 mb-1">Ticket Médio</p>
+                                <p id="ticket-medio" class="text-xl font-bold text-blue-600">R$ 0,00</p>
+                            </div>
+                            <button class="btn-lixeira" onclick="apagarItem(this)">🗑️</button>
+                        </div>
+                        <div class="p-4 bg-purple-50 rounded-xl item-container">
+                            <div>
+                                <p class="text-sm text-gray-700 mb-1">Caixa Atual</p>
+                                <p id="caixa-atual" class="text-xl font-bold text-purple-600">R$ 0,00</p>
+                            </div>
+                            <button class="btn-lixeira" onclick="apagarItem(this)">🗑️</button>
+                        </div>
                     </div>
-                    <div class="p-4 bg-blue-50 rounded-xl">
-                        <p class="text-sm text-gray-700 mb-1">Ticket Médio</p>
-                        <p id="ticket-medio" class="text-xl font-bold text-blue-600">R$ 0,00</p>
-                    </div>
-                    <div class="p-4 bg-purple-50 rounded-xl">
-                        <p class="text-sm text-gray-700 mb-1">Caixa Atual</p>
-                        <p id="caixa-atual" class="text-xl font-bold text-purple-600">R$ 0,00</p>
-                    </div>
-                </div>
-
-                <h3 class="font-bold mb-3 text-center text-sm">Últimas Movimentações (Com Responsável)</h3>
-                <div id="lista-movimentacoes" class="space-y-3 text-xs border rounded-lg p-3 bg-gray-50">
-                    <p class="text-gray-500 text-center py-3">Nenhuma movimentação registrada.</p>
                 </div>
             </div>
-        </div>
 
-        <div id="aba-clientes" class="aba-conteudo hidden">
-            <div class="bg-white rounded-2xl shadow p-5 mb-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-bold text-purple-700 text-center flex items-center justify-center gap-2">
-                        👤 Clientes Cadastrados / Referências
-                    </h2>
-                    <button class="btn-apagar-tudo" onclick="apagarTodosClientes()">
-                        <i class="fa fa-trash"></i> Apagar Tudo
-                    </button>
-                </div>
-                
-                <div id="lista-clientes" class="space-y-3 text-sm border rounded-lg p-3 bg-gray-50">
-                    <p class="text-gray-500 text-center py-3">Nenhum dado de cliente foi salvo ainda.</p>
+            <!-- ABA CADASTRADOS -->
+            <div id="aba-cadastrados" class="aba-conteudo hidden">
+                <div class="bg-white rounded-2xl shadow p-5 mb-6">
+                    <h2 class="text-lg font-bold text-purple-700 mb-4 text-center">👤 Acessos Liberados</h2>
+                    <div id="lista-acessos" class="space-y-2 text-xs mb-6">
+                        <p class="text-gray-500 text-center py-3">Nenhuma pessoa liberada ainda.</p>
+                    </div>
+
+                    <h2 class="text-lg font-bold text-purple-700 mb-4 text-center">🛍️ Produtos Cadastrados</h2>
+                    <div id="lista-produtos-cad" class="space-y-2 text-xs">
+                        <p class="text-gray-500 text-center py-3">Nenhum produto cadastrado.</p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
+    </div>
 
-        <div id="aba-cadastrados" class="aba-conteudo hidden">
-            <div class="bg-white rounded-2xl shadow p-5 mb-6">
-                <h2 class="text-lg font-bold text-purple-700 mb-4 text-center">👤 Atendentes Cadastrados</h2>
-                <div id="lista-atendentes-cad" class="space-y-2 text-xs mb-6">
-                    <p class="text-gray-500 text-center py-3">Nenhum atendente cadastrado.</p>
-                </div>
-
-                <h2 class="text-lg font-bold text-purple-700 mb-4 text-center">🛍️ Produtos Cadastrados</h2>
-                <div id="lista-produtos-cad" class="space-y-2 text-xs">
-                    <p class="text-gray-500 text-center py-3">Nenhum produto cadastrado.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- ✅ ÁUDIO DE NOTIFICAÇÃO -->
+    <audio id="som-notif" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-star-2967.mp3" type="audio/mpeg">
+    
 
     <script>
-        // ✅ CONFIGURAÇÃO DO FIREBASE USANDO A CHAVE DO ARQUIVO EXTERNO
+        // ===== CONFIGURAÇÃO FIREBASE COM AUTENTICAÇÃO =====
         const firebaseConfig = {
-          apiKey: window.MINHA_CHAVE,
-          authDomain: "val-modas.firebaseapp.com",
-          databaseURL: "https://val-modas-default-rtdb.firebaseio.com",
-          projectId: "val-modas",
-          storageBucket: "val-modas.firebasestorage.app",
-          messagingSenderId: "1060099036181",
-          appId: "1:1060099036181:web:e677b3b6ae0ce1a499aa1c"
+            apiKey: "AIzaSyCYd655rBu8_UfwGtYWDgRzdtAw-UAR9Qg",
+            authDomain: "val-modas.firebaseapp.com",
+            databaseURL: "https://val-modas-default-rtdb.firebaseio.com",
+            projectId: "val-modas",
+            storageBucket: "val-modas.firebasestorage.app",
+            messagingSenderId: "1060099036181",
+            appId: "1:1060099036181:web:e677b3b6ae0ce1a499aa1c"
         };
 
-        // Inicializa Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.database();
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' }); // ✅ PERMITE ESCOLHER CONTA
 
-        // ✅ FUNÇÕES PADRONIZADAS COM AS OUTRAS PÁGINAS
-        function salvarDados(caminho, dados) { 
-            return db.ref(caminho).set(dados); 
+        let usuarioLogado = null;
+        const SEU_EMAIL_ADMIN = 'seuemailadmin@gmail.com'; // ✅ COLOQUE SEU EMAIL AQUI
+        let usuarioEhAdmin = false;
+        let mensagensNaoLidas = 0;
+        const notifBadge = document.getElementById('notif-chat');
+        const somNotif = document.getElementById('som-notif');
+        const telaLogin = document.getElementById('telaLogin');
+        const btnSairLogin = document.getElementById('btnSairLogin');
+
+        // ===== ✅ VOCÊ (ADMIN) JÁ ENTRA DIRETO, SEM LOGIN AQUI =====
+        window.onload = () => {
+            // ✅ DEFINE ADMIN AUTOMATICAMENTE (JÁ QUE VOCÊ TEM SENHA NO SETOR)
+            usuarioEhAdmin = true;
+            usuarioLogado = { email: SEU_EMAIL_ADMIN, displayName: 'Administrador' };
+            liberarAcessoAdmin();
+
+            // BOTÃO SAIR
+            btnSairLogin.addEventListener('click', deslogarUsuario);
+            // BOTÃO LOGIN GOOGLE
+            document.getElementById('btnLoginGoogle').addEventListener('click', fazerLogin);
+        };
+
+        function liberarAcessoAdmin() {
+            btnSairLogin.classList.add('mostrar');
+            monitorarNovasMensagens();
+            abrirAba('geral');
         }
-        function carregarDados(caminho) { 
-            return db.ref(caminho).once('value').then(snap => snap.val() || []); 
+
+        // ===== ✅ SALVA TODAS AS CONVERSAS PARA O chat.html ABRIR =====
+        function salvarConversasAdmin() {
+            db.ref('mensagens').once('value', snapshot => {
+                localStorage.setItem('todas_conversas', JSON.stringify(snapshot.val()));
+                localStorage.setItem('usuario_eh_admin', 'true'); // ✅ AVISA AO chat.html QUE É VOCÊ
+            });
         }
-        function formatarMoeda(v) { 
-            return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); 
-        }
 
-        function removerItem(caminho, idItem, botaoClicado) {
-            if(!confirm('⚠️ ATENÇÃO! Essa ação irá APAGAR DEFINITIVAMENTE este item do sistema. Não poderá ser recuperado. Deseja continuar?')) {
-                return;
-            }
-
-            const itemParaRemover = botaoClicado.closest('.item-container');
-            itemParaRemover.style.opacity = '0';
-            itemParaRemover.style.transform = 'translateX(-20px)';
-
-            setTimeout(async () => {                 const dados = await carregarDados(caminho);
-                let dadosAtualizados;
-
-                if(Array.isArray(dados)) {
-                    dadosAtualizados = dados.filter(item => String(item.id) !== String(idItem));
-                } else {
-                    dadosAtualizados = {};
-                }
-
-                await salvarDados(caminho, dadosAtualizados);
+        // ===== ✅ FUNÇÃO DE LOGIN (SÓ PARA CLIENTES) =====
+        function fazerLogin() {
+            auth.signInWithPopup(provider)
+            .then(result => {
+                usuarioLogado = result.user;
+                usuarioEhAdmin = (usuarioLogado.email === SEU_EMAIL_ADMIN);
                 
-                carregarDadosAdmin();
-                carregarMovimentacoes();
-                carregarCadastrados();
-                carregarClientes();
-                verificarListaVazia();
-             }, 300);
-        }
+                telaLogin.style.display = 'none'; // FECHA TELA
+                btnSairLogin.classList.add('mostrar'); // MOSTRA BOTÃO SAIR
 
-        function apagarTodosClientes() {
-            if(!confirm('⚠️ CUIDADO! Você está prestes a APAGAR TODOS OS CLIENTES cadastrados. Essa ação é definitiva e não pode ser desfeita. Tem certeza absoluta?')) {
-                return;
-            }
-            salvarDados('clientes', []);
-            carregarClientes();
-            alert('✅ Todos os dados de clientes foram apagados com sucesso!');
-        }
-
-        function verificarListaVazia() {
-            const listaMov = document.getElementById('lista-movimentacoes');
-            if(listaMov.children.length <= 1) {
-                listaMov.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhuma movimentação registrada.</p>';
-            }
-
-            const listaAtend = document.getElementById('lista-atendentes-cad');
-            carregarDados('atendente_cadastro').then(atendentes => {
-                if(!atendentes || Object.keys(atendentes).length === 0) {
-                    listaAtend.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum atendente cadastrado.</p>';
-                }
-            });
-
-            const listaProd = document.getElementById('lista-produtos-cad');
-            carregarDados('produtos').then(produtos => {
-                if(produtos.length === 0) {
-                    listaProd.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum produto cadastrado.</p>';
-                }
-            });
-
-            const listaCli = document.getElementById('lista-clientes');
-            carregarDados('clientes').then(clientes => {
-                if(clientes.length === 0) {
-                    listaCli.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum dado de cliente foi salvo ainda.</p>';
-                }
-            });
-        }
-
-        function abrirAba(nome) {
-            document.querySelectorAll('.aba-conteudo').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`aba-${nome}`).classList.remove('hidden');
-
-            document.querySelectorAll('.btn-menu').forEach(btn => {
-                btn.classList.remove('btn-azul');
-                btn.classList.add('btn-azul-claro');
-            });
-            document.getElementById(`btn-${nome}`).classList.remove('btn-azul-claro');
-            document.getElementById(`btn-${nome}`).classList.add('btn-azul');
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            carregarDadosAdmin();
-            carregarMovimentacoes();
-            carregarCadastrados();
-            carregarClientes();
-        });
-
-        async function carregarDadosAdmin() {
-            const pedidos = await carregarDados('pedidos');
-            const totalPedidos = pedidos.length;
-            const pendentes = pedidos.filter(p => p.status === 'Pendente').length;
-            const entregues = pedidos.filter(p => p.status === 'Entregue').length;
-            const cancelados = pedidos.filter(p => p.status === 'Cancelado').length;
-            
-            const faturamento = pedidos
-                .filter(p => p.status === 'Entregue')
-                .reduce((s, p) => s + p.total, 0);
-            
-            const ticketMedio = entregues > 0 ? faturamento / entregues : 0;
-
-            document.getElementById('total-pedidos').innerText = pedidos.length || 0;
-            document.getElementById('pedidos-pendentes').innerText = pendentes;
-            document.getElementById('pedidos-entregues').innerText = entregues;
-            document.getElementById('pedidos-cancelados').innerText = cancelados;
-            document.getElementById('faturamento-total').innerText = formatarMoeda(faturamento);
-            document.getElementById('ticket-medio').innerText = formatarMoeda(ticketMedio);
-            document.getElementById('caixa-atual').innerText = formatarMoeda(faturamento);
-        }
-
-        async function carregarMovimentacoes() {
-            const pedidos = await carregarDados('pedidos');
-            const container = document.getElementById('lista-movimentacoes');
-            
-            if(pedidos.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhuma movimentação registrada.</p>';
-                return;
-            }
-
-            container.innerHTML = '';
-            pedidos.slice(-15).reverse().forEach(p => {
-                const cor = p.status === 'Entregue' ? 'text-green-600' : p.status === 'Cancelado' ? 'text-red-600' : 'text-yellow-600';
-                const resp = p.atendente_nome ? `Atendente: ${p.atendente_nome}` : 'Aguardando atendimento';
-                const cliente = p.cliente_nome || 'Cliente não identificado';
-
-                container.innerHTML += `
-                    <div class="p-3 bg-white rounded-lg shadow-sm item-container" data-id="${p.id}" style="transition: all 0.3s ease;">
-                        <div>
-                            <p class="font-medium text-base">Pedido #${p.id.slice(-4)} - <span class="${cor} font-bold">${p.status}</span></p>
-                            <p class="text-gray-600 mt-1">Cliente: ${cliente} | Atendente: ${resp}</p>
-                            <p class="${cor} font-bold text-lg mt-1">${formatarMoeda(p.total)}</p>
-                        </div>
-                        <button class="btn-remover" onclick="removerItem('pedidos', '${p.id}', this)">🗑️</button>
-                    </div>
-                `;
-            });
-        }
-
-        async function carregarClientes() {
-            const clientes = await carregarDados('clientes');
-            const container = document.getElementById('lista-clientes');
-
-            if(clientes.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum dado de cliente foi salvo ainda.</p>';
-                return;
-            }
-
-            container.innerHTML = '';
-            clientes.reverse().forEach(c => {
-                container.innerHTML += `
-                    <div class="p-3 bg-white rounded-lg shadow-sm item-container" data-id="${c.id}" style="transition: all 0.3s ease;">
-                        <div>
-                            <p class="font-bold text-base">${c.nome || 'Nome não informado'}</p>
-                            <p class="text-sm text-gray-700 mt-1"><strong>📞 Contato:</strong> ${c.telefone || 'Não informado'}</p>
-                            <p class="text-sm text-gray-700 mt-1"><strong>🏠 Endereço:</strong> ${c.endereco || 'Não informado'} - ${c.bairro || ''} ${c.numero ? 'Nº ' + c.numero : ''}</p>
-                            <p class="text-xs text-gray-500 mt-1"><strong>📝 Observação/Referência:</strong> ${c.referencia || 'Nenhuma'}</p>
-                            <p class="text-xs text-gray-400 mt-1">Cadastrado em: ${c.data_cadastro || 'Data não registrada'}</p>
-                        </div>
-                        <button class="btn-remover" onclick="removerItem('clientes', '${c.id}', this)">🗑️</button>
-                    </div>
-                `;
-            });
-        }
-
-        async function carregarCadastrados() {
-            const atendenteCad = await carregarDados('atendente_cadastro');
-            const containerProd = document.getElementById('lista-atendentes-cad');
-            
-            if (atendenteCad && atendenteCad.nome) {
-                containerProd.innerHTML = `
-                    <div class="border rounded-lg p-3 bg-white shadow-sm item-container" data-id="${atendenteCad.id || 'atendente_unico'}" style="transition: all 0.3s ease;">
-                        <div>
-                            <p class="font-bold">Nome: ${atendenteCad.nome}</p>
-                            <p class="text-sm text-gray-600">Contato: ${atendenteCad.contato || 'Não informado'}</p>
-                            <p class="text-xs text-gray-500">Cadastrado em: ${atendenteCad.data_cadastro || 'Data não registrada'}</p>
-                        </div>
-                        <button class="btn-remover" onclick="removerItem('atendente_cadastro', '${atendenteCad.id || 'atendente_unico'}', this)">🗑️</button>
-                    </div>
-                `;
-            } else {
-                containerProd.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum atendente cadastrado.</p>';
-            }
-
-            const produtos = await carregarDados('produtos');
-            const containerAtend = document.getElementById('lista-produtos-cad');
-            
-            if (produtos.length > 0) {
-                containerAtend.innerHTML = '';
-                produtos.forEach(prod => {
-                    containerAtend.innerHTML += `
-                        <div class="border rounded-lg p-3 bg-white shadow-sm mb-2 item-container" data-id="${prod.id}" style="transition: all 0.3s ease;">
-                            <div>
-                                <p class="font-bold">${prod.nome}</p>
-                                <p class="text-green-600 font-medium">${formatarMoeda(prod.preco)}</p>
-                                <p class="text-xs text-gray-500">Cadastrado por: ${prod.cadastrado_por || 'Sem responsável'}</p>
-                            </div>
-                            <button class="btn-remover" onclick="removerItem('produtos', '${prod.id}', this)">🗑️</button>
-                        </div>
-                    `;
+                // SALVA DADOS DO USUÁRIO NO BANCO
+                db.ref(`usuarios/${btoa(usuarioLogado.email)}`).set({
+                    nome: usuarioLogado.displayName,
+                    email: usuarioLogado.email,
+                    ultimoAcesso: firebase.database.ServerValue.TIMESTAMP
                 });
-            } else {
-                containerAtend.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum produto cadastrado.</p>';
+
+            })
+            .catch(error => alert('Erro no login: ' + error.message));
+        }
+
+        // ===== ✅ DESLOGAR: SÓ FECHA SE CLICAR AQUI =====
+        function deslogarUsuario() {
+            if(confirm('Deseja realmente sair / deslogar?')) {
+                auth.signOut().then(() => {
+                    usuarioLogado = null;
+                    usuarioEhAdmin = false;
+                    btnSairLogin.classList.remove('mostrar');
+                    location.reload(); // RECARREGA PARA VOLTAR AO NORMAL
+                });
             }
+        }
+
+        // ===== ✅ NOTIFICAÇÃO COM SOM (MESMO SE A TELA ESTIVER FECHADA) =====
+        function monitorarNovasMensagens() {
+            db.ref('mensagens').on('child_added', () => {
+                if(!document.hasFocus()) { // SE A TELA NÃO ESTIVER EM FOCO
+                    mensagensNaoLidas++;
+                    atualizarNotificacao();
+                    somNotif.currentTime = 0;
+                    somNotif.play().catch(e => {}); // TOCA SOM SEM ERRO
+                }
+            });
+        }
+
+        function atualizarNotificacao() {
+            if(mensagensNaoLidas > 0) {
+                notifBadge.textContent = mensagensNaoLidas;
+                notifBadge.classList.add('ativo');
+            } else {
+                notifBadge.classList.remove('ativo');
+            }
+        }
+
+        // ===== ✅ FUNÇÕES DE EXCLUSÃO E ZERAR =====
+        function apagarItem(botao) {
+            if(confirm('Apagar este item PERMANENTEMENTE?')) {
+                botao.parentElement.style.opacity = '0';
+                setTimeout(() => botao.parentElement.remove(), 300);
+            }
+        }
+
+        function apagarAviso(botao) {
+            if(confirm('Remover este aviso?')) {
+                botao.parentElement.style.opacity = '0';
+                setTimeout(() => botao.parentElement.remove(), 300);
+            }
+        }
+
+        function zerarValor(botao, idCampo) {
+            if(confirm('Zerar este valor?')) {
+                document.getElementById(idCampo).textContent = '0';
+                botao.parentElement.style.opacity = '0.5';
+            }
+        }
+
+        // ===== NAVEGAÇÃO ENTRE ABAS =====
+        function abrirAba(nome) {
+            document.querySelectorAll('.aba-conteudo').forEach(aba => aba.classList.add('hidden'));
+            document.getElementById(`aba-${nome}`).classList.remove('hidden');
+            
+            document.querySelectorAll('.botao-principal').forEach(btn => btn.classList.remove('ativo'));
+            event.target.classList.add('ativo');
         }
     </script>
 </body>
