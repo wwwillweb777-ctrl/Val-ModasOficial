@@ -21,6 +21,7 @@
             background-color: #f9fafb; 
             color: #1f2937; 
             padding-top: 120px; 
+            padding-bottom: 20px;
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 8px; }
         .shadow { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); }
@@ -49,10 +50,12 @@
             margin: 0 2px !important;
             pointer-events: auto !important;
             opacity: 1 !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
         }
         .btn-azul {
             background-color: #2563eb !important;
             color: #ffffff !important;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
         }
         .btn-azul-claro {
             background-color: rgba(37, 99, 235, 0.25) !important;
@@ -72,6 +75,8 @@
             right: 12px !important;
             height: 28px !important;
             z-index: 10;
+            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .titulo-admin {
@@ -89,13 +94,16 @@
         .btn-remover {
             background: transparent !important;
             border: none !important;
-            font-size: 16px !important;
+            font-size: 18px !important;
             cursor: pointer !important;
             color: inherit !important;
-            padding: 2px !important;
+            padding: 4px !important;
+            transition: 0.2s;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
         }
         .btn-remover:hover {
-            color: #666 !important;
+            color: #dc2626 !important;
+            transform: scale(1.1);
             background: transparent !important;
         }
 
@@ -113,9 +121,12 @@
             gap: 5px !important;
             margin-left: auto !important;
             transition: all 0.2s ease !important;
+            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+            border: 1px solid rgba(255,255,255,0.2);
         }
         .btn-apagar-tudo:hover {
             background-color: #b91c1c !important;
+            transform: translateY(-1px);
         }
 
         .item-container {
@@ -123,8 +134,15 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 10px;
-            transition: opacity 0.3s ease;
+            transition: all 0.3s ease;
             font-size: 16px !important;
+            border: 1px solid #e9d5ff;
+            border-radius: 12px;
+            padding: 12px !important;
+            background: linear-gradient(to bottom, #fdf4ff, #faf5ff);
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
         }
         .item-container p {
             font-size: 16px !important;
@@ -132,6 +150,129 @@
         .item-container .font-bold {
             font-size: 17px !important;
         }
+        .item-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(126, 34, 206, 0.12);
+            border-color: #d8b4fe;
+        }
+
+        /* ✅ ESTILOS DA CALCULADORA - BOTÃO PRETO, ÍCONE BRANCO */
+        .calc-wrapper {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 46%;
+            max-width: 280px;
+            z-index: 999;
+        }
+
+        .calc-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f3e8ff;
+            border: 2px solid #7e22ce;
+            border-radius: 12px 12px 0 0;
+            padding: 6px 12px;
+            font-weight: 600;
+            color: #7e22ce;
+            font-size: 14px;
+            box-shadow: 0 -2px 8px rgba(126, 34, 206, 0.1);
+        }
+
+        .btn-toggle-calc {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #000000 !important; /* Preto */
+            border: 1px solid #000000;
+            color: #ffffff !important; /* Branco */
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            line-height: 1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        .btn-toggle-calc::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #ffffff; /* Círculo branco */
+            border-radius: 50%;
+        }
+        .btn-toggle-calc.aberto::after { display: none; }
+        .btn-toggle-calc.aberto::before {
+            content: '−';
+            position: absolute;
+            color: #ffffff; /* Sinal de menos branco */
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .calculadora {
+            background-color: #ffffff;
+            border: 2px solid #7e22ce;
+            border-top: none;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 6px 16px rgba(126, 34, 206, 0.15);
+            padding: 10px;
+            transition: all 0.3s ease;
+            max-height: 420px;
+            overflow: hidden;
+        }
+        .calculadora.escondida {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border: none;
+            opacity: 0;
+        }
+
+        /* ✅ DISPLAY DA CALCULADORA: FUNDO PRETO, NÚMEROS BRANCOS */
+        .calc-tela {
+            width: 100%;
+            height: 38px;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            text-align: right;
+            font-size: 18px;
+            padding: 0 10px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            border: 1px solid #333333;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+        .calc-botoes {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        .calc-btn {
+            height: 38px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .calc-btn:hover { transform: scale(0.96); opacity: 0.92; }
+        .calc-btn.limpar { background-color: #dc2626; }
+        .calc-btn.operador { background-color: #7e22ce; }
+        .calc-btn.igual { 
+            background-color: #2563eb;
+            grid-column: span 2;
+        }
+        .calc-btn.numero { background-color: #e5e7eb; color: #1f2937; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -151,60 +292,89 @@
 
     <section class="container mx-auto p-4">
         <div id="aba-geral" class="aba-conteudo">
-            <div class="bg-white rounded-2xl shadow p-5 mb-6">
+            <div class="bg-white rounded-2xl shadow p-5 mb-6 border border-purple-100">
                 <h2 class="text-lg font-bold text-purple-700 mb-5 text-center flex items-center justify-center gap-2">
                     📊 Resumo Geral
                 </h2>
                 <div class="grid grid-cols-2 gap-4 text-center">
-                    <div class="p-5 bg-purple-50 rounded-xl">
-                        <p class="text-sm font-medium text-gray-700 mb-1">Total de Pedidos</p>
-                        <p id="total-pedidos" class="text-3xl font-bold text-blue-600">0</p>
+                    <div class="p-5 rounded-xl item-container" data-id="total-pedidos">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 mb-1">Total de Pedidos</p>
+                            <p id="total-pedidos" class="text-3xl font-bold text-blue-600">0</p>
+                        </div>
+                        <button class="btn-remover" onclick="zerarContador('pedidos', 'total-pedidos')">🗑️</button>
                     </div>
-                    <div class="p-5 bg-purple-50 rounded-xl">
-                        <p class="text-sm font-medium text-gray-700 mb-1">Pendentes</p>
-                        <p id="pedidos-pendentes" class="text-3xl font-bold text-yellow-600">0</p>
+                    <div class="p-5 rounded-xl item-container" data-id="pendentes">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 mb-1">Pendentes</p>
+                            <p id="pedidos-pendentes" class="text-3xl font-bold text-yellow-600">0</p>
+                        </div>
+                        <button class="btn-remover" onclick="zerarContador('pendentes', 'pedidos-pendentes')">🗑️</button>
                     </div>
-                    <div class="p-5 bg-purple-50 rounded-xl">
-                        <p class="text-sm font-medium text-gray-700 mb-1">Entregues</p>
-                        <p id="pedidos-entregues" class="text-3xl font-bold text-green-600">0</p>
+                    
+                    <!-- ✅ Entregues - TAMANHO ORIGINAL -->
+                    <div class="p-5 rounded-xl item-container" data-id="entregues">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 mb-1">Entregues</p>
+                            <p id="pedidos-entregues" class="text-3xl font-bold text-green-600">0</p>
+                        </div>
+                        <button class="btn-remover" onclick="zerarContador('entregues', 'pedidos-entregues')">🗑️</button>
                     </div>
-                    <div class="p-5 bg-purple-50 rounded-xl">
-                        <p class="text-sm font-medium text-gray-700 mb-1">Cancelados</p>
-                        <p id="pedidos-cancelados" class="text-3xl font-bold text-red-600">0</p>
+
+                    <!-- ✅ CÉLULA VAZIA AO LADO -->
+                    <div></div>
+
+                    <!-- ✅ Cancelados: 100% IGUAL AO ENTREGUES - MESMA LARGURA, MESMA FORMA, MESMA BORDA, EXATAMENTE EMBAIXO -->
+                    <div class="p-5 rounded-xl item-container" data-id="cancelados">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 mb-1">Cancelados</p>
+                            <p id="pedidos-cancelados" class="text-3xl font-bold text-red-600">0</p>
+                        </div>
+                        <button class="btn-remover" onclick="zerarContador('cancelados', 'pedidos-cancelados')">🗑️</button>
                     </div>
+
                 </div>
             </div>
         </div>
 
         <div id="aba-financeiro" class="aba-conteudo hidden">
-            <div class="bg-white rounded-2xl shadow p-5 mb-6">
+            <div class="bg-white rounded-2xl shadow p-5 mb-6 border border-purple-100">
                 <h2 class="text-lg font-bold text-purple-700 mb-4 text-center flex items-center justify-center gap-2">
                     💰 Relatório Financeiro
                 </h2>
                 <div class="grid grid-cols-1 gap-3 text-center mb-5">
-                    <div class="p-4 bg-green-50 rounded-xl">
-                        <p class="text-sm text-gray-700 mb-1">Faturamento Total</p>
-                        <p id="faturamento-total" class="text-xl font-bold text-green-600">R$ 0,00</p>
+                    <div class="p-4 rounded-xl item-container" data-id="faturamento">
+                        <div>
+                            <p class="text-sm text-gray-700 mb-1">Faturamento Total</p>
+                            <p id="faturamento-total" class="text-xl font-bold text-green-600">R$ 0,00</p>
+                        </div>
+                        <button class="btn-remover" onclick="zerarValorFinanceiro('faturamento')">🗑️</button>
                     </div>
-                    <div class="p-4 bg-blue-50 rounded-xl">
-                        <p class="text-sm text-gray-700 mb-1">Ticket Médio</p>
-                        <p id="ticket-medio" class="text-xl font-bold text-blue-600">R$ 0,00</p>
+                    <div class="p-4 rounded-xl item-container" data-id="ticket">
+                        <div>
+                            <p class="text-sm text-gray-700 mb-1">Ticket Médio</p>
+                            <p id="ticket-medio" class="text-xl font-bold text-blue-600">R$ 0,00</p>
+                        </div>
+                        <button class="btn-remover" onclick="zerarValorFinanceiro('ticket')">🗑️</button>
                     </div>
-                    <div class="p-4 bg-purple-50 rounded-xl">
-                        <p class="text-sm text-gray-700 mb-1">Caixa Atual</p>
-                        <p id="caixa-atual" class="text-xl font-bold text-purple-600">R$ 0,00</p>
+                    <div class="p-4 rounded-xl item-container" data-id="caixa">
+                        <div>
+                            <p class="text-sm text-gray-700 mb-1">Caixa Atual</p>
+                            <p id="caixa-atual" class="text-xl font-bold text-purple-600">R$ 0,00</p>
+                        </div>
+                        <button class="btn-remover" onclick="zerarValorFinanceiro('caixa')">🗑️</button>
                     </div>
                 </div>
 
                 <h3 class="font-bold mb-3 text-center text-sm">Últimas Movimentações (Com Responsável)</h3>
-                <div id="lista-movimentacoes" class="space-y-3 text-xs border rounded-lg p-3 bg-gray-50">
+                <div id="lista-movimentacoes" class="space-y-3 text-xs border rounded-lg p-3 bg-gray-50 border-purple-100">
                     <p class="text-gray-500 text-center py-3">Nenhuma movimentação registrada.</p>
                 </div>
             </div>
         </div>
 
         <div id="aba-clientes" class="aba-conteudo hidden">
-            <div class="bg-white rounded-2xl shadow p-5 mb-6">
+            <div class="bg-white rounded-2xl shadow p-5 mb-6 border border-purple-100">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-bold text-purple-700 text-center flex items-center justify-center gap-2">
                         👤 Clientes Cadastrados / Referências
@@ -214,14 +384,14 @@
                     </button>
                 </div>
                 
-                <div id="lista-clientes" class="space-y-3 text-sm border rounded-lg p-3 bg-gray-50">
+                <div id="lista-clientes" class="space-y-3 text-sm border rounded-lg p-3 bg-gray-50 border-purple-100">
                     <p class="text-gray-500 text-center py-3">Nenhum dado de cliente foi salvo ainda.</p>
                 </div>
             </div>
         </div>
 
         <div id="aba-cadastrados" class="aba-conteudo hidden">
-            <div class="bg-white rounded-2xl shadow p-5 mb-6">
+            <div class="bg-white rounded-2xl shadow p-5 mb-6 border border-purple-100">
                 <h2 class="text-lg font-bold text-purple-700 mb-4 text-center">👤 Atendentes Cadastrados</h2>
                 <div id="lista-atendentes-cad" class="space-y-2 text-xs mb-6">
                     <p class="text-gray-500 text-center py-3">Nenhum atendente cadastrado.</p>
@@ -234,6 +404,40 @@
             </div>
         </div>
     </section>
+
+    <!-- ✅ CALCULADORA - NÃO ATRAPALHA NADA -->
+    <div class="calc-wrapper">
+        <div class="calc-bar">
+            <span>Calculadora</span>
+            <button class="btn-toggle-calc" id="btnToggleCalc" onclick="toggleCalc()"></button>
+        </div>
+        <div class="calculadora escondida" id="calculadora">
+            <input type="text" class="calc-tela" id="telaCalc" readonly>
+            <div class="calc-botoes">
+                <button class="calc-btn limpar" onclick="limparCalc()">C</button>
+                <button class="calc-btn operador" onclick="adicionarCalc('/')">/</button>
+                <button class="calc-btn operador" onclick="adicionarCalc('*')">×</button>
+                <button class="calc-btn operador" onclick="adicionarCalc('-')">-</button>
+
+                <button class="calc-btn numero" onclick="adicionarCalc('7')">7</button>
+                <button class="calc-btn numero" onclick="adicionarCalc('8')">8</button>
+                <button class="calc-btn numero" onclick="adicionarCalc('9')">9</button>
+                <button class="calc-btn operador" onclick="adicionarCalc('+')">+</button>
+
+                <button class="calc-btn numero" onclick="adicionarCalc('4')">4</button>
+                <button class="calc-btn numero" onclick="adicionarCalc('5')">5</button>
+                <button class="calc-btn numero" onclick="adicionarCalc('6')">6</button>
+                <button class="calc-btn numero" onclick="adicionarCalc('.')">.</button>
+
+                <button class="calc-btn numero" onclick="adicionarCalc('1')">1</button>
+                <button class="calc-btn numero" onclick="adicionarCalc('2')">2</button>
+                <button class="calc-btn numero" onclick="adicionarCalc('3')">3</button>
+                <button class="calc-btn igual" onclick="calcularCalc()">=</button>
+
+                <button class="calc-btn numero" onclick="adicionarCalc('0')" style="grid-column: span 3;">0</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // ✅ CONFIGURAÇÃO DO FIREBASE USANDO A CHAVE DO ARQUIVO EXTERNO
@@ -273,7 +477,8 @@
             itemParaRemover.style.opacity = '0';
             itemParaRemover.style.transform = 'translateX(-20px)';
 
-            setTimeout(async () => {                 const dados = await carregarDados(caminho);
+            setTimeout(async () => {                
+                const dados = await carregarDados(caminho);
                 let dadosAtualizados;
 
                 if(Array.isArray(dados)) {
@@ -290,6 +495,21 @@
                 carregarClientes();
                 verificarListaVazia();
              }, 300);
+        }
+
+        // ✅ FUNÇÕES NOVAS: LIXEIRA NOS CONTADORES E VALORES
+        function zerarContador(tipo, elementoId) {
+            if(!confirm(`⚠️ Zerar este contador irá apagar todos os dados de ${tipo}. Deseja continuar?`)) return;
+            salvarDados('pedidos', []);
+            document.getElementById(elementoId).innerText = '0';
+            carregarDadosAdmin();
+        }
+        function zerarValorFinanceiro(tipo) {
+            if(!confirm(`⚠️ Zerar este valor irá limpar os dados de ${tipo}. Deseja continuar?`)) return;
+            if(tipo === 'faturamento') salvarDados('faturamento', 0);
+            if(tipo === 'ticket') salvarDados('ticket_medio', 0);
+            if(tipo === 'caixa') salvarDados('caixa_atual', 0);
+            carregarDadosAdmin();
         }
 
         function apagarTodosClientes() {
@@ -386,7 +606,7 @@
                 const cliente = p.cliente_nome || 'Cliente não identificado';
 
                 container.innerHTML += `
-                    <div class="p-3 bg-white rounded-lg shadow-sm item-container" data-id="${p.id}" style="transition: all 0.3s ease;">
+                    <div class="p-3 rounded-lg shadow-sm item-container" data-id="${p.id}" style="transition: all 0.3s ease;">
                         <div>
                             <p class="font-medium text-base">Pedido #${p.id.slice(-4)} - <span class="${cor} font-bold">${p.status}</span></p>
                             <p class="text-gray-600 mt-1">Cliente: ${cliente} | Atendente: ${resp}</p>
@@ -410,7 +630,7 @@
             container.innerHTML = '';
             clientes.reverse().forEach(c => {
                 container.innerHTML += `
-                    <div class="p-3 bg-white rounded-lg shadow-sm item-container" data-id="${c.id}" style="transition: all 0.3s ease;">
+                    <div class="p-3 rounded-lg shadow-sm item-container" data-id="${c.id}" style="transition: all 0.3s ease;">
                         <div>
                             <p class="font-bold text-base">${c.nome || 'Nome não informado'}</p>
                             <p class="text-sm text-gray-700 mt-1"><strong>📞 Contato:</strong> ${c.telefone || 'Não informado'}</p>
@@ -430,7 +650,7 @@
             
             if (atendenteCad && atendenteCad.nome) {
                 containerProd.innerHTML = `
-                    <div class="border rounded-lg p-3 bg-white shadow-sm item-container" data-id="${atendenteCad.id || 'atendente_unico'}" style="transition: all 0.3s ease;">
+                    <div class="border rounded-lg p-3 shadow-sm item-container" data-id="${atendenteCad.id || 'atendente_unico'}" style="transition: all 0.3s ease;">
                         <div>
                             <p class="font-bold">Nome: ${atendenteCad.nome}</p>
                             <p class="text-sm text-gray-600">Contato: ${atendenteCad.contato || 'Não informado'}</p>
@@ -450,7 +670,7 @@
                 containerAtend.innerHTML = '';
                 produtos.forEach(prod => {
                     containerAtend.innerHTML += `
-                        <div class="border rounded-lg p-3 bg-white shadow-sm mb-2 item-container" data-id="${prod.id}" style="transition: all 0.3s ease;">
+                        <div class="border rounded-lg p-3 shadow-sm mb-2 item-container" data-id="${prod.id}" style="transition: all 0.3s ease;">
                             <div>
                                 <p class="font-bold">${prod.nome}</p>
                                 <p class="text-green-600 font-medium">${formatarMoeda(prod.preco)}</p>
@@ -463,6 +683,22 @@
             } else {
                 containerAtend.innerHTML = '<p class="text-gray-500 text-center py-3">Nenhum produto cadastrado.</p>';
             }
+        }
+
+        // ✅ FUNÇÕES DA CALCULADORA
+        const telaCalc = document.getElementById('telaCalc');
+        const btnToggle = document.getElementById('btnToggleCalc');
+        const calcEl = document.getElementById('calculadora');
+
+        function toggleCalc() {
+            calcEl.classList.toggle('escondida');
+            btnToggle.classList.toggle('aberto');
+        }
+        function adicionarCalc(valor) { telaCalc.value += valor; }
+        function limparCalc() { telaCalc.value = ''; }
+        function calcularCalc() {
+            try { telaCalc.value = eval(telaCalc.value) || ''; }
+            catch { telaCalc.value = 'Erro'; }
         }
     </script>
 </body>
